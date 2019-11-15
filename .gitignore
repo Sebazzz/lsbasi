@@ -182,3 +182,4 @@ UpgradeLog*.htm
 FakesAssemblies/
 /src/App/stats.json
 *.db
+*.filters
