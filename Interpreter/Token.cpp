@@ -10,41 +10,40 @@ TokenType Token::type() const
 	return _type;
 }
 
-std::wstring Token::to_string() const
+const wchar_t* Token::getTokenTypeAsString() const
 {
-	const wchar_t* tokenType;
 	switch (this->_type)
 	{
 	case TokenType::plus:
-		tokenType = L"plus";
-		break;
+		return L"plus";
 
 	case TokenType::minus:
-		tokenType = L"minus";
-		break;
+		return L"minus";
 		
 	case TokenType::eof:
-		tokenType = L"eof";
-		break;
+		return L"eof";
 
 	case TokenType::integer:
-		tokenType = L"integer";
-		break;
+		return L"integer";
 
 	default:
-		tokenType = L"?";
-		break;
+		return L"?";
 	}
+}
 
-	const size_t sz = 256;
-	wchar_t buffer[sz];
+std::wstring Token::to_string() const
+{
+	const wchar_t* tokenType = getTokenTypeAsString();
 
 	const wchar_t* fmt = L"TOKEN(%s,%s)";
 	if (this->_value.empty())
 	{
 		fmt = L"TOKEN(%s)";
 	}
-	
+
+	// Format string
+	const size_t sz = 256;
+	wchar_t buffer[sz];
 	swprintf_s(buffer, sz, fmt, tokenType, this->_value.c_str());
 	
 	return std::wstring(buffer);

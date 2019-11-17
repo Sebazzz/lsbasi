@@ -13,6 +13,7 @@ public:
 	[[nodiscard]] std::wstring value() const;
 
 	[[nodiscard]] TokenType type() const;
+	const wchar_t* getTokenTypeAsString() const;
 
 	Token(TokenType token, std::wstring cs)
 		: _type(token),
