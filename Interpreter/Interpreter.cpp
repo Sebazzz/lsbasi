@@ -1,6 +1,7 @@
 #include "Interpreter.h"
 #include "interpret_except.h"
 #include <stdexcept>
+#include "math.h"
 
 void Interpreter::tokenizeIfNecessary()
 {
@@ -58,7 +59,19 @@ Token Interpreter::getNextToken()
 	if (isdigit(currentChar))
 	{
 		this->pos += 1;
-		return Token(TokenType::integer, std::wstring(1, currentChar));
+
+		std::wstring allDigits(1, currentChar);
+
+		{
+			wchar_t possibleDigit;
+			while (this->pos < this->input.size() && isdigit(possibleDigit = this->input[this->pos]))
+			{
+				allDigits += possibleDigit;
+				this->pos++;
+			}
+		}
+		
+		return Token(TokenType::integer, allDigits);
 	}
 
 	switch (currentChar)
@@ -98,7 +111,7 @@ int Interpreter::parseIntegerToken(const std::vector<Token>::value_type& token) 
 	} catch (std::invalid_argument& e)
 	{
 		throw interpret_except(e);
-	} catch (std::overflow_error& e)
+	} catch (std::out_of_range& e)
 	{
 		throw interpret_except(e);
 	}
@@ -127,11 +140,11 @@ std::wstring Interpreter::interpret()
 				switch (lastToken->type())
 				{
 				case TokenType::plus:
-					result += parseIntegerToken(token);
+					add_interpret(result, parseIntegerToken(token));
 					break;
 
 				case TokenType::minus:
-					result -= parseIntegerToken(token);
+					subtract_interpret(result, parseIntegerToken(token));
 					break;
 
 				default:

@@ -11,6 +11,8 @@ class Interpreter
 private:
 	std::wstring input;
 	std::vector<Token> tokens;
+
+	std::optional<Token> currentToken;
 	size_t pos;
 
 	void tokenizeIfNecessary();
