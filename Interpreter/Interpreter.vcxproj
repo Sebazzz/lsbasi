@@ -160,6 +160,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Interpreter.cpp" />
+    <ClCompile Include="interpret_except.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Token.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ConsoleColor.h" />
+    <ClInclude Include="Interpreter.h" />
+    <ClInclude Include="interpret_except.h" />
+    <ClInclude Include="Token.h" />
+    <ClInclude Include="TokenType.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
