@@ -16,6 +16,7 @@ private:
 	size_t pos;
 
 	void tokenizeIfNecessary();
+	void handleNegativeIntegers();
 	void tokenizeCore();
 	Token getNextToken();
 

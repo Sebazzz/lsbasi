@@ -11,6 +11,44 @@ void Interpreter::tokenizeIfNecessary()
 	}
 }
 
+void Interpreter::handleNegativeIntegers()
+{
+	std::optional<Token> previousToken;
+	for (size_t index=0; index<this->tokens.size();index++)
+	{
+		Token current = this->tokens[index];
+
+		if (previousToken.has_value())
+		{
+			if (current.type() == TokenType::integer)
+			{
+				if (previousToken->type() == TokenType::minus)
+				{
+					// Previous is a minus-as-sign-specifier, so append and remove
+					auto tokenVal = current.value();
+					tokenVal.insert(0, 1, L'-');
+					this->tokens[index] = Token(TokenType::integer, tokenVal);
+					this->tokens.erase(this->tokens.begin() + index - 1);
+					index--;
+				}
+			} else if (current.type() == TokenType::minus)
+			{
+				if (previousToken->type() != TokenType::integer)
+				{
+					// Previous is an operand, which means we should remember the current token
+					previousToken.emplace(current);
+					continue;
+				}
+			}
+
+			previousToken.reset();
+		} else
+		{
+			previousToken.emplace(current);
+		}
+	}
+}
+
 void Interpreter::tokenizeCore()
 {
 	if (this->input.empty())
@@ -18,6 +56,7 @@ void Interpreter::tokenizeCore()
 		throw interpret_except("string is empty");
 	}
 
+	// Read all
 	while (true)
 	{
 		Token current = this->getNextToken();
@@ -29,6 +68,9 @@ void Interpreter::tokenizeCore()
 		this->tokens.push_back(current);
 	}
 
+	// Optimize
+	handleNegativeIntegers();
+	
 	if (this->input.empty())
 	{
 		throw interpret_except("No tokens were parsed");
