@@ -4,7 +4,7 @@
 #include <iostream>
 #include "Interpreter.h"
 #include "interpret_except.h"
-#include "ConsoleColor.h"
+#include "console_color.h"
 
 int main()
 {
@@ -30,8 +30,8 @@ int main()
 			std::wcout << result << std::endl;
 		} catch (interpret_except& e)
 		{
-			std::wcout << consolecolor::reversed << consolecolor::red << consolecolor::bold << L"Error interpreting --> " <<  consolecolor::reset;
-			std::wcout << consolecolor::reversed << consolecolor::red << e.what() << consolecolor::reset << std::endl;
+			std::wcout << console_color::reversed << console_color::bright_red << console_color::bold << L"Error interpreting --> " <<  console_color::faint;
+			std::wcout << console_color::red << e.what() << console_color::reset << std::endl;
 		}
 		
 		std::wcout << std::endl;

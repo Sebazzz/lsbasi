@@ -34,7 +34,15 @@ std::wstring Token::to_string() const
 
 	const size_t sz = 256;
 	wchar_t buffer[sz];
-	swprintf_s(buffer, sz, L"TOKEN(%s,%s)", tokenType, this->_value.c_str());
+
+	const wchar_t* fmt = L"TOKEN(%s,%s)";
+	if (this->_value.empty())
+	{
+		fmt = L"TOKEN(%s)";
+	}
+	
+	swprintf_s(buffer, sz, fmt, tokenType, this->_value.c_str());
+	
 	return std::wstring(buffer);
 }
 
