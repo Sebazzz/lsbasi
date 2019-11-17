@@ -35,18 +35,12 @@ std::wstring Token::to_string() const
 {
 	const wchar_t* tokenType = getTokenTypeAsString();
 
-	const wchar_t* fmt = L"TOKEN(%s,%s)";
 	if (this->_value.empty())
 	{
-		fmt = L"TOKEN(%s)";
+		return L"TOKEN(" + std::wstring(tokenType) + L")";
 	}
-
-	// Format string
-	const size_t sz = 256;
-	wchar_t buffer[sz];
-	swprintf_s(buffer, sz, fmt, tokenType, this->_value.c_str());
 	
-	return std::wstring(buffer);
+	return L"TOKEN(" + std::wstring(tokenType) + L"," + std::wstring(this->_value) + L")";
 }
 
 Token Token::eof()
