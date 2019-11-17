@@ -16,7 +16,7 @@ int main()
 		input.reserve(256);
 		
 		std::wcout << L"> ";
-		std::wcin >> input;
+		std::getline(std::wcin, input);
 		std::wcout << std::endl;
 
 		try
