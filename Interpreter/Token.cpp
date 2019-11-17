@@ -19,6 +19,10 @@ std::wstring Token::to_string() const
 		tokenType = L"plus";
 		break;
 
+	case TokenType::minus:
+		tokenType = L"minus";
+		break;
+		
 	case TokenType::eof:
 		tokenType = L"eof";
 		break;

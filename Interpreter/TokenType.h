@@ -4,5 +4,6 @@ enum class TokenType
 {
 	integer,
 	plus,
+	minus,
 	eof
 };

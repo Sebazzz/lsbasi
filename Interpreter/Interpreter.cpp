@@ -67,6 +67,10 @@ Token Interpreter::getNextToken()
 		this->pos += 1;
 		return Token(TokenType::plus, std::wstring());
 
+	case '-':
+		this->pos += 1;
+		return Token(TokenType::minus, std::wstring());
+
 	default:
 		throw interpret_except("Unknown token in string");
 	}
@@ -124,6 +128,10 @@ std::wstring Interpreter::interpret()
 				{
 				case TokenType::plus:
 					result += parseIntegerToken(token);
+					break;
+
+				case TokenType::minus:
+					result -= parseIntegerToken(token);
 					break;
 
 				default:
