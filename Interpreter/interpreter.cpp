@@ -1,10 +1,10 @@
-#include "Interpreter.h"
+#include "interpreter.h"
 #include "interpret_except.h"
 #include <stdexcept>
 #include "math.h"
 #include <optional>
 
-void Interpreter::ensure_tokenized()
+void interpreter::ensure_tokenized()
 {
 	if (this->tokens.empty())
 	{
@@ -12,29 +12,29 @@ void Interpreter::ensure_tokenized()
 	}
 }
 
-void Interpreter::compact_negative_integers()
+void interpreter::compact_negative_integers()
 {
-	std::optional<Token> previousToken;
+	std::optional<token> previousToken;
 	for (size_t index=0; index<this->tokens.size();index++)
 	{
-		Token current = this->tokens[index];
+		token current = this->tokens[index];
 
 		if (previousToken.has_value())
 		{
-			if (current.type() == TokenType::integer)
+			if (current.type() == token_type::integer)
 			{
-				if (previousToken->type() == TokenType::minus)
+				if (previousToken->type() == token_type::minus)
 				{
 					// Previous is a minus-as-sign-specifier, so append and remove
 					auto tokenVal = current.value();
 					tokenVal.insert(0, 1, L'-');
-					this->tokens[index] = Token(TokenType::integer, tokenVal);
+					this->tokens[index] = token(token_type::integer, tokenVal);
 					this->tokens.erase(this->tokens.begin() + index - 1);
 					index--;
 				}
-			} else if (current.type() == TokenType::minus)
+			} else if (current.type() == token_type::minus)
 			{
-				if (previousToken->type() != TokenType::integer)
+				if (previousToken->type() != token_type::integer)
 				{
 					// Previous is an operand, which means we should remember the current token
 					previousToken.emplace(current);
@@ -50,13 +50,13 @@ void Interpreter::compact_negative_integers()
 	}
 }
 
-void Interpreter::do_tokenize()
+void interpreter::do_tokenize()
 {
 	// Read all
 	while (true)
 	{
-		Token current = this->lexer.get_next_token();
-		if (current.type() == TokenType::eof)
+		token current = this->lexer.get_next_token();
+		if (current.type() == token_type::eof)
 		{
 			break;
 		}
@@ -73,7 +73,7 @@ void Interpreter::do_tokenize()
 	}
 }
 
-std::wstring Interpreter::tokenize()
+std::wstring interpreter::tokenize()
 {
 	this->ensure_tokenized();
 
@@ -87,14 +87,14 @@ std::wstring Interpreter::tokenize()
 	return buffer;
 }
 
-int Interpreter::get_integer(std::vector<Token>::iterator& token) const
+int interpreter::get_integer(std::vector<token>::iterator& token) const
 {
 	if (token == this->tokens.end())
 	{
 		throw interpret_except("Found end while searching for integer");
 	}
 	
-	if (token->type() != TokenType::integer)
+	if (token->type() != token_type::integer)
 	{
 		throw interpret_except("Expected integer");
 	}
@@ -113,7 +113,7 @@ int Interpreter::get_integer(std::vector<Token>::iterator& token) const
 	}
 }
 
-bool Interpreter::handle_operator(double& result, std::vector<Token>::iterator& it)
+bool interpreter::handle_operator(double& result, std::vector<token>::iterator& it)
 {
 	if (this->tokens.end() == it)
 	{
@@ -125,20 +125,20 @@ bool Interpreter::handle_operator(double& result, std::vector<Token>::iterator& 
 	
 	switch (operatorType)
 	{
-		case TokenType::plus:
+		case token_type::plus:
 			add_interpret(result, static_cast<double>(get_integer(it)));
 			break;
 
-		case TokenType::minus:
+		case token_type::minus:
 			subtract_interpret(result, static_cast<double>(get_integer(it)));
 			break;
 
-		case TokenType::multiply:
+		case token_type::multiply:
 			// TODO: implement overflow detection
 			result *= get_integer(it);
 			break;
 
-		case TokenType::divide:
+		case token_type::divide:
 			divide_interpret(result, static_cast<double>(get_integer(it)));
 			break;
 
@@ -149,7 +149,7 @@ bool Interpreter::handle_operator(double& result, std::vector<Token>::iterator& 
 	return true;
 }
 
-std::wstring Interpreter::interpret()
+std::wstring interpreter::interpret()
 {
 	this->ensure_tokenized();
 

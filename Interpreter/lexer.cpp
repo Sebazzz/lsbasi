@@ -1,12 +1,12 @@
-#include "Lexer.h"
+#include "lexer.h"
 #include "interpret_except.h"
 
-bool Lexer::is_at_end() const
+bool lexer::is_at_end() const
 {
 	return this->pos >= this->input.size();
 }
 
-void Lexer::advance()
+void lexer::advance()
 {
 	this->pos++;
 
@@ -19,7 +19,7 @@ void Lexer::advance()
 	}
 }
 
-bool Lexer::skip_whitespace()
+bool lexer::skip_whitespace()
 {
 	bool hasSkippedWhitespace = false;
 	while (!this->is_at_end() && isspace(this->currentChar))
@@ -31,7 +31,7 @@ bool Lexer::skip_whitespace()
 	return hasSkippedWhitespace;
 }
 
-Token Lexer::read_digit()
+token lexer::read_digit()
 {
 	// This var holds our lexeme: what makes up our digit token
 	std::wstring allDigits(1, this->currentChar);
@@ -48,28 +48,28 @@ Token Lexer::read_digit()
 		allDigits += this->currentChar;
 	}
 	
-	return Token(TokenType::integer, allDigits);
+	return token(token_type::integer, allDigits);
 }
 
-Token Lexer::read_operator()
+token lexer::read_operator()
 {
 	switch (this->currentChar)
 	{
 	case '+':
 		this->advance();
-		return Token(TokenType::plus, std::wstring());
+		return token(token_type::plus, std::wstring());
 
 	case '-':
 		this->advance();
-		return Token(TokenType::minus, std::wstring());
+		return token(token_type::minus, std::wstring());
 
 	case '*':
 		this->advance();
-		return Token(TokenType::multiply, std::wstring());
+		return token(token_type::multiply, std::wstring());
 
 	case '/':
 		this->advance();
-		return Token(TokenType::divide, std::wstring());
+		return token(token_type::divide, std::wstring());
 
 	default:
 		throw interpret_except("Unknown token in string");
@@ -82,14 +82,14 @@ Token Lexer::read_operator()
     This method is responsible for breaking a sentence
     apart into tokens. One token at a time.
  */
-Token Lexer::get_next_token()
+token lexer::get_next_token()
 {
 	if (this->input.empty())
 	{
 		throw interpret_except("string is empty");
 	}
 	
-	auto token = Token::eof();
+	auto token = token::eof();
 	while (!this->is_at_end())
 	{
 		if (this->skip_whitespace())

@@ -159,20 +159,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Interpreter.cpp" />
+    <ClCompile Include="interpreter.cpp" />
     <ClCompile Include="interpret_except.cpp" />
-    <ClCompile Include="Lexer.cpp" />
+    <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Token.cpp" />
+    <ClCompile Include="token.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h" />
-    <ClInclude Include="Interpreter.h" />
+    <ClInclude Include="interpreter.h" />
     <ClInclude Include="interpret_except.h" />
-    <ClInclude Include="Lexer.h" />
+    <ClInclude Include="lexer.h" />
     <ClInclude Include="math.h" />
-    <ClInclude Include="Token.h" />
-    <ClInclude Include="TokenType.h" />
+    <ClInclude Include="token.h" />
+    <ClInclude Include="token_type.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

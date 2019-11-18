@@ -2,7 +2,7 @@
 //
 
 #include <iostream>
-#include "Interpreter.h"
+#include "interpreter.h"
 #include "interpret_except.h"
 #include "console_color.h"
 
@@ -21,7 +21,7 @@ int main()
 
 		try
 		{
-			Interpreter interpreter(input);
+			interpreter interpreter(input);
 
 			std::wstring tokenStr = interpreter.tokenize();
 			std::wcout << tokenStr << std::endl;

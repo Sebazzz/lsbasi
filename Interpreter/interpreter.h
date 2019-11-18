@@ -2,9 +2,9 @@
 #include <string>
 #include <utility>
 #include <memory>
-#include "Token.h"
+#include "token.h"
 #include <vector>
-#include "Lexer.h"
+#include "lexer.h"
 
 // Grammar:
 //
@@ -16,11 +16,11 @@
  * Interpret simple math expressions
  * 
  */
-class Interpreter
+class interpreter
 {
 private:
-	std::vector<Token> tokens;
-	Lexer lexer;
+	std::vector<token> tokens;
+	lexer lexer;
 	
 	void ensure_tokenized();
 
@@ -31,11 +31,11 @@ private:
 	
 	void do_tokenize();
 
-	[[nodiscard]] int get_integer(std::vector<Token>::iterator& token) const;
-	bool handle_operator(double& result, std::vector<Token>::iterator& it);
+	[[nodiscard]] int get_integer(std::vector<token>::iterator& token) const;
+	bool handle_operator(double& result, std::vector<token>::iterator& it);
 
 public:
-	explicit Interpreter(std::wstring input)
+	explicit interpreter(std::wstring input)
 		: lexer(std::move(input))
 	{
 		this->tokens.reserve(3);

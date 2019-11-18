@@ -1,35 +1,35 @@
-#include "Token.h"
+#include "token.h"
 
-std::wstring Token::value() const
+std::wstring token::value() const
 {
 	return _value;
 }
 
-TokenType Token::type() const
+token_type token::type() const
 {
 	return _type;
 }
 
-const wchar_t* Token::getTokenTypeAsString() const
+const wchar_t* token::getTokenTypeAsString() const
 {
 	switch (this->_type)
 	{
-	case TokenType::plus:
+	case token_type::plus:
 		return L"plus";
 
-	case TokenType::minus:
+	case token_type::minus:
 		return L"min";
 
-	case TokenType::multiply:
+	case token_type::multiply:
 		return L"mul";
 
-	case TokenType::divide:
+	case token_type::divide:
 		return L"div";
 		
-	case TokenType::eof:
+	case token_type::eof:
 		return L"eof";
 
-	case TokenType::integer:
+	case token_type::integer:
 		return L"int";
 
 	default:
@@ -37,7 +37,7 @@ const wchar_t* Token::getTokenTypeAsString() const
 	}
 }
 
-std::wstring Token::to_string() const
+std::wstring token::to_string() const
 {
 	const wchar_t* tokenType = getTokenTypeAsString();
 
@@ -49,7 +49,7 @@ std::wstring Token::to_string() const
 	return L"TOK(" + std::wstring(tokenType) + L"," + std::wstring(this->_value) + L")";
 }
 
-Token Token::eof()
+token token::eof()
 {
-	return Token(TokenType::eof, std::wstring());
+	return token(token_type::eof, std::wstring());
 }

@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
 #include <utility>
-#include "Token.h"
+#include "token.h"
 #include <optional>
 
-class Lexer
+class lexer
 {
 	// Constant
 	const std::wstring input;
@@ -17,11 +17,11 @@ class Lexer
 	void advance();
 	bool skip_whitespace();
 	
-	Token read_digit();
-	Token read_operator();
+	token read_digit();
+	token read_operator();
 
 public:
-	explicit Lexer(std::wstring input)
+	explicit lexer(std::wstring input)
 		: input(std::move(input))
 	{
 		this->pos = 0;
@@ -31,6 +31,6 @@ public:
 	/**
 	 * Reads the next token from the string
 	 */
-	Token get_next_token();
+	token get_next_token();
 };
 

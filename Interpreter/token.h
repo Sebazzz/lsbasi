@@ -1,12 +1,12 @@
 #pragma once
-#include "TokenType.h"
+#include "token_type.h"
 #include <string>
 #include <utility>
 
-class Token
+class token
 {
 private:
-	TokenType _type;
+	token_type _type;
 	std::wstring _value;
 	
 	[[nodiscard]] const wchar_t* getTokenTypeAsString() const;
@@ -14,28 +14,28 @@ private:
 public:
 	[[nodiscard]] std::wstring value() const;
 
-	[[nodiscard]] TokenType type() const;
+	[[nodiscard]] token_type type() const;
 
-	Token(TokenType token, std::wstring cs)
+	token(token_type token, std::wstring cs)
 		: _type(token),
 		  _value(std::move(cs))
 	{
 	}
 
 
-	Token(const Token& other)
+	token(const token& other)
 		: _type(other._type),
 		  _value(other._value)
 	{
 	}
 
-	Token(Token&& other) noexcept
+	token(token&& other) noexcept
 		: _type(other._type),
 		  _value(std::move(other._value))
 	{
 	}
 
-	Token& operator=(const Token& other)
+	token& operator=(const token& other)
 	{
 		if (this == &other)
 			return *this;
@@ -44,7 +44,7 @@ public:
 		return *this;
 	}
 
-	Token& operator=(Token&& other) noexcept
+	token& operator=(token&& other) noexcept
 	{
 		if (this == &other)
 			return *this;
@@ -55,6 +55,6 @@ public:
 
 	[[nodiscard]] std::wstring to_string() const;
 
-	static Token eof();
+	static token eof();
 };
 
