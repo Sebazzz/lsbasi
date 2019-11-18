@@ -18,7 +18,7 @@ const wchar_t* Token::getTokenTypeAsString() const
 		return L"plus";
 
 	case TokenType::minus:
-		return L"minus";
+		return L"min";
 
 	case TokenType::multiply:
 		return L"mul";
@@ -30,7 +30,7 @@ const wchar_t* Token::getTokenTypeAsString() const
 		return L"eof";
 
 	case TokenType::integer:
-		return L"integer";
+		return L"int";
 
 	default:
 		return L"?";
@@ -43,10 +43,10 @@ std::wstring Token::to_string() const
 
 	if (this->_value.empty())
 	{
-		return L"TOKEN(" + std::wstring(tokenType) + L")";
+		return L"TOK(" + std::wstring(tokenType) + L")";
 	}
 	
-	return L"TOKEN(" + std::wstring(tokenType) + L"," + std::wstring(this->_value) + L")";
+	return L"TOK(" + std::wstring(tokenType) + L"," + std::wstring(this->_value) + L")";
 }
 
 Token Token::eof()
