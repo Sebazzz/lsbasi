@@ -1,6 +1,56 @@
 #include "Lexer.h"
 #include "interpret_except.h"
 
+bool Lexer::is_at_end() const
+{
+	return this->pos >= this->input.size();
+}
+
+void Lexer::advance()
+{
+	this->pos++;
+
+	if (this->is_at_end())
+	{
+		this->currentChar = 0;
+	} else
+	{
+		this->currentChar = this->input[this->pos];
+	}
+}
+
+bool Lexer::skip_whitespace()
+{
+	bool hasSkippedWhitespace = false;
+	while (!this->is_at_end() && isspace(this->currentChar))
+	{
+		hasSkippedWhitespace = true;
+		this->advance();
+	}
+
+	return hasSkippedWhitespace;
+}
+
+Token Lexer::read_digit()
+{
+	// This var holds our lexeme: what makes up our digit token
+	std::wstring allDigits(1, this->currentChar);
+
+	while (!this->is_at_end())
+	{
+		this->advance();
+		
+		if (!isdigit(this->currentChar))
+		{
+			break;
+		}
+
+		allDigits += this->currentChar;
+	}
+	
+	return Token(TokenType::integer, allDigits);
+}
+
 /*
     Lexical analyzer (also known as scanner or tokenizer)
 
@@ -14,48 +64,33 @@ Token Lexer::get_next_token()
 		throw interpret_except("string is empty");
 	}
 	
-	if (this->pos >= this->input.size())
+	auto token = Token::eof();
+	while (!this->is_at_end())
 	{
-		return Token::eof();
-	}
-
-	const auto currentChar = this->input[this->pos];
-
-	if (isspace(currentChar))
-	{
-		this->pos += 1;
-		return this->get_next_token();
-	}
-	
-	if (isdigit(currentChar))
-	{
-		this->pos += 1;
-
-		std::wstring allDigits(1, currentChar);
-
+		if (this->skip_whitespace())
 		{
-			wchar_t possibleDigit;
-			while (this->pos < this->input.size() && isdigit(possibleDigit = this->input[this->pos]))
-			{
-				allDigits += possibleDigit;
-				this->pos++;
-			}
+			continue;
 		}
-		
-		return Token(TokenType::integer, allDigits);
+
+		if (isdigit(this->currentChar))
+		{
+			return this->read_digit();
+		}
+
+		switch (this->currentChar)
+		{
+			case '+':
+				this->advance();
+				return Token(TokenType::plus, std::wstring());
+
+			case '-':
+				this->advance();
+				return Token(TokenType::minus, std::wstring());
+
+			default:
+				throw interpret_except("Unknown token in string");
+		}
 	}
 
-	switch (currentChar)
-	{
-	case '+':
-		this->pos += 1;
-		return Token(TokenType::plus, std::wstring());
-
-	case '-':
-		this->pos += 1;
-		return Token(TokenType::minus, std::wstring());
-
-	default:
-		throw interpret_except("Unknown token in string");
-	}
+	return token;
 }
