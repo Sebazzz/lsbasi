@@ -2,6 +2,7 @@
 #include "interpret_except.h"
 #include <stdexcept>
 #include "math.h"
+#include <optional>
 
 void Interpreter::ensure_tokenized()
 {
@@ -51,15 +52,10 @@ void Interpreter::compact_negative_integers()
 
 void Interpreter::do_tokenize()
 {
-	if (this->input.empty())
-	{
-		throw interpret_except("string is empty");
-	}
-
 	// Read all
 	while (true)
 	{
-		Token current = this->get_next_token();
+		Token current = this->lexer.get_next_token();
 		if (current.type() == TokenType::eof)
 		{
 			break;
@@ -71,63 +67,9 @@ void Interpreter::do_tokenize()
 	// Optimize
 	compact_negative_integers();
 	
-	if (this->input.empty())
+	if (this->tokens.empty())
 	{
 		throw interpret_except("No tokens were parsed");
-	}
-}
-
-/*
-    Lexical analyzer (also known as scanner or tokenizer)
-
-    This method is responsible for breaking a sentence
-    apart into tokens. One token at a time.
- */
-Token Interpreter::get_next_token()
-{
-	if (this->pos >= this->input.size())
-	{
-		return Token::eof();
-	}
-
-	const auto currentChar = this->input[this->pos];
-
-	if (isspace(currentChar))
-	{
-		this->pos += 1;
-		return this->get_next_token();
-	}
-	
-	if (isdigit(currentChar))
-	{
-		this->pos += 1;
-
-		std::wstring allDigits(1, currentChar);
-
-		{
-			wchar_t possibleDigit;
-			while (this->pos < this->input.size() && isdigit(possibleDigit = this->input[this->pos]))
-			{
-				allDigits += possibleDigit;
-				this->pos++;
-			}
-		}
-		
-		return Token(TokenType::integer, allDigits);
-	}
-
-	switch (currentChar)
-	{
-	case '+':
-		this->pos += 1;
-		return Token(TokenType::plus, std::wstring());
-
-	case '-':
-		this->pos += 1;
-		return Token(TokenType::minus, std::wstring());
-
-	default:
-		throw interpret_except("Unknown token in string");
 	}
 }
 

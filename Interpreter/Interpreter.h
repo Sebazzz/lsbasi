@@ -4,17 +4,14 @@
 #include <memory>
 #include "Token.h"
 #include <vector>
-#include <optional>
+#include "Lexer.h"
 
 class Interpreter
 {
 private:
-	std::wstring input;
 	std::vector<Token> tokens;
-
-	std::optional<Token> currentToken;
-	size_t pos;
-
+	Lexer lexer;
+	
 	void ensure_tokenized();
 
 	/**
@@ -24,19 +21,13 @@ private:
 	
 	void do_tokenize();
 
-	/**
-	 * Reads the next token from the string
-	 */
-	Token get_next_token();
-
 	[[nodiscard]] int parse_token_as_integer(const std::vector<Token>::value_type& token) const;
 
 public:
 	explicit Interpreter(std::wstring input)
-		: input(std::move(input))
+		: lexer(std::move(input))
 	{
 		this->tokens.reserve(3);
-		this->pos = 0;
 	}
 
 	/**

@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="interpret_except.cpp" />
+    <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Token.cpp" />
   </ItemGroup>
@@ -168,6 +169,7 @@
     <ClInclude Include="console_color.h" />
     <ClInclude Include="Interpreter.h" />
     <ClInclude Include="interpret_except.h" />
+    <ClInclude Include="Lexer.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="TokenType.h" />
