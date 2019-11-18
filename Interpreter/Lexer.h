@@ -25,7 +25,7 @@ public:
 		: input(std::move(input))
 	{
 		this->pos = 0;
-		this->currentChar = this->input.size() > 0 ? this->input[this->pos] : 0;
+		this->currentChar = !this->input.empty() ? this->input[this->pos] : 0;
 	}
 	
 	/**
