@@ -6,6 +6,16 @@
 #include <vector>
 #include "Lexer.h"
 
+// Grammar:
+//
+// expression: factor ((MUL|DIV|PLUS|MIN)factor)*
+// factor:     integer
+
+/**
+ *
+ * Interpret simple math expressions
+ * 
+ */
 class Interpreter
 {
 private:
