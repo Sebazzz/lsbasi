@@ -19,6 +19,12 @@ const wchar_t* Token::getTokenTypeAsString() const
 
 	case TokenType::minus:
 		return L"minus";
+
+	case TokenType::multiply:
+		return L"mul";
+
+	case TokenType::divide:
+		return L"div";
 		
 	case TokenType::eof:
 		return L"eof";
