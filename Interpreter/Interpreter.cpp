@@ -87,11 +87,23 @@ std::wstring Interpreter::tokenize()
 	return buffer;
 }
 
-int Interpreter::parse_token_as_integer(const std::vector<Token>::value_type& token) const
+int Interpreter::get_integer(std::vector<Token>::iterator& token) const
 {
+	if (token == this->tokens.end())
+	{
+		throw interpret_except("Found end while searching for integer");
+	}
+	
+	if (token->type() != TokenType::integer)
+	{
+		throw interpret_except("Expected integer");
+	}
+	
 	try
 	{
-		return std::stoi(token.value());
+		const auto val = std::stoi(token->value());
+		++token;
+		return val;
 	} catch (std::invalid_argument& e)
 	{
 		throw interpret_except(e);
@@ -101,69 +113,52 @@ int Interpreter::parse_token_as_integer(const std::vector<Token>::value_type& to
 	}
 }
 
+bool Interpreter::handle_operator(double& result, std::vector<Token>::iterator& it)
+{
+	if (this->tokens.end() == it)
+	{
+		return false;
+	}
+
+	const auto operatorType = it->type();
+	++it;
+	
+	switch (operatorType)
+	{
+		case TokenType::plus:
+			add_interpret(result, static_cast<double>(get_integer(it)));
+			break;
+
+		case TokenType::minus:
+			subtract_interpret(result, static_cast<double>(get_integer(it)));
+			break;
+
+		case TokenType::multiply:
+			// TODO: implement overflow detection
+			result *= get_integer(it);
+			break;
+
+		case TokenType::divide:
+			divide_interpret(result, static_cast<double>(get_integer(it)));
+			break;
+
+		default:
+			throw interpret_except("Expected operator but found different token instead");
+	}
+
+	return true;
+}
+
 std::wstring Interpreter::interpret()
 {
 	this->ensure_tokenized();
 
-	double result = 0;
-	std::optional<Token> lastToken;
+	auto it = this->tokens.begin();
+	double result = get_integer(it);
 
-	for (const auto& token : this->tokens)
+	while (handle_operator(result, it))
 	{
-		if (lastToken.has_value())
-		{
-			if (lastToken->type() != TokenType::integer)
-			{
-				// Current token must be integer
-				if (token.type() != TokenType::integer)
-				{
-					throw interpret_except("Expect integer after operator");
-				}
-
-				// Execute operation
-				switch (lastToken->type())
-				{
-				case TokenType::plus:
-					add_interpret(result, static_cast<double>(parse_token_as_integer(token)));
-					break;
-
-				case TokenType::minus:
-					subtract_interpret(result, static_cast<double>(parse_token_as_integer(token)));
-					break;
-
-				case TokenType::multiply:
-					// TODO: implement overflow detection
-					result *= parse_token_as_integer(token);
-					break;
-
-				case TokenType::divide:
-					divide_interpret(result, static_cast<double>(parse_token_as_integer(token)));
-					break;
-
-				default:
-					throw interpret_except("Invalid parser state handling integer");
-				}
-			} else
-			{
-				// Last token is integer, can't have an integer now too
-				if (token.type() == TokenType::integer)
-				{
-					throw interpret_except("Two consequent integer tokens");
-				}
-			}
-		} else
-		{
-			// No previous token, so we cannot have an operator now
-			if (token.type() != TokenType::integer)
-			{
-				throw interpret_except("Operation without operand");
-			}
-
-			// Parse number
-			result = parse_token_as_integer(token);
-		}
-
-		lastToken.emplace(token);
+		// Continue
 	}
 
 	return std::to_wstring(result);

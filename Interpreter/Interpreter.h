@@ -21,7 +21,8 @@ private:
 	
 	void do_tokenize();
 
-	[[nodiscard]] int parse_token_as_integer(const std::vector<Token>::value_type& token) const;
+	[[nodiscard]] int get_integer(std::vector<Token>::iterator& token) const;
+	bool handle_operator(double& result, std::vector<Token>::iterator& it);
 
 public:
 	explicit Interpreter(std::wstring input)
