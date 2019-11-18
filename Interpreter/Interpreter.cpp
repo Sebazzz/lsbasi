@@ -3,15 +3,15 @@
 #include <stdexcept>
 #include "math.h"
 
-void Interpreter::tokenizeIfNecessary()
+void Interpreter::ensure_tokenized()
 {
 	if (this->tokens.empty())
 	{
-		this->tokenizeCore();
+		this->do_tokenize();
 	}
 }
 
-void Interpreter::handleNegativeIntegers()
+void Interpreter::compact_negative_integers()
 {
 	std::optional<Token> previousToken;
 	for (size_t index=0; index<this->tokens.size();index++)
@@ -49,7 +49,7 @@ void Interpreter::handleNegativeIntegers()
 	}
 }
 
-void Interpreter::tokenizeCore()
+void Interpreter::do_tokenize()
 {
 	if (this->input.empty())
 	{
@@ -59,7 +59,7 @@ void Interpreter::tokenizeCore()
 	// Read all
 	while (true)
 	{
-		Token current = this->getNextToken();
+		Token current = this->get_next_token();
 		if (current.type() == TokenType::eof)
 		{
 			break;
@@ -69,7 +69,7 @@ void Interpreter::tokenizeCore()
 	}
 
 	// Optimize
-	handleNegativeIntegers();
+	compact_negative_integers();
 	
 	if (this->input.empty())
 	{
@@ -83,7 +83,7 @@ void Interpreter::tokenizeCore()
     This method is responsible for breaking a sentence
     apart into tokens. One token at a time.
  */
-Token Interpreter::getNextToken()
+Token Interpreter::get_next_token()
 {
 	if (this->pos >= this->input.size())
 	{
@@ -95,7 +95,7 @@ Token Interpreter::getNextToken()
 	if (isspace(currentChar))
 	{
 		this->pos += 1;
-		return this->getNextToken();
+		return this->get_next_token();
 	}
 	
 	if (isdigit(currentChar))
@@ -133,7 +133,7 @@ Token Interpreter::getNextToken()
 
 std::wstring Interpreter::tokenize()
 {
-	this->tokenizeIfNecessary();
+	this->ensure_tokenized();
 
 	std::wstring buffer;
 	for (const auto& token : this->tokens)
@@ -145,7 +145,7 @@ std::wstring Interpreter::tokenize()
 	return buffer;
 }
 
-int Interpreter::parseIntegerToken(const std::vector<Token>::value_type& token) const
+int Interpreter::parse_token_as_integer(const std::vector<Token>::value_type& token) const
 {
 	try
 	{
@@ -161,7 +161,7 @@ int Interpreter::parseIntegerToken(const std::vector<Token>::value_type& token) 
 
 std::wstring Interpreter::interpret()
 {
-	this->tokenizeIfNecessary();
+	this->ensure_tokenized();
 
 	int result = 0;
 	std::optional<Token> lastToken;
@@ -182,11 +182,11 @@ std::wstring Interpreter::interpret()
 				switch (lastToken->type())
 				{
 				case TokenType::plus:
-					add_interpret(result, parseIntegerToken(token));
+					add_interpret(result, parse_token_as_integer(token));
 					break;
 
 				case TokenType::minus:
-					subtract_interpret(result, parseIntegerToken(token));
+					subtract_interpret(result, parse_token_as_integer(token));
 					break;
 
 				default:
@@ -209,7 +209,7 @@ std::wstring Interpreter::interpret()
 			}
 
 			// Parse number
-			result = parseIntegerToken(token);
+			result = parse_token_as_integer(token);
 		}
 
 		lastToken.emplace(token);
