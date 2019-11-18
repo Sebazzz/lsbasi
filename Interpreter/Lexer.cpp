@@ -51,6 +51,31 @@ Token Lexer::read_digit()
 	return Token(TokenType::integer, allDigits);
 }
 
+Token Lexer::read_operator()
+{
+	switch (this->currentChar)
+	{
+	case '+':
+		this->advance();
+		return Token(TokenType::plus, std::wstring());
+
+	case '-':
+		this->advance();
+		return Token(TokenType::minus, std::wstring());
+
+	case '*':
+		this->advance();
+		return Token(TokenType::multiply, std::wstring());
+
+	case '/':
+		this->advance();
+		return Token(TokenType::divide, std::wstring());
+
+	default:
+		throw interpret_except("Unknown token in string");
+	}
+}
+
 /*
     Lexical analyzer (also known as scanner or tokenizer)
 
@@ -77,19 +102,7 @@ Token Lexer::get_next_token()
 			return this->read_digit();
 		}
 
-		switch (this->currentChar)
-		{
-			case '+':
-				this->advance();
-				return Token(TokenType::plus, std::wstring());
-
-			case '-':
-				this->advance();
-				return Token(TokenType::minus, std::wstring());
-
-			default:
-				throw interpret_except("Unknown token in string");
-		}
+		return read_operator();
 	}
 
 	return token;

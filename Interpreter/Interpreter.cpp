@@ -105,7 +105,7 @@ std::wstring Interpreter::interpret()
 {
 	this->ensure_tokenized();
 
-	int result = 0;
+	double result = 0;
 	std::optional<Token> lastToken;
 
 	for (const auto& token : this->tokens)
@@ -124,11 +124,20 @@ std::wstring Interpreter::interpret()
 				switch (lastToken->type())
 				{
 				case TokenType::plus:
-					add_interpret(result, parse_token_as_integer(token));
+					add_interpret(result, static_cast<double>(parse_token_as_integer(token)));
 					break;
 
 				case TokenType::minus:
-					subtract_interpret(result, parse_token_as_integer(token));
+					subtract_interpret(result, static_cast<double>(parse_token_as_integer(token)));
+					break;
+
+				case TokenType::multiply:
+					// TODO: implement overflow detection
+					result *= parse_token_as_integer(token);
+					break;
+
+				case TokenType::divide:
+					divide_interpret(result, static_cast<double>(parse_token_as_integer(token)));
 					break;
 
 				default:

@@ -18,6 +18,7 @@ class Lexer
 	bool skip_whitespace();
 	
 	Token read_digit();
+	Token read_operator();
 
 public:
 	explicit Lexer(std::wstring input)

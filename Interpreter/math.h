@@ -22,3 +22,14 @@ void subtract_interpret(T& result, T operand)
 {
 	add_interpret(result, -1 * operand);
 }
+
+template <typename T>
+void divide_interpret(T& result, T operand)
+{
+	if (operand == 0)
+	{
+		throw interpret_except("Divide by zero");
+	}
+
+	result /= operand;
+}
