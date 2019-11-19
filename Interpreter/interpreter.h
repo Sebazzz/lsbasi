@@ -34,7 +34,7 @@ private:
 
 	[[nodiscard]] int get_factor(std::vector<token>::iterator& token) const;
 	double handle_term(std::vector<token>::iterator& token) const;
-	bool handle_expr(double& result, std::vector<token>::iterator& it);
+	double handle_expr(std::vector<token>::iterator& it);
 
 public:
 	explicit interpreter(std::wstring input)

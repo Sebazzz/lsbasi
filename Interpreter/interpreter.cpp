@@ -143,31 +143,31 @@ double interpreter::handle_term(std::vector<token>::iterator& token) const
 	return result;
 }
 
-bool interpreter::handle_expr(double& result, std::vector<token>::iterator& it)
+double interpreter::handle_expr(std::vector<token>::iterator& it)
 {
-	if (this->tokens.end() == it)
+	double result = handle_term(it);
+	
+	while (it != this->tokens.end())
 	{
-		return false;
+		const auto operatorType = it->type();
+		switch (operatorType)
+		{
+			case token_type::plus:
+				++it;
+				add_interpret(result, static_cast<double>(handle_term(it)));
+				break;
+
+			case token_type::minus:
+				++it;
+				subtract_interpret(result, static_cast<double>(handle_term(it)));
+				break;
+
+			default:
+				throw interpret_except("Expected plus/minus but found different token instead");
+		}
 	}
 
-	const auto operatorType = it->type();
-
-	++it;
-	switch (operatorType)
-	{
-		case token_type::plus:
-			add_interpret(result, static_cast<double>(handle_term(it)));
-			break;
-
-		case token_type::minus:
-			subtract_interpret(result, static_cast<double>(handle_term(it)));
-			break;
-
-		default:
-			throw interpret_except("Expected plus/minus but found different token instead");
-	}
-
-	return true;
+	return result;
 }
 
 std::wstring interpreter::interpret()
@@ -175,12 +175,7 @@ std::wstring interpreter::interpret()
 	this->ensure_tokenized();
 
 	auto it = this->tokens.begin();
-	double result = handle_term(it);
-
-	while (handle_expr(result, it))
-	{
-		// Continue
-	}
+	const double result = handle_expr(it);
 
 	if (round(result) == result)
 	{
