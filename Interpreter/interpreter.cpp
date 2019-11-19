@@ -161,5 +161,10 @@ std::wstring interpreter::interpret()
 		// Continue
 	}
 
+	if (round(result) == result)
+	{
+		return std::to_wstring(static_cast<int>(result));
+	}
+
 	return std::to_wstring(result);
 }
