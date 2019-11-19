@@ -40,10 +40,23 @@ TEST_CASE( "Interpretation succeeds - mixed multiple terms", "[interpreter]" ) {
     REQUIRE( do_interpret(L"-5+5*3") == std::wstring(L"10") );
 }
 
+TEST_CASE( "Interpretation succeeds - groups", "[interpreter]" ) {
+    REQUIRE( do_interpret(L"(1+2)*3") == std::wstring(L"9") );
+    REQUIRE( do_interpret(L"(-5+5)*3") == std::wstring(L"0") );
+    REQUIRE( do_interpret(L"((-5+1)*5)*3") == std::wstring(L"60") );
+    REQUIRE( do_interpret(L"7 + 3 * (10 / (12 / (3 + 1) - 1))") == std::wstring(L"22") );
+}
+
 TEST_CASE( "Interpretation fails on bad syntax", "[interpreter]" ) {
-    REQUIRE_THROWS_MATCHES( do_interpret(L"50 50"), interpret_except, Catch::Message("Expected plus/minus but found different token instead"));
+    REQUIRE_THROWS_MATCHES( do_interpret(L"50 50"), interpret_except, Catch::Message("Unexpected token found"));
     REQUIRE_THROWS_MATCHES( do_interpret(L"50 ++ 50"), interpret_except, Catch::Message("Expected integer"));
     REQUIRE_THROWS_MATCHES( do_interpret(L"+"), interpret_except, Catch::Message("Expected integer"));
     REQUIRE_THROWS_MATCHES( do_interpret(L"-"), interpret_except, Catch::Message("Expected integer"));
     REQUIRE_THROWS_MATCHES( do_interpret(L""), interpret_except, Catch::Message("string is empty"));
+}
+
+TEST_CASE( "Interpretation fails on bad syntax - groups", "[interpreter]" ) {
+    REQUIRE_THROWS_MATCHES( do_interpret(L"50 + 50 )"), interpret_except, Catch::Message("Unexpected token found"));
+    REQUIRE_THROWS_MATCHES( do_interpret(L"(50 + 50))"), interpret_except, Catch::Message("Unexpected token found"));
+    REQUIRE_THROWS_MATCHES( do_interpret(L"((50+50)"), interpret_except, Catch::Message("Unexpected token found"));
 }
