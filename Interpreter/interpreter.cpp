@@ -87,7 +87,7 @@ std::wstring interpreter::tokenize()
 	return buffer;
 }
 
-int interpreter::get_integer(std::vector<token>::iterator& token) const
+int interpreter::get_factor(std::vector<token>::iterator& token) const
 {
 	if (token == this->tokens.end())
 	{
@@ -113,7 +113,37 @@ int interpreter::get_integer(std::vector<token>::iterator& token) const
 	}
 }
 
-bool interpreter::handle_operator(double& result, std::vector<token>::iterator& it)
+double interpreter::handle_term(std::vector<token>::iterator& token) const
+{
+	// We expect a factor with possibly a multiply or divide
+	double result = get_factor(token);
+
+	while (token != this->tokens.end())
+	{
+		switch (token->type())
+		{
+			case token_type::multiply:
+				++token;
+			
+				// TODO: implement overflow detection
+				result *= get_factor(token);
+				break;
+
+			case token_type::divide:
+				++token;
+				divide_interpret(result, static_cast<double>(get_factor(token)));
+				break;
+
+			// Not a multiply or divide, just continue
+			default:
+				return result;
+		}
+	}
+	
+	return result;
+}
+
+bool interpreter::handle_expr(double& result, std::vector<token>::iterator& it)
 {
 	if (this->tokens.end() == it)
 	{
@@ -121,29 +151,20 @@ bool interpreter::handle_operator(double& result, std::vector<token>::iterator& 
 	}
 
 	const auto operatorType = it->type();
+
 	++it;
-	
 	switch (operatorType)
 	{
 		case token_type::plus:
-			add_interpret(result, static_cast<double>(get_integer(it)));
+			add_interpret(result, static_cast<double>(handle_term(it)));
 			break;
 
 		case token_type::minus:
-			subtract_interpret(result, static_cast<double>(get_integer(it)));
-			break;
-
-		case token_type::multiply:
-			// TODO: implement overflow detection
-			result *= get_integer(it);
-			break;
-
-		case token_type::divide:
-			divide_interpret(result, static_cast<double>(get_integer(it)));
+			subtract_interpret(result, static_cast<double>(handle_term(it)));
 			break;
 
 		default:
-			throw interpret_except("Expected operator but found different token instead");
+			throw interpret_except("Expected plus/minus but found different token instead");
 	}
 
 	return true;
@@ -154,9 +175,9 @@ std::wstring interpreter::interpret()
 	this->ensure_tokenized();
 
 	auto it = this->tokens.begin();
-	double result = get_integer(it);
+	double result = handle_term(it);
 
-	while (handle_operator(result, it))
+	while (handle_expr(result, it))
 	{
 		// Continue
 	}

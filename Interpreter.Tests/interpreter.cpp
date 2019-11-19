@@ -22,7 +22,7 @@ TEST_CASE( "Interpretation succeeds", "[interpreter]" ) {
 }
 
 TEST_CASE( "Interpretation fails on bad syntax", "[interpreter]" ) {
-    REQUIRE_THROWS_MATCHES( do_interpret(L"50 50"), interpret_except, Catch::Message("Expected operator but found different token instead"));
+    REQUIRE_THROWS_MATCHES( do_interpret(L"50 50"), interpret_except, Catch::Message("Expected plus/minus but found different token instead"));
     REQUIRE_THROWS_MATCHES( do_interpret(L"50 ++ 50"), interpret_except, Catch::Message("Expected integer"));
     REQUIRE_THROWS_MATCHES( do_interpret(L"+"), interpret_except, Catch::Message("Expected integer"));
     REQUIRE_THROWS_MATCHES( do_interpret(L"-"), interpret_except, Catch::Message("Expected integer"));

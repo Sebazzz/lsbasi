@@ -32,8 +32,9 @@ private:
 	
 	void do_tokenize();
 
-	[[nodiscard]] int get_integer(std::vector<token>::iterator& token) const;
-	bool handle_operator(double& result, std::vector<token>::iterator& it);
+	[[nodiscard]] int get_factor(std::vector<token>::iterator& token) const;
+	double handle_term(std::vector<token>::iterator& token) const;
+	bool handle_expr(double& result, std::vector<token>::iterator& it);
 
 public:
 	explicit interpreter(std::wstring input)
