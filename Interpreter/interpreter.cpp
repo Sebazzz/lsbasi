@@ -14,38 +14,28 @@ void interpreter::ensure_tokenized()
 
 void interpreter::compact_negative_integers()
 {
-	std::optional<token> previousToken;
+	// Make from subsequent tokens "-" and "<number>" a negative number token
+	
 	for (size_t index=0; index<this->tokens.size();index++)
 	{
 		token current = this->tokens[index];
 
-		if (previousToken.has_value())
-		{
-			if (current.type() == token_type::integer)
-			{
-				if (previousToken->type() == token_type::minus)
-				{
-					// Previous is a minus-as-sign-specifier, so append and remove
-					auto tokenVal = current.value();
-					tokenVal.insert(0, 1, L'-');
-					this->tokens[index] = token(token_type::integer, tokenVal);
-					this->tokens.erase(this->tokens.begin() + index - 1);
-					index--;
-				}
-			} else if (current.type() == token_type::minus)
-			{
-				if (previousToken->type() != token_type::integer)
-				{
-					// Previous is an operand, which means we should remember the current token
-					previousToken.emplace(current);
-					continue;
-				}
-			}
+		// If this isn't an integer we can't negate
+		if (current.type() != token_type::integer)
+			continue;
 
-			previousToken.reset();
-		} else
+		// If there isn't a previous token, or it isn't a minus we cannot negate
+		if (index < 1 || this->tokens[index-1].type() != token_type::minus)
+			continue;
+		
+		if (index == 1 || index >= 2 && (this->tokens[index-2].type() != token_type::integer && this->tokens[index-2].type() != token_type::group_end))
 		{
-			previousToken.emplace(current);
+			// Previous is a minus-as-sign-specifier, so append and remove
+			auto tokenVal = current.value();
+			tokenVal.insert(0, 1, L'-');
+			this->tokens[index] = token(token_type::integer, tokenVal);
+			this->tokens.erase(this->tokens.begin() + index - 1);
+			index--;
 		}
 	}
 }
@@ -87,7 +77,7 @@ std::wstring interpreter::tokenize()
 	return buffer;
 }
 
-int interpreter::get_factor(std::vector<token>::iterator& token) const
+int interpreter::handle_integer(std::vector<token>::iterator& token) const
 {
 	if (token == this->tokens.end())
 	{
@@ -113,25 +103,49 @@ int interpreter::get_factor(std::vector<token>::iterator& token) const
 	}
 }
 
-double interpreter::handle_term(std::vector<token>::iterator& token) const
+double interpreter::handle_factor(std::vector<token>::iterator& it) const
+{
+	if (it->type() == token_type::group_start)
+	{
+		return handle_group(it);
+	}
+
+	return handle_integer(it);
+}
+
+double interpreter::handle_group(std::vector<token>::iterator& it) const
+{
+	++it; // Skip the current "start group" token
+
+	const double result = this->handle_expr(it);
+	if (it != this->tokens.end() && it->type() == token_type::group_end)
+	{
+		++it;
+		return result;
+	}
+
+	throw interpret_except("Expected to find end-of-group");
+}
+
+double interpreter::handle_term(std::vector<token>::iterator& it) const
 {
 	// We expect a factor with possibly a multiply or divide
-	double result = get_factor(token);
+	double result = handle_factor(it);
 
-	while (token != this->tokens.end())
+	while (it != this->tokens.end())
 	{
-		switch (token->type())
+		switch (it->type())
 		{
 			case token_type::multiply:
-				++token;
+				++it;
 			
 				// TODO: implement overflow detection
-				result *= get_factor(token);
+				result *= handle_factor(it);
 				break;
 
 			case token_type::divide:
-				++token;
-				divide_interpret(result, static_cast<double>(get_factor(token)));
+				++it;
+				divide_interpret(result, static_cast<double>(handle_factor(it)));
 				break;
 
 			// Not a multiply or divide, just continue
@@ -143,7 +157,7 @@ double interpreter::handle_term(std::vector<token>::iterator& token) const
 	return result;
 }
 
-double interpreter::handle_expr(std::vector<token>::iterator& it)
+double interpreter::handle_expr(std::vector<token>::iterator& it) const
 {
 	double result = handle_term(it);
 	
@@ -163,7 +177,8 @@ double interpreter::handle_expr(std::vector<token>::iterator& it)
 				break;
 
 			default:
-				throw interpret_except("Expected plus/minus but found different token instead");
+				// Note this may be an unexpected token
+				return result;
 		}
 	}
 
@@ -176,6 +191,12 @@ std::wstring interpreter::interpret()
 
 	auto it = this->tokens.begin();
 	const double result = handle_expr(it);
+
+	if (it != this->tokens.end())
+	{
+		// If we have still tokens left, we hit an unexpected token
+		throw interpret_except("Unexpected token found");
+	}
 
 	if (round(result) == result)
 	{

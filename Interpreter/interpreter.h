@@ -10,7 +10,8 @@
 //
 // expression: term ((PLUS|MIN)term)*
 // term:       factor ((MUL|DIV) factor)*
-// factor:     integer
+// factor:     (integer | group)
+// group:      "(" expression ")"
 
 /**
  *
@@ -32,9 +33,11 @@ private:
 	
 	void do_tokenize();
 
-	[[nodiscard]] int get_factor(std::vector<token>::iterator& token) const;
-	double handle_term(std::vector<token>::iterator& token) const;
-	double handle_expr(std::vector<token>::iterator& it);
+	int handle_integer(std::vector<token>::iterator& token) const;
+	double handle_factor(std::vector<token>::iterator& it) const;
+	double handle_group(std::vector<token>::iterator& it) const;
+	double handle_term(std::vector<token>::iterator& it) const;
+	double handle_expr(std::vector<token>::iterator& it) const;
 
 public:
 	explicit interpreter(std::wstring input)

@@ -1,5 +1,6 @@
 #pragma once
 #include <limits>
+#include <cfenv>
 
 #include "interpret_except.h"
 
@@ -15,6 +16,23 @@ void add_interpret(T& result, T operand)
 	}
 
 	result = result + operand;
+}
+
+template<>
+inline void add_interpret(double& result, double operand)
+{
+	std::feclearexcept(FE_OVERFLOW);
+    std::feclearexcept(FE_UNDERFLOW);
+
+	result = result + operand;
+
+	if (std::fetestexcept(FE_OVERFLOW)) {
+        throw interpret_except("Floating point overflow");
+	}
+
+	if (std::fetestexcept(FE_UNDERFLOW)) {
+        throw interpret_except("Floating point underflow");
+	}
 }
 
 template <typename T>
