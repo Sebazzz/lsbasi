@@ -16,6 +16,9 @@ TEST_CASE( "Interpretation succeeds", "[interpreter]" ) {
     REQUIRE( do_interpret(L"50/2") == std::wstring(L"25") );
     REQUIRE( do_interpret(L"50+-52") == std::wstring(L"-2") );
     REQUIRE( do_interpret(L"-50/2") == std::wstring(L"-25") );
+
+    REQUIRE( do_interpret(L"1+2*3") == std::wstring(L"7") );
+    REQUIRE( do_interpret(L"-5+5*3") == std::wstring(L"10") );
 }
 
 TEST_CASE( "Interpretation fails on bad syntax", "[interpreter]" ) {

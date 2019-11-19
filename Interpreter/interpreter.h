@@ -8,7 +8,8 @@
 
 // Grammar:
 //
-// expression: factor ((MUL|DIV|PLUS|MIN)factor)*
+// expression: term ((PLUS|MIN)term)*
+// term:       factor ((MUL|DIV) factor)*
 // factor:     integer
 
 /**
