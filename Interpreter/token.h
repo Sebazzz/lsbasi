@@ -22,12 +22,7 @@ public:
 	{
 	}
 
-
-	token(const token& other)
-		: _type(other._type),
-		  _value(other._value)
-	{
-	}
+	token(const token& other) = default;
 
 	token(token&& other) noexcept
 		: _type(other._type),

@@ -71,6 +71,14 @@ token lexer::read_operator()
 		this->advance();
 		return token(token_type::divide, std::wstring());
 
+	case '(':
+		this->advance();
+		return token(token_type::group_start, std::wstring());
+
+	case ')':
+		this->advance();
+		return token(token_type::group_end, std::wstring());
+
 	default:
 		throw interpret_except("Unknown token in string");
 	}

@@ -7,5 +7,7 @@ enum class token_type
 	minus,
 	multiply,
 	divide,
+	group_start,
+	group_end,
 	eof
 };

@@ -32,6 +32,12 @@ const wchar_t* token::getTokenTypeAsString() const
 	case token_type::integer:
 		return L"int";
 
+	case token_type::group_start:
+		return L"group_start";
+
+	case token_type::group_end:
+		return L"group_end";
+
 	default:
 		return L"?";
 	}
