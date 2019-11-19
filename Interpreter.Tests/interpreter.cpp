@@ -9,14 +9,33 @@ std::wstring do_interpret(std::wstring input)
     return sut.interpret();
 }
 
-TEST_CASE( "Interpretation succeeds", "[interpreter]" ) {
+TEST_CASE( "Interpretation succeeds - plus/minus", "[interpreter]" ) {
     REQUIRE( do_interpret(L"1+1") == std::wstring(L"2") );
     REQUIRE( do_interpret(L"1-1") == std::wstring(L"0") );
-    REQUIRE( do_interpret(L"10*31") == std::wstring(L"310") );
-    REQUIRE( do_interpret(L"50/2") == std::wstring(L"25") );
+    REQUIRE( do_interpret(L"5+-2") == std::wstring(L"3") );
+}
+
+TEST_CASE( "Interpretation succeeds - plus/minus - multi-digit", "[interpreter]" ) {
+    REQUIRE( do_interpret(L"10+16") == std::wstring(L"26") );
+    REQUIRE( do_interpret(L"10-15") == std::wstring(L"-5") );
+   
     REQUIRE( do_interpret(L"50+-52") == std::wstring(L"-2") );
     REQUIRE( do_interpret(L"-50/2") == std::wstring(L"-25") );
 
+    REQUIRE( do_interpret(L"10*31") == std::wstring(L"310") );
+    REQUIRE( do_interpret(L"50/2") == std::wstring(L"25") );
+    REQUIRE( do_interpret(L"1+2*3") == std::wstring(L"7") );
+    REQUIRE( do_interpret(L"-5+5*3") == std::wstring(L"10") );
+}
+
+TEST_CASE( "Interpretation succeeds - multiply/divide", "[interpreter]" ) {
+    REQUIRE( do_interpret(L"-50/2") == std::wstring(L"-25") );
+
+    REQUIRE( do_interpret(L"10*31") == std::wstring(L"310") );
+    REQUIRE( do_interpret(L"50/2") == std::wstring(L"25") );
+}
+
+TEST_CASE( "Interpretation succeeds - mixed multiple terms", "[interpreter]" ) {
     REQUIRE( do_interpret(L"1+2*3") == std::wstring(L"7") );
     REQUIRE( do_interpret(L"-5+5*3") == std::wstring(L"10") );
 }
