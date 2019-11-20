@@ -11,21 +11,18 @@ private:
 	token_type m_op;
 
 protected:
-	explicit ast_node(token_type token)
-		: m_op(token)
-	{
-	}
+	explicit ast_node(token_type token);
 
 public:
-	[[nodiscard]] token_type op() const
-	{
-		return m_op;
-	}
+	[[nodiscard]] token_type op() const;
 };
 
+/* Type for pointer to AST node */
 using ast_ptr = std::shared_ptr<ast_node>;
 
-inline ast_ptr make_ast_ptr(ast_node&& node)
+/* Helper function for making a pointer to AST node */
+template <class T, class... TArgs>
+ast_ptr make_ast_ptr(TArgs&&... args)
 {
-	return std::make_shared<ast_node>(node);
+	return std::make_shared<T>(args);
 }
