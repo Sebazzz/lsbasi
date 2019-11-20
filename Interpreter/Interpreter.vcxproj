@@ -195,6 +195,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="num.cpp" />
     <ClCompile Include="parser.cpp" />
+    <ClCompile Include="rpn_visitor.cpp" />
     <ClCompile Include="stringify_visitor.cpp" />
     <ClCompile Include="token.cpp" />
   </ItemGroup>
@@ -210,6 +211,7 @@
     <ClInclude Include="interpret_math.h" />
     <ClInclude Include="num.h" />
     <ClInclude Include="parser.h" />
+    <ClInclude Include="rpn_visitor.h" />
     <ClInclude Include="stringify_visitor.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="token_type.h" />
