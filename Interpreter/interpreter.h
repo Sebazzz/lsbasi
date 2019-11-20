@@ -25,12 +25,6 @@ private:
 	lexer lexer;
 	
 	void ensure_tokenized();
-
-	/**
-	 * Ensures "-" and following digits are considered negative integers if not prepended by an operator
-	 */
-	void compact_negative_integers();
-	
 	void do_tokenize();
 
 	int handle_integer(std::vector<token>::iterator& token) const;

@@ -12,6 +12,7 @@ std::wstring do_interpret(std::wstring input)
 TEST_CASE( "Interpretation succeeds - plus/minus", "[interpreter]" ) {
     REQUIRE( do_interpret(L"1+1") == std::wstring(L"2") );
     REQUIRE( do_interpret(L"1-1") == std::wstring(L"0") );
+    REQUIRE( do_interpret(L"1--1") == std::wstring(L"2") );
     REQUIRE( do_interpret(L"5+-2") == std::wstring(L"3") );
 }
 
@@ -55,6 +56,7 @@ TEST_CASE( "Interpretation fails on bad syntax", "[interpreter]" ) {
     REQUIRE_THROWS_MATCHES( do_interpret(L"+"), interpret_except, Catch::Message("Expected integer"));
     REQUIRE_THROWS_MATCHES( do_interpret(L"-"), interpret_except, Catch::Message("Expected integer"));
     REQUIRE_THROWS_MATCHES( do_interpret(L""), interpret_except, Catch::Message("string is empty"));
+    REQUIRE_THROWS_MATCHES( do_interpret(L"5--"), interpret_except, Catch::Message("Expected integer"));
 }
 
 TEST_CASE( "Interpretation fails on bad syntax - groups", "[interpreter]" ) {

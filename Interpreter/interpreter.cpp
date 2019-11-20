@@ -12,34 +12,6 @@ void interpreter::ensure_tokenized()
 	}
 }
 
-void interpreter::compact_negative_integers()
-{
-	// Make from subsequent tokens "-" and "<number>" a negative number token
-	
-	for (size_t index=0; index<this->tokens.size();index++)
-	{
-		token current = this->tokens[index];
-
-		// If this isn't an integer we can't negate
-		if (current.type() != token_type::integer)
-			continue;
-
-		// If there isn't a previous token, or it isn't a minus we cannot negate
-		if (index < 1 || this->tokens[index-1].type() != token_type::minus)
-			continue;
-		
-		if (index == 1 || index >= 2 && (this->tokens[index-2].type() != token_type::integer && this->tokens[index-2].type() != token_type::group_end))
-		{
-			// Previous is a minus-as-sign-specifier, so append and remove
-			auto tokenVal = current.value();
-			tokenVal.insert(0, 1, L'-');
-			this->tokens[index] = token(token_type::integer, tokenVal);
-			this->tokens.erase(this->tokens.begin() + index - 1);
-			index--;
-		}
-	}
-}
-
 void interpreter::do_tokenize()
 {
 	// Read all
@@ -54,9 +26,7 @@ void interpreter::do_tokenize()
 		this->tokens.push_back(current);
 	}
 
-	// Optimize
-	compact_negative_integers();
-	
+	// We may just have gotten whitespace
 	if (this->tokens.empty())
 	{
 		throw interpret_except("No tokens were parsed");
@@ -83,7 +53,21 @@ int interpreter::handle_integer(std::vector<token>::iterator& token) const
 	{
 		throw interpret_except("Found end while searching for integer");
 	}
-	
+
+	// We expect an integer. If it is prepended by a sign, it is negative
+	int signCorrection = 1;
+	if (token->type() == token_type::minus)
+	{
+		signCorrection = -1;
+		++token;
+	}
+
+	if (token == this->tokens.end())
+	{
+		throw interpret_except("Expected integer");
+	}
+
+	// Now we don't expect a sign anymore.
 	if (token->type() != token_type::integer)
 	{
 		throw interpret_except("Expected integer");
@@ -91,7 +75,7 @@ int interpreter::handle_integer(std::vector<token>::iterator& token) const
 	
 	try
 	{
-		const auto val = std::stoi(token->value());
+		const auto val = std::stoi(token->value()) * signCorrection;
 		++token;
 		return val;
 	} catch (std::invalid_argument& e)
