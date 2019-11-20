@@ -27,11 +27,13 @@ private:
 	void ensure_tokenized();
 	void do_tokenize();
 
-	int handle_integer(std::vector<token>::iterator& token) const;
+	int handle_integer(std::vector<token>::iterator& it) const;
 	double handle_factor(std::vector<token>::iterator& it) const;
 	double handle_group(std::vector<token>::iterator& it) const;
 	double handle_term(std::vector<token>::iterator& it) const;
 	double handle_expr(std::vector<token>::iterator& it) const;
+
+	inline bool is_at_end(std::vector<token>::iterator& it) const;
 
 public:
 	explicit interpreter(std::wstring input)

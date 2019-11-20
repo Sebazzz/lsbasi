@@ -47,36 +47,36 @@ std::wstring interpreter::tokenize()
 	return buffer;
 }
 
-int interpreter::handle_integer(std::vector<token>::iterator& token) const
+int interpreter::handle_integer(std::vector<token>::iterator& it) const
 {
-	if (token == this->tokens.end())
+	if (this->is_at_end(it))
 	{
 		throw interpret_except("Found end while searching for integer");
 	}
 
 	// We expect an integer. If it is prepended by a sign, it is negative
 	int signCorrection = 1;
-	if (token->type() == token_type::minus)
+	if (it->type() == token_type::minus)
 	{
 		signCorrection = -1;
-		++token;
+		++it;
 	}
 
-	if (token == this->tokens.end())
+	if (this->is_at_end(it))
 	{
 		throw interpret_except("Expected integer");
 	}
 
 	// Now we don't expect a sign anymore.
-	if (token->type() != token_type::integer)
+	if (it->type() != token_type::integer)
 	{
 		throw interpret_except("Expected integer");
 	}
 	
 	try
 	{
-		const auto val = std::stoi(token->value()) * signCorrection;
-		++token;
+		const auto val = std::stoi(it->value()) * signCorrection;
+		++it;
 		return val;
 	} catch (std::invalid_argument& e)
 	{
@@ -102,7 +102,7 @@ double interpreter::handle_group(std::vector<token>::iterator& it) const
 	++it; // Skip the current "start group" token
 
 	const double result = this->handle_expr(it);
-	if (it != this->tokens.end() && it->type() == token_type::group_end)
+	if (!this->is_at_end(it) && it->type() == token_type::group_end)
 	{
 		++it;
 		return result;
@@ -116,7 +116,7 @@ double interpreter::handle_term(std::vector<token>::iterator& it) const
 	// We expect a factor with possibly a multiply or divide
 	double result = handle_factor(it);
 
-	while (it != this->tokens.end())
+	while (!this->is_at_end(it))
 	{
 		switch (it->type())
 		{
@@ -145,7 +145,7 @@ double interpreter::handle_expr(std::vector<token>::iterator& it) const
 {
 	double result = handle_term(it);
 	
-	while (it != this->tokens.end())
+	while (!this->is_at_end(it))
 	{
 		const auto operatorType = it->type();
 		switch (operatorType)
@@ -169,6 +169,11 @@ double interpreter::handle_expr(std::vector<token>::iterator& it) const
 	return result;
 }
 
+bool interpreter::is_at_end(std::vector<token>::iterator& it) const
+{
+	return it == this->tokens.end();
+}
+
 std::wstring interpreter::interpret()
 {
 	this->ensure_tokenized();
@@ -176,7 +181,7 @@ std::wstring interpreter::interpret()
 	auto it = this->tokens.begin();
 	const double result = handle_expr(it);
 
-	if (it != this->tokens.end())
+	if (!this->is_at_end(it))
 	{
 		// If we have still tokens left, we hit an unexpected token
 		throw interpret_except("Unexpected token found");
