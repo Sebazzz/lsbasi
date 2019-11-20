@@ -39,6 +39,11 @@ public:
 	std::wstring tokenize();
 
 	/**
+	 * Stringifies the abstract syntax tree
+	 */
+	std::wstring stringify_ast();
+
+	/**
 	 * Interprets (executes) the string
 	 */
 	std::wstring interpret();

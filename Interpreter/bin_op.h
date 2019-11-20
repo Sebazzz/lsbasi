@@ -27,5 +27,7 @@ public:
 	[[nodiscard]] token_type op() const;
 
 	[[nodiscard]] ast_ptr right() const;
+
+	void accept(ast_node_visitor& visitor) override;
 };
 

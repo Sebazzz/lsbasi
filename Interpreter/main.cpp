@@ -26,6 +26,9 @@ int main()
 			std::wstring tokenStr = interpreter.tokenize();
 			std::wcout << tokenStr << std::endl;
 
+			std::wstring astStr = interpreter.stringify_ast();
+			std::wcout << astStr << std::endl;
+
 			std::wstring result = interpreter.interpret();
 			std::wcout << result << std::endl;
 		} catch (interpret_except& e)

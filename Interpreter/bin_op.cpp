@@ -1,4 +1,5 @@
 #include "bin_op.h"
+#include "ast_node_visitor.h"
 
 bin_op::bin_op(ast_ptr left, token_type op, ast_ptr right): ast_node(op),
                                                             m_left(std::move(left)),
@@ -50,4 +51,9 @@ token_type bin_op::op() const
 ast_ptr bin_op::right() const
 {
 	return m_right;
+}
+
+void bin_op::accept(ast_node_visitor& visitor)
+{
+	visitor.visit(*this);
 }

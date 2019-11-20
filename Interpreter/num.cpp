@@ -1,4 +1,5 @@
 #include "num.h"
+#include "ast_node_visitor.h"
 
 num::num(const num_value value): ast_node(token_type::integer), m_value(value)
 {
@@ -30,4 +31,9 @@ num& num::operator=(num&& other) noexcept
 num_value num::value() const
 {
 	return m_value;
+}
+
+void num::accept(ast_node_visitor& visitor)
+{
+	visitor.visit(*this);
 }

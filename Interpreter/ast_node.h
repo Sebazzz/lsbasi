@@ -3,6 +3,8 @@
 #include "token_type.h"
 #include "token.h"
 
+class ast_node_visitor;
+
 /**
  * Base class for the abstract syntax tree
  */
@@ -26,6 +28,8 @@ public:
 	ast_node& operator=(const ast_node& other);
 
 	ast_node& operator=(ast_node&& other) noexcept;
+
+	virtual void accept(ast_node_visitor& visitor) = 0;
 };
 
 /* Type for pointer to AST node */

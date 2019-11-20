@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include "interpret_except.h"
 #include "interpret_math.h"
+#include "stringify_visitor.h"
 
 void interpreter::ensure_parsed()
 {
@@ -19,6 +20,18 @@ void interpreter::do_parse()
 std::wstring interpreter::tokenize()
 {
 	return this->parser.stringify_parse_tree();
+}
+
+std::wstring interpreter::stringify_ast()
+{
+	stringify_visitor visitor;
+
+	this->ensure_parsed();
+
+	ast_node& node = *this->parsed_ast;
+	visitor.visit(node);
+
+	return visitor.get_string();
 }
 
 std::wstring interpreter::interpret()

@@ -24,5 +24,7 @@ public:
 	~num() = default;
 
 	[[nodiscard]] num_value value() const;
+	
+	void accept(ast_node_visitor& visitor) override;
 };
 

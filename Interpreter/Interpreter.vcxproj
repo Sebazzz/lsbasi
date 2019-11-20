@@ -186,6 +186,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ast_node.cpp" />
+    <ClCompile Include="ast_node_visitor.cpp" />
     <ClCompile Include="bin_op.cpp" />
     <ClCompile Include="interpreter.cpp" />
     <ClCompile Include="interpret_except.cpp" />
@@ -193,10 +194,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="num.cpp" />
     <ClCompile Include="parser.cpp" />
+    <ClCompile Include="stringify_visitor.cpp" />
     <ClCompile Include="token.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ast_node.h" />
+    <ClInclude Include="ast_node_visitor.h" />
     <ClInclude Include="bin_op.h" />
     <ClInclude Include="console_color.h" />
     <ClInclude Include="interpreter.h" />
@@ -205,6 +208,7 @@
     <ClInclude Include="interpret_math.h" />
     <ClInclude Include="num.h" />
     <ClInclude Include="parser.h" />
+    <ClInclude Include="stringify_visitor.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="token_type.h" />
   </ItemGroup>
