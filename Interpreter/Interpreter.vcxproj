@@ -185,18 +185,24 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ast_node.cpp" />
+    <ClCompile Include="bin_op.cpp" />
     <ClCompile Include="interpreter.cpp" />
     <ClCompile Include="interpret_except.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="num.cpp" />
     <ClCompile Include="token.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ast_node.h" />
+    <ClInclude Include="bin_op.h" />
     <ClInclude Include="console_color.h" />
     <ClInclude Include="interpreter.h" />
     <ClInclude Include="interpret_except.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="math.h" />
+    <ClInclude Include="num.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="token_type.h" />
   </ItemGroup>
