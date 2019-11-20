@@ -2,14 +2,16 @@
 #include "ast_node.h"
 #include <string>
 
+using num_value = int;
+
 class num :
 	public ast_node
 {
 private:
-	std::wstring m_value;
+	int m_value;
 
 public:
-	num(token_type token, std::wstring cs);
+	num(num_value value);
 
 	num(const num& other) = default;
 
@@ -21,6 +23,6 @@ public:
 
 	~num() = default;
 
-	[[nodiscard]] std::wstring value() const;
+	[[nodiscard]] num_value value() const;
 };
 

@@ -1,12 +1,11 @@
 #include "num.h"
 
-num::num(token_type token, std::wstring cs): ast_node(token),
-                                             m_value(std::move(cs))
+num::num(const num_value value): ast_node(token_type::integer), m_value(value)
 {
 }
 
-num::num(num&& other) noexcept: ast_node(std::move(other)),
-                                m_value(std::move(other.m_value))
+num::num(num&& other) noexcept: ast_node(other),
+                                m_value(other.m_value)
 {
 }
 
@@ -23,12 +22,12 @@ num& num::operator=(num&& other) noexcept
 {
 	if (this == &other)
 		return *this;
-	m_value = std::move(other.m_value);
-	ast_node::operator =(std::move(other));
+	m_value = other.m_value;
+	ast_node::operator =(other);
 	return *this;
 }
 
-std::wstring num::value() const
+num_value num::value() const
 {
 	return m_value;
 }

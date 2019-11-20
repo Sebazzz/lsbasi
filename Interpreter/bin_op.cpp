@@ -7,7 +7,7 @@ bin_op::bin_op(ast_ptr left, token_type op, ast_ptr right): ast_node(op),
 {
 }
 
-bin_op::bin_op(bin_op&& other) noexcept: ast_node(std::move(other)),
+bin_op::bin_op(bin_op&& other) noexcept: ast_node(other),
                                          m_left(std::move(other.m_left)),
                                          m_op(other.m_op),
                                          m_right(std::move(other.m_right))

@@ -2,16 +2,11 @@
 #include <string>
 #include <utility>
 #include <memory>
-#include "token.h"
-#include <vector>
 #include "lexer.h"
-
-// Grammar:
-//
-// expression: term ((PLUS|MIN)term)*
-// term:       factor ((MUL|DIV) factor)*
-// factor:     (integer | group)
-// group:      "(" expression ")"
+#include "ast_node.h"
+#include "bin_op.h"
+#include "num.h"
+#include "parser.h"
 
 /**
  *
@@ -21,25 +16,21 @@
 class interpreter
 {
 private:
-	std::vector<token> tokens;
-	lexer lexer;
+	parser parser;
 	
-	void ensure_tokenized();
-	void do_tokenize();
+	ast_ptr parsed_ast;
 
-	int handle_integer(std::vector<token>::iterator& it) const;
-	double handle_factor(std::vector<token>::iterator& it) const;
-	double handle_group(std::vector<token>::iterator& it) const;
-	double handle_term(std::vector<token>::iterator& it) const;
-	double handle_expr(std::vector<token>::iterator& it) const;
+	[[nodiscard]] static int handle_num(num& node);
+	[[nodiscard]] double handle_bin_op(bin_op& node) const;
+	[[nodiscard]] double handle_ast_node(ast_node& node) const;
 
-	inline bool is_at_end(std::vector<token>::iterator& it) const;
+	void ensure_parsed();
+	void do_parse();
 
 public:
 	explicit interpreter(std::wstring input)
-		: lexer(std::move(input))
+		: parser(std::move(input))
 	{
-		this->tokens.reserve(3);
 	}
 
 	/**
