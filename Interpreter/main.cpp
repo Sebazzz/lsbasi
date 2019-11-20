@@ -6,16 +6,17 @@
 #include "interpret_except.h"
 #include "console_color.h"
 #include "rpn_visitor.h"
+#include "invoke_repl_visitor.h"
+#include "lisp_notation_visitor.h"
 
 std::wstring make_rpn(std::wstring& input)
 {
-	parser parser(std::move(input));
-    const auto result = parser.parse();
+    return invoke_repl_visitor<rpn_visitor>(input);
+}
 
-    rpn_visitor visitor;
-    visitor.visit(*result);
-
-    return visitor.get_string();
+std::wstring make_lisp_notation(std::wstring& input)
+{
+    return invoke_repl_visitor<lisp_notation_visitor>(input);
 }
 
 int main()
@@ -43,6 +44,9 @@ int main()
 
 			std::wstring rpn = make_rpn(input);
 			std::wcout << L"RPN:    " << rpn << std::endl;
+
+			std::wstring lisp = make_lisp_notation(input);
+			std::wcout << L"LISP:   " << lisp << std::endl;
 
 			std::wstring result = interpreter.interpret();
 			std::wcout << L"Result: " << result << std::endl;

@@ -192,6 +192,7 @@
     <ClCompile Include="interpreter.cpp" />
     <ClCompile Include="interpret_except.cpp" />
     <ClCompile Include="lexer.cpp" />
+    <ClCompile Include="lisp_notation_visitor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="num.cpp" />
     <ClCompile Include="parser.cpp" />
@@ -207,8 +208,10 @@
     <ClInclude Include="eval_visitor.h" />
     <ClInclude Include="interpreter.h" />
     <ClInclude Include="interpret_except.h" />
+    <ClInclude Include="invoke_repl_visitor.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="interpret_math.h" />
+    <ClInclude Include="lisp_notation_visitor.h" />
     <ClInclude Include="num.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="rpn_visitor.h" />
