@@ -48,6 +48,7 @@ TEST_CASE( "Interpretation succeeds - groups", "[interpreter]" ) {
     REQUIRE( do_interpret(L"(-5+5)*3") == std::wstring(L"0") );
     REQUIRE( do_interpret(L"((-5+1)*5)*3") == std::wstring(L"-60") );
     REQUIRE( do_interpret(L"7 + 3 * (10 / (12 / (3 + 1) - 1))") == std::wstring(L"22") );
+    REQUIRE( do_interpret(L"7 + 3 * (10 / (12 / (3 + 1) - 1)) / (2 + 3) - 5 - 3 + (8)") == std::wstring(L"10") );
 }
 
 TEST_CASE( "Interpretation fails on bad syntax", "[interpreter]" ) {
