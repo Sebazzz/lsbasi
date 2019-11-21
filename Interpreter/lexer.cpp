@@ -1,5 +1,6 @@
 #include "lexer.h"
 #include "interpret_except.h"
+#include <map>
 
 bool lexer::is_at_end() const
 {
@@ -28,7 +29,7 @@ wchar_t lexer::peek() const
 		return NO_NEXT_CHAR;
 	}
 
-	return this->input[this->pos];
+	return this->input[next_pos];
 }
 
 bool lexer::skip_whitespace()
@@ -96,6 +97,37 @@ token lexer::read_operator()
 	}
 }
 
+static std::map<std::wstring, token> reserved_keywords {
+	{ L"BEGIN", token(token_type::begin, L"BEGIN" )},
+	{ L"END", token(token_type::end, L"END" )}
+};
+
+token lexer::read_identifier_or_keyword()
+{
+	std::wstring identifier;
+
+	// [A-z][A-z0-9]+
+	while (!this->is_at_end() && std::isalnum(this->currentChar))
+	{
+		identifier += this->currentChar;
+		this->advance();
+	}
+
+	const auto reserved_keyword = reserved_keywords.find(identifier);
+	if (reserved_keyword != reserved_keywords.end())
+	{
+		// Found a reserved keyword, return it
+		return reserved_keyword->second;
+	}
+
+	return token(token_type::identifier, identifier);
+}
+
+token make_simple_token(token_type type)
+{
+	return token(type, std::wstring());
+}
+
 /*
     Lexical analyzer (also known as scanner or tokenizer)
 
@@ -115,6 +147,30 @@ token lexer::get_next_token()
 		if (this->skip_whitespace())
 		{
 			continue;
+		}
+
+		if (isalpha(this->currentChar))
+		{
+			return this->read_identifier_or_keyword();
+		}
+
+		if (this->currentChar == L':' && this->peek() == L'=')
+		{
+			this->advance();
+			this->advance();
+			return make_simple_token(token_type::assign);
+		}
+
+		if (this->currentChar == L';')
+		{
+			this->advance();
+			return make_simple_token(token_type::semicolon);
+		}
+
+		if (this->currentChar == L'.')
+		{
+			this->advance();
+			return make_simple_token(token_type::dot);
 		}
 
 		if (isdigit(this->currentChar))

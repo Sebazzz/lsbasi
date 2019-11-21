@@ -17,7 +17,7 @@ class lexer
 	// State variables
 	wchar_t currentChar;
 	size_t pos;
-	
+
 	[[nodiscard]] bool is_at_end() const;
 	void advance();
 
@@ -30,6 +30,7 @@ class lexer
 	
 	token read_digit();
 	token read_operator();
+	token read_identifier_or_keyword();
 
 public:
 	explicit lexer(std::wstring input)
