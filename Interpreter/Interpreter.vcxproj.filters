@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\ast">
+      <UniqueIdentifier>{8c92c901-c9ea-4202-92a7-e8d0526d272b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ast">
+      <UniqueIdentifier>{5bf18ddc-e818-448f-8cb2-981adee822b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ast_visitor">
+      <UniqueIdentifier>{a17ab65b-d0a3-44c2-856b-1e3ee9e0ccea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ast_visitor">
+      <UniqueIdentifier>{942a82d3-3610-4e0d-9225-1b8e7d404af1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\lexing">
+      <UniqueIdentifier>{b677fb98-69d7-4a7d-ac6b-c53fe31b7ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\lexing">
+      <UniqueIdentifier>{dc3af86c-9f8d-4719-8620-1bc99249c398}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interpret_except.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interpreter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ast_node.cpp">
+      <Filter>Source Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="bin_op.cpp">
+      <Filter>Source Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="num.cpp">
+      <Filter>Source Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ast_node_visitor.cpp">
+      <Filter>Source Files\ast_visitor</Filter>
+    </ClCompile>
+    <ClCompile Include="stringify_visitor.cpp">
+      <Filter>Source Files\ast_visitor</Filter>
+    </ClCompile>
+    <ClCompile Include="eval_visitor.cpp">
+      <Filter>Source Files\ast_visitor</Filter>
+    </ClCompile>
+    <ClCompile Include="rpn_visitor.cpp">
+      <Filter>Source Files\ast_visitor</Filter>
+    </ClCompile>
+    <ClCompile Include="lisp_notation_visitor.cpp">
+      <Filter>Source Files\ast_visitor</Filter>
+    </ClCompile>
+    <ClCompile Include="unary_op.cpp">
+      <Filter>Source Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="lexer.cpp">
+      <Filter>Source Files\lexing</Filter>
+    </ClCompile>
+    <ClCompile Include="token.cpp">
+      <Filter>Source Files\lexing</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="interpret_except.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="console_color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interpreter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ast_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="bin_op.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="num.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interpret_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ast_node_visitor.h">
+      <Filter>Header Files\ast_visitor</Filter>
+    </ClInclude>
+    <ClInclude Include="stringify_visitor.h">
+      <Filter>Header Files\ast_visitor</Filter>
+    </ClInclude>
+    <ClInclude Include="eval_visitor.h">
+      <Filter>Header Files\ast_visitor</Filter>
+    </ClInclude>
+    <ClInclude Include="rpn_visitor.h">
+      <Filter>Header Files\ast_visitor</Filter>
+    </ClInclude>
+    <ClInclude Include="lisp_notation_visitor.h">
+      <Filter>Header Files\ast_visitor</Filter>
+    </ClInclude>
+    <ClInclude Include="invoke_repl_visitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="unary_op.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="lexer.h">
+      <Filter>Header Files\lexing</Filter>
+    </ClInclude>
+    <ClInclude Include="token.h">
+      <Filter>Header Files\lexing</Filter>
+    </ClInclude>
+    <ClInclude Include="token_type.h">
+      <Filter>Header Files\lexing</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
