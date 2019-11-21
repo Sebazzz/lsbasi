@@ -19,6 +19,18 @@ void lexer::advance()
 	}
 }
 
+wchar_t lexer::peek() const
+{
+	const auto next_pos = this->pos + 1;
+
+	if (next_pos >= this->input.size())
+	{
+		return NO_NEXT_CHAR;
+	}
+
+	return this->input[this->pos];
+}
+
 bool lexer::skip_whitespace()
 {
 	bool hasSkippedWhitespace = false;

@@ -38,6 +38,24 @@ const wchar_t* token::getTokenTypeAsString() const
 	case token_type::group_end:
 		return L"group_end";
 
+	case token_type::begin:
+		return L"begin";
+		
+	case token_type::end:
+		return L"end";
+		
+	case token_type::dot: 
+		return L".";
+
+	case token_type::assign:
+		return L":=";
+
+	case token_type::semicolon:
+		return L"semi";
+		
+	case token_type::identifier:
+		return L"idf";
+		
 	default:
 		return L"?";
 	}

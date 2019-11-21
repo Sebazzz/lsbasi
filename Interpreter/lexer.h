@@ -6,6 +6,11 @@
 
 class lexer
 {
+	/**
+	 * Returned by peek method to indicate that we reached the end
+	 */
+	const static wchar_t NO_NEXT_CHAR = 0;
+	
 	// Constant
 	const std::wstring input;
 
@@ -15,6 +20,12 @@ class lexer
 	
 	[[nodiscard]] bool is_at_end() const;
 	void advance();
+
+	/**
+	 * Peeks the next character or returns NO_NEXT_CHAR on failure
+	 */
+	[[nodiscard]] wchar_t peek() const; // Considered returning a std::optional instead, but a constant works just as well
+
 	bool skip_whitespace();
 	
 	token read_digit();
