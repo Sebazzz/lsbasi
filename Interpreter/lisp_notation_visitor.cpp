@@ -41,3 +41,8 @@ void lisp_notation_visitor::visit(ast_node& node)
 {
 	ast_node_visitor::visit(node);
 }
+
+void lisp_notation_visitor::visit(unary_op& unaryOperator)
+{
+	unaryOperator.expr()->accept(*this);
+}

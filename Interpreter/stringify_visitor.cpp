@@ -29,3 +29,9 @@ void stringify_visitor::visit(ast_node& node)
 {
 	ast_node_visitor::visit(node);
 }
+
+void stringify_visitor::visit(unary_op& unaryOperator)
+{
+	this->string_buf.append(token(unaryOperator.op(), std::wstring()).to_string());
+	unaryOperator.expr()->accept(*this);
+}

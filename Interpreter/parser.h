@@ -8,7 +8,7 @@
 //
 // expression: term ((PLUS|MIN)term)*
 // term:       factor ((MUL|DIV) factor)*
-// factor:     (integer | group)
+// factor:     (PLUS|MINUS)factor | integer | group
 // group:      "(" expression ")"
 
 class parser
@@ -22,6 +22,7 @@ private:
 	void do_tokenize();
 
 	ast_ptr handle_integer(std::vector<token>::iterator& it) const;
+	ast_ptr handle_unary(std::vector<token>::iterator& it) const;
 	ast_ptr handle_factor(std::vector<token>::iterator& it) const;
 	ast_ptr handle_group(std::vector<token>::iterator& it) const;
 	ast_ptr handle_term(std::vector<token>::iterator& it) const;

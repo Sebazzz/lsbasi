@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include "num.h"
 #include "bin_op.h"
+#include "unary_op.h"
 
 std::wstring parser::stringify_parse_tree()
 {
@@ -70,20 +71,6 @@ ast_ptr parser::handle_integer(std::vector<token>::iterator& it) const
 		throw interpret_except("Found end while searching for integer");
 	}
 
-	// We expect an integer. If it is prepended by a sign, it is negative
-	int signCorrection = 1;
-	if (it->type() == token_type::minus)
-	{
-		signCorrection = -1;
-		++it;
-	}
-
-	if (this->is_at_end(it))
-	{
-		throw interpret_except("Expected integer");
-	}
-
-	// Now we don't expect a sign anymore.
 	if (it->type() != token_type::integer)
 	{
 		throw interpret_except("Expected integer");
@@ -91,7 +78,7 @@ ast_ptr parser::handle_integer(std::vector<token>::iterator& it) const
 	
 	try
 	{
-		const auto val = std::stoi(it->value()) * signCorrection;
+		const auto val = std::stoi(it->value());
 		++it;
 		return make_ast_ptr<num>(val);
 	} catch (std::invalid_argument& e)
@@ -103,11 +90,33 @@ ast_ptr parser::handle_integer(std::vector<token>::iterator& it) const
 	}
 }
 
+ast_ptr parser::handle_unary(std::vector<token>::iterator& it) const
+{
+	const auto tokenType = it->type();
+	if (tokenType != token_type::plus && tokenType != token_type::minus)
+	{
+		throw interpret_except("Expected unary operation");
+	}
+
+	++it;
+	return make_ast_ptr<unary_op>(tokenType, handle_factor(it));
+}
+
 ast_ptr parser::handle_factor(std::vector<token>::iterator& it) const
 {
+	if (this->is_at_end(it))
+	{
+		throw interpret_except("Found end while searching for factor");
+	}
+	
 	if (it->type() == token_type::group_start)
 	{
 		return handle_group(it);
+	}
+
+	if (it->type() == token_type::plus || it->type() == token_type::minus)
+	{
+		return handle_unary(it);
 	}
 
 	return handle_integer(it);

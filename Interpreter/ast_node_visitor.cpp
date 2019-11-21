@@ -10,6 +10,11 @@ void ast_node_visitor::visit(bin_op&)
 	// For derived classes to implement
 }
 
+void ast_node_visitor::visit(unary_op&)
+{
+	// For derived classes to implement
+}
+
 void ast_node_visitor::visit(num&)
 {
 	// For derived classes to implement

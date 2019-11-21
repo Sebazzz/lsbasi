@@ -1,5 +1,6 @@
 #include "rpn_visitor.h"
 #include <stdexcept>
+#include "interpret_except.h"
 
 std::wstring& rpn_visitor::get_string()
 {
@@ -38,4 +39,41 @@ void rpn_visitor::visit(num& number)
 void rpn_visitor::visit(ast_node& node)
 {
 	ast_node_visitor::visit(node);
+}
+
+void rpn_visitor::visit(unary_op& unaryOperator)
+{
+	const auto expr = unaryOperator.expr();
+
+	if (unaryOperator.op() == token_type::plus)
+	{
+		// No effect
+		expr->accept(*this);
+		return;
+	}
+
+	if (unaryOperator.op() == token_type::minus)
+	{
+		// In the case of a number, we can just consider the number negative
+		{
+			num* n = dynamic_cast<num*>(expr.get());
+
+			if (n != nullptr)
+			{
+				this->string_buf += op_to_string(unaryOperator.op());
+				this->visit(*expr);
+				return;
+			}
+		}
+		
+		// This is actually a multiplication, so...
+		expr->accept(*this);
+		
+		this->string_buf += L" ";
+		this->string_buf += L"-1";
+		this->string_buf += L" ";
+		this->string_buf += op_to_string(unaryOperator.op());
+	}
+
+	throw interpret_except("Unsupported unary operator");
 }

@@ -54,6 +54,26 @@ void eval_visitor::visit(ast_node& node)
 	this->m_stack.pop();
 }
 
+void eval_visitor::visit(unary_op& unaryOperator)
+{
+	const auto expr = unaryOperator.expr();
+	auto result = this->accept(*expr);
+
+	switch (unaryOperator.op())
+	{
+	case token_type::plus:
+		// No-op
+		break;
+	case token_type::minus:
+		result *= -1;
+		break;
+	default:
+		throw interpret_except("Unsupported unary operation");
+	}
+
+	this->register_visit_result(result);
+}
+
 double eval_visitor::result() const
 {
 	return this->m_result;

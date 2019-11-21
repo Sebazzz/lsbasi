@@ -199,6 +199,7 @@
     <ClCompile Include="rpn_visitor.cpp" />
     <ClCompile Include="stringify_visitor.cpp" />
     <ClCompile Include="token.cpp" />
+    <ClCompile Include="unary_op.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ast_node.h" />
@@ -218,6 +219,7 @@
     <ClInclude Include="stringify_visitor.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="token_type.h" />
+    <ClInclude Include="unary_op.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
