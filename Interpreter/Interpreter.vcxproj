@@ -85,6 +85,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets>PreLinkEvent</CustomBuildBeforeTargets>
+    <OutDir>$(SolutionDir)$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -110,6 +112,7 @@
       <Command>"$(VC_ExecutablePath_x86_x86)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
       <Inputs>*.cpp;%(Inputs)</Inputs>
       <Outputs>$(OutDir)\*.lib</Outputs>
+      <Message>Creating static library for unit tests</Message>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -132,6 +135,7 @@
       <Command>"$(VC_ExecutablePath_x64_x64)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
       <Inputs>*.cpp;%(Inputs)</Inputs>
       <Outputs>$(OutDir)\*.lib</Outputs>
+      <Message>Creating static library for unit tests</Message>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -159,6 +163,7 @@
       <Command>"$(VC_ExecutablePath_x86)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
       <Inputs>*.cpp;%(Inputs)</Inputs>
       <Outputs>$(OutDir)\*.lib</Outputs>
+      <Message>Creating static library for unit tests</Message>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -186,6 +191,7 @@
       <Command>"$(VC_ExecutablePath_x86)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
       <Inputs>*.cpp;%(Inputs)</Inputs>
       <Outputs>$(OutDir)\*.lib</Outputs>
+      <Message>Creating static library for unit tests</Message>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
