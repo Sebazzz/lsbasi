@@ -7,8 +7,24 @@ std::wstring do_lex(lexer& lex)
     return token.to_string();
 }
 
-TEST_CASE( "Lexer tokenize test - single  line", "[lexer]" ) {
+TEST_CASE( "Lexer tokenize test - single line", "[lexer]" ) {
     lexer lex(L"BEGIN a := 2; END.");
+
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(begin,BEGIN)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(idf,a)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(:=)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(int,2)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(semi)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(end,END)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(.)") );
+}
+
+
+TEST_CASE( "Lexer tokenize test - multiline", "[lexer]" ) {
+    lexer lex(L"\
+BEGIN\
+   a := 2;\
+END.");
 
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(begin,BEGIN)") );
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(idf,a)") );
