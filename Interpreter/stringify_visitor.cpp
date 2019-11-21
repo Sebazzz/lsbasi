@@ -1,4 +1,5 @@
 #include "stringify_visitor.h"
+#include "token.h"
 
 std::wstring& stringify_visitor::get_string()
 {

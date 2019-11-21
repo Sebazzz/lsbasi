@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
 #include "token_type.h"
-#include "token.h"
 
 class ast_node_visitor;
 
