@@ -19,7 +19,7 @@ wchar_t lisp_notation_visitor::op_to_string(token_type token)
 	}
 }
 
-void lisp_notation_visitor::visit(bin_op& binaryOperator)
+void lisp_notation_visitor::visit(ast::bin_op& binaryOperator)
 {
 	this->string_buf += L'(';
 	this->string_buf += op_to_string(binaryOperator.op());
@@ -32,17 +32,17 @@ void lisp_notation_visitor::visit(bin_op& binaryOperator)
 	this->string_buf += L')';
 }
 
-void lisp_notation_visitor::visit(num& number)
+void lisp_notation_visitor::visit(ast::num& number)
 {
 	this->string_buf.append(std::to_wstring(number.value()));
 }
 
-void lisp_notation_visitor::visit(ast_node& node)
+void lisp_notation_visitor::visit(ast::ast_node& node)
 {
 	ast_node_visitor::visit(node);
 }
 
-void lisp_notation_visitor::visit(unary_op& unaryOperator)
+void lisp_notation_visitor::visit(ast::unary_op& unaryOperator)
 {
 	unaryOperator.expr()->accept(*this);
 }

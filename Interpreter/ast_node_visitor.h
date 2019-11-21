@@ -10,9 +10,9 @@ class ast_node_visitor
 public:
 	virtual ~ast_node_visitor() = default;
 	
-	virtual void visit(ast_node& ast_node);
-	virtual void visit(bin_op& binaryOperator);
-	virtual void visit(unary_op& unaryOperator);
-	virtual void visit(num& number);
+	virtual void visit(ast::ast_node& ast_node);
+	virtual void visit(ast::bin_op& binaryOperator);
+	virtual void visit(ast::unary_op& unaryOperator);
+	virtual void visit(ast::num& number);
 };
 

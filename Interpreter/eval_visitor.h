@@ -32,10 +32,10 @@ public:
 	eval_visitor& operator=(const eval_visitor& other) = delete;
 	eval_visitor& operator=(eval_visitor&& other) noexcept = delete;
 	
-	void visit(bin_op& binaryOperator) override;
-	void visit(num& number) override;
-	void visit(ast_node& node) override;
-	void visit(unary_op& unaryOperator) override;
+	void visit(ast::bin_op& binaryOperator) override;
+	void visit(ast::num& number) override;
+	void visit(ast::ast_node& node) override;
+	void visit(ast::unary_op& unaryOperator) override;
 	
 	[[nodiscard]] double result() const;
 };

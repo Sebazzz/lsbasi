@@ -2,9 +2,15 @@
 #include "ast_node.h"
 #include <string>
 
-using num_value = int;
+namespace ast
+{
+	using num_value = int;
 
-class num :
+	class num;	
+}
+
+
+class ast::num :
 	public ast_node
 {
 private:

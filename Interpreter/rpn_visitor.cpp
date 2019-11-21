@@ -20,7 +20,7 @@ wchar_t rpn_visitor::op_to_string(token_type token)
 	}
 }
 
-void rpn_visitor::visit(bin_op& binaryOperator)
+void rpn_visitor::visit(ast::bin_op& binaryOperator)
 {
 	binaryOperator.left()->accept(*this);
 	this->string_buf += L" ";
@@ -31,17 +31,17 @@ void rpn_visitor::visit(bin_op& binaryOperator)
 	this->string_buf += op_to_string(binaryOperator.op());
 }
 
-void rpn_visitor::visit(num& number)
+void rpn_visitor::visit(ast::num& number)
 {
 	this->string_buf.append(std::to_wstring(number.value()));
 }
 
-void rpn_visitor::visit(ast_node& node)
+void rpn_visitor::visit(ast::ast_node& node)
 {
 	ast_node_visitor::visit(node);
 }
 
-void rpn_visitor::visit(unary_op& unaryOperator)
+void rpn_visitor::visit(ast::unary_op& unaryOperator)
 {
 	const auto expr = unaryOperator.expr();
 
@@ -56,7 +56,7 @@ void rpn_visitor::visit(unary_op& unaryOperator)
 	{
 		// In the case of a number, we can just consider the number negative
 		{
-			num* n = dynamic_cast<num*>(expr.get());
+			const auto n = dynamic_cast<ast::num*>(expr.get());
 
 			if (n != nullptr)
 			{

@@ -5,6 +5,8 @@
 #include "bin_op.h"
 #include "unary_op.h"
 
+using namespace ast;
+
 std::wstring parser::stringify_parse_tree()
 {
 	this->ensure_tokenized();

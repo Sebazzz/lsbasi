@@ -3,7 +3,12 @@
 #include "ast_node.h"
 #include "token_type.h"
 
-class unary_op final : public ast_node
+namespace ast
+{
+	class unary_op;
+}
+
+class ast::unary_op final : public ast_node
 {
 private:
 	token_type m_op;

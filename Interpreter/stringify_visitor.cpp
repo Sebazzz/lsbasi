@@ -6,7 +6,7 @@ std::wstring& stringify_visitor::get_string()
 	return this->string_buf;
 }
 
-void stringify_visitor::visit(bin_op& binaryOperator)
+void stringify_visitor::visit(ast::bin_op& binaryOperator)
 {
 	this->string_buf += L"[";
 
@@ -21,17 +21,17 @@ void stringify_visitor::visit(bin_op& binaryOperator)
 	this->string_buf += L"]";
 }
 
-void stringify_visitor::visit(num& number)
+void stringify_visitor::visit(ast::num& number)
 {
 	this->string_buf.append(std::to_wstring(number.value()));
 }
 
-void stringify_visitor::visit(ast_node& node)
+void stringify_visitor::visit(ast::ast_node& node)
 {
 	ast_node_visitor::visit(node);
 }
 
-void stringify_visitor::visit(unary_op& unaryOperator)
+void stringify_visitor::visit(ast::unary_op& unaryOperator)
 {
 	this->string_buf.append(token(unaryOperator.op(), std::wstring()).to_string());
 	unaryOperator.expr()->accept(*this);

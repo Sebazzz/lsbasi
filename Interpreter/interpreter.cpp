@@ -27,7 +27,7 @@ std::wstring interpreter::stringify_ast()
 
 	this->ensure_parsed();
 
-	ast_node& node = *this->parsed_ast;
+	ast::ast_node& node = *this->parsed_ast;
 	visitor.visit(node);
 
 	return visitor.get_string();

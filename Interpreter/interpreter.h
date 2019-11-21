@@ -3,9 +3,6 @@
 #include <utility>
 #include <memory>
 #include "lexer.h"
-#include "ast_node.h"
-#include "bin_op.h"
-#include "num.h"
 #include "parser.h"
 
 /**

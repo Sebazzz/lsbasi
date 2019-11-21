@@ -1,6 +1,8 @@
 #include "unary_op.h"
 #include "ast_node_visitor.h"
 
+using namespace ast;
+
 unary_op::unary_op(token_type op, ast_ptr expr): ast_node(op),
                                                             m_op(op),
                                                             m_expr(std::move(expr))

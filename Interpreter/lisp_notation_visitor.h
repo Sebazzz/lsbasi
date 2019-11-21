@@ -19,10 +19,10 @@ public:
 	lisp_notation_visitor& operator=(const lisp_notation_visitor& other) = delete;
 	lisp_notation_visitor& operator=(lisp_notation_visitor&& other) noexcept = delete;
 	
-	void visit(bin_op& binaryOperator) override;
-	void visit(num& number) override;
-	void visit(ast_node& node) override;
-	void visit(unary_op& unaryOperator) override;
+	void visit(ast::bin_op& binaryOperator) override;
+	void visit(ast::num& number) override;
+	void visit(ast::ast_node& node) override;
+	void visit(ast::unary_op& unaryOperator) override;
 	
 	std::wstring& get_string();
 };

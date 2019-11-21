@@ -1,6 +1,8 @@
 #include "bin_op.h"
 #include "ast_node_visitor.h"
 
+using namespace ast;
+
 bin_op::bin_op(ast_ptr left, token_type op, ast_ptr right): ast_node(op),
                                                             m_left(std::move(left)),
                                                             m_op(op),

@@ -2,7 +2,12 @@
 #include "ast_node.h"
 #include "token_type.h"
 
-class bin_op final : public ast_node
+namespace ast
+{
+	class bin_op;
+}
+
+class ast::bin_op final : public ast_node
 {
 private:
 	ast_ptr m_left;

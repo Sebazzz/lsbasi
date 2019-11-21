@@ -1,6 +1,8 @@
 #include "num.h"
 #include "ast_node_visitor.h"
 
+using namespace ast;
+
 num::num(const num_value value): ast_node(token_type::integer), m_value(value)
 {
 }

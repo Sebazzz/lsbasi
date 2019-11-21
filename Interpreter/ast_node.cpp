@@ -1,5 +1,7 @@
 #include "ast_node.h"
 
+using namespace ast;
+
 ast_node::ast_node(token_type token): m_token(token)
 {
 }

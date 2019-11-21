@@ -31,15 +31,15 @@
     <Filter Include="Source Files\lexing">
       <UniqueIdentifier>{dc3af86c-9f8d-4719-8620-1bc99249c398}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\interpreter">
+      <UniqueIdentifier>{fe141248-7528-4699-af0c-922a5bb29cc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\interpreter">
+      <UniqueIdentifier>{19da65f4-d1ba-4075-8661-872bdc83fbcc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="interpret_except.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="interpreter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ast_node.cpp">
@@ -78,15 +78,15 @@
     <ClCompile Include="token.cpp">
       <Filter>Source Files\lexing</Filter>
     </ClCompile>
+    <ClCompile Include="interpreter.cpp">
+      <Filter>Source Files\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="interpret_except.cpp">
+      <Filter>Source Files\interpreter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="interpret_except.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="console_color.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="interpreter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ast_node.h">
@@ -99,9 +99,6 @@
       <Filter>Header Files\ast</Filter>
     </ClInclude>
     <ClInclude Include="parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="interpret_math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ast_node_visitor.h">
@@ -133,6 +130,15 @@
     </ClInclude>
     <ClInclude Include="token_type.h">
       <Filter>Header Files\lexing</Filter>
+    </ClInclude>
+    <ClInclude Include="interpreter.h">
+      <Filter>Header Files\interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="interpret_except.h">
+      <Filter>Header Files\interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="interpret_math.h">
+      <Filter>Header Files\interpreter</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@ eval_visitor::eval_visitor() : m_result(0)
 {
 }
 
-void eval_visitor::visit(bin_op& binaryOperator)
+void eval_visitor::visit(ast::bin_op& binaryOperator)
 {
 	double result = this->accept(*binaryOperator.left());
 	const double rightVal = this->accept(*binaryOperator.right());
@@ -41,12 +41,12 @@ void eval_visitor::visit(bin_op& binaryOperator)
 	this->register_visit_result(result);
 }
 
-void eval_visitor::visit(num& number)
+void eval_visitor::visit(ast::num& number)
 {
 	this->register_visit_result(number.value());
 }
 
-void eval_visitor::visit(ast_node& node)
+void eval_visitor::visit(ast::ast_node& node)
 {
 	ast_node_visitor::visit(node);
 
@@ -54,7 +54,7 @@ void eval_visitor::visit(ast_node& node)
 	this->m_stack.pop();
 }
 
-void eval_visitor::visit(unary_op& unaryOperator)
+void eval_visitor::visit(ast::unary_op& unaryOperator)
 {
 	const auto expr = unaryOperator.expr();
 	auto result = this->accept(*expr);

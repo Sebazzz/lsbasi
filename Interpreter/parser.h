@@ -11,6 +11,8 @@
 // factor:     (PLUS|MINUS)factor | integer | group
 // group:      "(" expression ")"
 
+using ast_ptr = ast::ast_ptr;
+
 class parser
 {
 private:
