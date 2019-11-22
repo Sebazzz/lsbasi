@@ -21,6 +21,13 @@ namespace ast
 	{
 		return std::make_shared<T>(std::forward<TArgs>(args)...);
 	}
+
+	/* Helper function for making a pointer to AST node */
+	template <class T, class... TArgs>
+	ast_node_ptr<T> make_ast_node_ptr(TArgs&&... args)
+	{
+		return std::make_shared<T>(std::forward<TArgs>(args)...);
+	}
 }
 
 /**

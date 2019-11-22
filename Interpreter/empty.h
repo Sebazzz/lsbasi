@@ -7,7 +7,7 @@ namespace ast
 }
 
 
-class ast::empty :
+class ast::empty final :
 	public ast_node
 {
 public:
@@ -16,5 +16,7 @@ public:
 	explicit empty(const ast_node& other);
 
 	explicit empty(ast_node&& other);
+
+	void accept(ast_node_visitor& visitor) override;
 };
 

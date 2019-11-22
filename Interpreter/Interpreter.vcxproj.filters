@@ -93,11 +93,11 @@
     <ClCompile Include="var.cpp">
       <Filter>Source Files\ast</Filter>
     </ClCompile>
-    <ClCompile Include="empty.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="exec_visitor.cpp">
       <Filter>Source Files\ast_visitor</Filter>
+    </ClCompile>
+    <ClCompile Include="empty.cpp">
+      <Filter>Source Files\ast</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

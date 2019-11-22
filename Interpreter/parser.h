@@ -47,7 +47,7 @@ private:
 	ast_ptr handle_expr(std::vector<token>::iterator& it) const;
 	ast_ptr handle_program(std::vector<token>::iterator& it) const;
 	ast_ptr handle_compound(std::vector<token>::iterator& it) const;
-	ast_ptr handle_statement_list(std::vector<token>::iterator& it, ast::statement_list& statement_list) const;
+	void handle_statement_list(std::vector<token>::iterator& it, ast::statement_list& statement_list) const;
 	ast_ptr handle_statement(std::vector<token>::iterator& it) const;
 	ast_ptr handle_assign(std::vector<token>::iterator& it) const;
 

@@ -3,7 +3,7 @@
 
 using namespace ast;
 
-var::var(const var_identifier identifier): ast_node(token_type::identifier), m_identifier(identifier)
+var::var(var_identifier identifier): ast_node(token_type::identifier), m_identifier(identifier)
 {
 }
 
@@ -30,7 +30,7 @@ var& var::operator=(var&& other) noexcept
 	return *this;
 }
 
-var_identifier var::identifier() const
+const var_identifier& var::identifier() const
 {
 	return m_identifier;
 }

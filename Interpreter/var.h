@@ -28,7 +28,7 @@ public:
 
 	~var() = default;
 
-	[[nodiscard]] var_identifier identifier() const;
+	[[nodiscard]] const var_identifier& identifier() const;
 	
 	void accept(ast_node_visitor& visitor) override;
 };

@@ -73,6 +73,6 @@ std::wstring interpreter::interpret()
 	{
 		return interpret_repl();
 	}
-
-	throw interpret_except("Not implemented");
+	
+	return interpret_program();
 }

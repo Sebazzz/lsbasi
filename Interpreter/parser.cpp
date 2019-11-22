@@ -4,6 +4,9 @@
 #include "num.h"
 #include "bin_op.h"
 #include "unary_op.h"
+#include "empty.h"
+#include "var.h"
+#include "assign.h"
 
 using namespace ast;
 
@@ -132,6 +135,13 @@ ast_ptr parser::handle_factor(std::vector<token>::iterator& it) const
 		return handle_group(it);
 	}
 
+	if (it->type() == token_type::identifier)
+	{
+		const auto identifier = make_ast_node_ptr<var>(it->value());
+		++it;
+		return identifier;
+	}
+
 	if (it->type() == token_type::plus || it->type() == token_type::minus)
 	{
 		return handle_unary(it);
@@ -203,29 +213,136 @@ ast_ptr parser::handle_expr(std::vector<token>::iterator& it) const
 	return result;
 }
 
-ast_ptr parser::handle_program(std::vector<token>::iterator&) const
+ast_ptr parser::handle_program(std::vector<token>::iterator& it) const
 {
-	throw std::logic_error("Not implemented");
+	const auto ast = handle_compound(it);
+
+	if (this->is_at_end(it))
+	{
+		throw interpret_except("Unexpected end of program");
+	}
+	
+	if (this->is_at_end(it) || it->type() != token_type::dot)
+	{
+		throw interpret_except("Unexpected end of program - dot expected");
+	}
+
+	++it;
+	
+	if (!this->is_at_end(it))
+	{
+		throw interpret_except("Expected end of program");
+	}
+
+	return ast;
 }
 
-ast_ptr parser::handle_compound(std::vector<token>::iterator&) const
+ast_ptr parser::handle_compound(std::vector<token>::iterator& it) const
 {
-	throw std::logic_error("Not implemented");
+	if (this->is_at_end(it) || it->type() != token_type::begin)
+	{
+		throw interpret_except("Expected BEGIN");
+	}
+
+	++it;
+
+	statement_list statement_list;
+	handle_statement_list(it, statement_list);
+
+	if (this->is_at_end(it) || it->type() != token_type::end)
+	{
+		throw interpret_except("Expected END");
+	}
+	
+	++it;
+
+	return make_ast_node_ptr<compound>(statement_list);
 }
 
-ast_ptr parser::handle_statement_list(std::vector<token>::iterator&, ast::statement_list&) const
+void parser::handle_statement_list(std::vector<token>::iterator& it, statement_list& statement_list) const
 {
-	throw std::logic_error("Not implemented");
+	if (this->is_at_end(it))
+	{
+		throw interpret_except("Expected statement");
+	}
+
+	while (true)
+	{
+		statement_list.push_back(this->handle_statement(it));
+
+		if (this->is_at_end(it))
+		{
+			// We will fail further up the call stack, but ignore this in this function
+			return;
+		}
+
+		if (it->type() != token_type::semicolon)
+		{
+			// No next statement
+			return;
+		}
+
+		// Prepare for next statement
+		++it;
+	}
+	
 }
 
-ast_ptr parser::handle_statement(std::vector<token>::iterator&) const
+ast_ptr parser::handle_statement(std::vector<token>::iterator& it) const
 {
-	throw std::logic_error("Not implemented");
+	if (this->is_at_end(it))
+	{
+		throw interpret_except("Found end while searching for statement");
+	}
+
+	if (it->type() == token_type::begin)
+	{
+		// Compound
+		return this->handle_compound(it);
+	}
+
+	if (it->type() == token_type::end)
+	{
+		// Empty
+		return make_ast_ptr<empty>();
+	}
+
+	if (it -> type() == token_type::identifier)
+	{
+		// Assignment
+		return this->handle_assign(it);
+	}
+
+	throw interpret_except("Unexpected token in statement");
 }
 
-ast_ptr parser::handle_assign(std::vector<token>::iterator&) const
+ast_ptr parser::handle_assign(std::vector<token>::iterator& it) const
 {
-	throw std::logic_error("Not implemented");
+	if (this->is_at_end(it))
+	{
+		throw interpret_except("Found end while handling assignment");
+	}
+
+	const auto identifier = make_ast_node_ptr<var>(it->value());
+	++it;
+
+	if (this->is_at_end(it) || it->type() != token_type::assign)
+	{
+		throw interpret_except("Expected assignment");
+	}
+
+	++it;
+
+	if (this->is_at_end(it))
+	{
+		// We could just do this check further down the stack, however,
+		// if we handle it here, the error message is more clear
+		throw interpret_except("Expected expression in assignment");
+	}
+
+	const auto expression = this->handle_expr(it);
+
+	return make_ast_ptr<assign>(identifier, expression);
 }
 
 bool parser::is_at_end(std::vector<token>::iterator& it) const
