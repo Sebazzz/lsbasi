@@ -28,3 +28,33 @@ BEGIN                                   \
 END.                                    \
 ") == std::wstring(L"done") );
 }
+
+TEST_CASE( "Interpretation succeeds - program (case insensitive)", "[interpreter_program]" ) {
+	REQUIRE( do_interpret_program(L"\
+begIN                                   \
+    BegiN                               \
+        NUMBer := 2;                    \
+        a := numBER;                    \
+        b := 10 * A + 10 * number / 4;  \
+        c := A - - B                    \
+    end;                                \
+    X := 11;                            \
+ENd.                                    \
+") == std::wstring(L"done") );
+}
+
+TEST_CASE( "Interpretation succeeds - program (vars with underscore)", "[interpreter_program]" ) {
+    REQUIRE( do_interpret_program(L"\
+BEGIN       \
+   _a := 2;  \
+END.        \
+") == std::wstring(L"done") );
+}
+
+TEST_CASE( "Interpretation succeeds - program (division using 'div' keyword)", "[interpreter_program]" ) {
+    REQUIRE( do_interpret_program(L"\
+BEGIN       \
+   _a := 2 div 3;  \
+END.        \
+") == std::wstring(L"done") );
+}
