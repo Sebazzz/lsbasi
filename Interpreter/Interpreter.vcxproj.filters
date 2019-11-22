@@ -84,6 +84,18 @@
     <ClCompile Include="interpret_except.cpp">
       <Filter>Source Files\interpreter</Filter>
     </ClCompile>
+    <ClCompile Include="compound.cpp">
+      <Filter>Source Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="assign.cpp">
+      <Filter>Source Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="var.cpp">
+      <Filter>Source Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="empty.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -139,6 +151,18 @@
     </ClInclude>
     <ClInclude Include="interpret_math.h">
       <Filter>Header Files\interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="compound.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="assign.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="var.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="empty.h">
+      <Filter>Header Files\ast</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

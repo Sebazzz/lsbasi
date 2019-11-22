@@ -1,6 +1,5 @@
 #pragma once
 #include "ast_node.h"
-#include <string>
 
 namespace ast
 {
@@ -14,7 +13,7 @@ class ast::num :
 	public ast_node
 {
 private:
-	int m_value;
+	num_value m_value;
 
 public:
 	num(num_value value);

@@ -207,9 +207,12 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="assign.cpp" />
     <ClCompile Include="ast_node.cpp" />
     <ClCompile Include="ast_node_visitor.cpp" />
     <ClCompile Include="bin_op.cpp" />
+    <ClCompile Include="compound.cpp" />
+    <ClCompile Include="empty.cpp" />
     <ClCompile Include="eval_visitor.cpp" />
     <ClCompile Include="interpreter.cpp" />
     <ClCompile Include="interpret_except.cpp" />
@@ -222,12 +225,16 @@
     <ClCompile Include="stringify_visitor.cpp" />
     <ClCompile Include="token.cpp" />
     <ClCompile Include="unary_op.cpp" />
+    <ClCompile Include="var.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="assign.h" />
     <ClInclude Include="ast_node.h" />
     <ClInclude Include="ast_node_visitor.h" />
     <ClInclude Include="bin_op.h" />
+    <ClInclude Include="compound.h" />
     <ClInclude Include="console_color.h" />
+    <ClInclude Include="empty.h" />
     <ClInclude Include="eval_visitor.h" />
     <ClInclude Include="interpreter.h" />
     <ClInclude Include="interpret_except.h" />
@@ -242,6 +249,7 @@
     <ClInclude Include="token.h" />
     <ClInclude Include="token_type.h" />
     <ClInclude Include="unary_op.h" />
+    <ClInclude Include="var.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -23,3 +23,26 @@ void ast_node_visitor::visit(ast::num&)
 {
 	// For derived classes to implement
 }
+
+void ast_node_visitor::visit(ast::compound& compound)
+{
+	for (auto& statement : compound.statements())
+	{
+		statement->accept(*this);
+	}
+}
+
+void ast_node_visitor::visit(ast::assign&)
+{
+	// For derived classes to implement
+}
+
+void ast_node_visitor::visit(ast::var&)
+{
+	// For derived classes to implement
+}
+
+void ast_node_visitor::visit(ast::empty&)
+{
+	// For derived classes to implement
+}
