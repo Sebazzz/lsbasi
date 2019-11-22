@@ -1,10 +1,33 @@
 #pragma once
 #include "ast_node_visitor.h"
-class exec_visitor :
-	public ast_node_visitor
+#include "var.h"
+#include <map>
+#include <stack>
+#include "eval_visitor.h"
+
+struct stack_context
+{
+	std::map<ast::var_identifier, double> variables;
+};
+
+class stack
 {
 private:
+	std::stack<stack_context> m_stack;
 
+public:
+	stack_context& current_context();
+	stack_context& push();
+	void pop();
+};
+
+class exec_visitor :
+	public eval_visitor
+{
+private:
+	stack m_stack;
+	std::wstring m_last_value;
+	
 public:
 	~exec_visitor() override = default;
 	exec_visitor();
@@ -14,5 +37,10 @@ public:
 	exec_visitor& operator=(exec_visitor&& other) noexcept = delete;
 
 	void visit(ast::ast_node& node) override;
+	void visit(ast::compound& compound) override;
+	void visit(ast::assign& assign) override;
+	void visit(ast::var& var) override;
+	
+	[[nodiscard]] std::wstring last_value() const;
 };
 

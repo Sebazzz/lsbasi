@@ -3,7 +3,7 @@
 #include <stack>
 #include "interpret_except.h"
 
-class eval_visitor final : public ast_node_visitor
+class eval_visitor : public ast_node_visitor
 {
 private:
 	double m_result;
@@ -13,6 +13,7 @@ private:
 	 */
 	std::stack<double> m_stack;
 
+protected:
 	/**
 	 * Helper function to visit the specified node and get the result back
 	 */
