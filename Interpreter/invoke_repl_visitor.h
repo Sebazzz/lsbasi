@@ -6,7 +6,7 @@ template <class T>
 std::wstring invoke_repl_visitor(std::wstring& input)
 {
 	parser parser(std::move(input));
-    const auto result = parser.parse();
+    const auto result = parser.parse_repl();
 
     T visitor;
     visitor.visit(*result);

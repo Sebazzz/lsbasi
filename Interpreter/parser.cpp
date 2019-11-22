@@ -21,7 +21,7 @@ std::wstring parser::stringify_parse_tree()
 	return buffer;
 }
 
-ast_ptr parser::parse()
+ast_ptr parser::parse_repl()
 {
 	this->ensure_tokenized();
 
@@ -32,6 +32,22 @@ ast_ptr parser::parse()
 	{
 		// If we have still tokens left, we hit an unexpected token
 		throw interpret_except("Unexpected token found");
+	}
+
+	return result;
+}
+
+ast_ptr parser::parse()
+{
+	this->ensure_tokenized();
+
+	auto it = this->tokens.begin();
+	const ast_ptr result = handle_program(it);
+
+	if (!this->is_at_end(it))
+	{
+		// If we have still tokens left, we hit an unexpected token
+		throw interpret_except("Unexpected token found at end of program");
 	}
 
 	return result;
@@ -185,6 +201,31 @@ ast_ptr parser::handle_expr(std::vector<token>::iterator& it) const
 	}
 
 	return result;
+}
+
+ast_ptr parser::handle_program(std::vector<token>::iterator&) const
+{
+	throw std::logic_error("Not implemented");
+}
+
+ast_ptr parser::handle_compound(std::vector<token>::iterator&) const
+{
+	throw std::logic_error("Not implemented");
+}
+
+ast_ptr parser::handle_statement_list(std::vector<token>::iterator&, ast::statement_list&) const
+{
+	throw std::logic_error("Not implemented");
+}
+
+ast_ptr parser::handle_statement(std::vector<token>::iterator&) const
+{
+	throw std::logic_error("Not implemented");
+}
+
+ast_ptr parser::handle_assign(std::vector<token>::iterator&) const
+{
+	throw std::logic_error("Not implemented");
 }
 
 bool parser::is_at_end(std::vector<token>::iterator& it) const

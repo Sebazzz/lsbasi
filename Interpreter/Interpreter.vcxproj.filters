@@ -96,6 +96,9 @@
     <ClCompile Include="empty.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="exec_visitor.cpp">
+      <Filter>Source Files\ast_visitor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -163,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="empty.h">
       <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="exec_visitor.h">
+      <Filter>Header Files\ast_visitor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

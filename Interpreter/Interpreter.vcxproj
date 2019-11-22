@@ -214,6 +214,7 @@
     <ClCompile Include="compound.cpp" />
     <ClCompile Include="empty.cpp" />
     <ClCompile Include="eval_visitor.cpp" />
+    <ClCompile Include="exec_visitor.cpp" />
     <ClCompile Include="interpreter.cpp" />
     <ClCompile Include="interpret_except.cpp" />
     <ClCompile Include="lexer.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="console_color.h" />
     <ClInclude Include="empty.h" />
     <ClInclude Include="eval_visitor.h" />
+    <ClInclude Include="exec_visitor.h" />
     <ClInclude Include="interpreter.h" />
     <ClInclude Include="interpret_except.h" />
     <ClInclude Include="invoke_repl_visitor.h" />

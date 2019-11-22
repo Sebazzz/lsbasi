@@ -2,13 +2,29 @@
 #include "lexer.h"
 #include "ast_node.h"
 #include <vector>
+#include "compound.h"
 
 
 // Grammar:
 //
-// expression: term ((PLUS|MIN)term)*
+// program:    compound DOT
+//
+// compound:   BEGIN statement_list END
+//
+// statement_list: statement |  statement SEMI statement
+//
+// statement:  compound | assign | empty
+//
+// assign:     var ASSIGN expr
+//
+// empty:
+// 
+// expression: term ((PLUS|MIN) term)*
+// 
 // term:       factor ((MUL|DIV) factor)*
-// factor:     (PLUS|MINUS)factor | integer | group
+// 
+// factor:     (PLUS|MINUS) factor | integer | group | var
+// 
 // group:      "(" expression ")"
 
 using ast_ptr = ast::ast_ptr;
@@ -29,6 +45,11 @@ private:
 	ast_ptr handle_group(std::vector<token>::iterator& it) const;
 	ast_ptr handle_term(std::vector<token>::iterator& it) const;
 	ast_ptr handle_expr(std::vector<token>::iterator& it) const;
+	ast_ptr handle_program(std::vector<token>::iterator& it) const;
+	ast_ptr handle_compound(std::vector<token>::iterator& it) const;
+	ast_ptr handle_statement_list(std::vector<token>::iterator& it, ast::statement_list& statement_list) const;
+	ast_ptr handle_statement(std::vector<token>::iterator& it) const;
+	ast_ptr handle_assign(std::vector<token>::iterator& it) const;
 
 	inline bool is_at_end(std::vector<token>::iterator& it) const;
 	
@@ -45,7 +66,12 @@ public:
 	std::wstring stringify_parse_tree();
 
 	/**
-	 * Parses the text as an abstract syntax tree
+	 * Parses the text as an abstract syntax tree (repl mode: no programs)
+	 */
+	ast_ptr parse_repl();
+
+	/**
+	 * Parses the text as an abstract syntax tree (expect full program)
 	 */
 	ast_ptr parse();
 };

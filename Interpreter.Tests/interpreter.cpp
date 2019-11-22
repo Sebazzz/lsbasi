@@ -4,7 +4,7 @@
 
 std::wstring do_interpret(std::wstring input)
 {
-    interpreter sut(std::move(input));
+    interpreter sut(std::move(input), true);
 
     return sut.interpret();
 }

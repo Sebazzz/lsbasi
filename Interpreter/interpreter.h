@@ -16,13 +16,25 @@ private:
 	parser parser;
 	
 	ast_ptr parsed_ast;
+	bool m_repl_mode;
 
 	void ensure_parsed();
 	void do_parse();
 
+	/**
+	 * Interpret in REPL mode
+	 */
+	std::wstring interpret_repl() const;
+
+	/**
+	 * Interpret, expecting full program
+	 */
+	std::wstring interpret_program() const;
+
+
 public:
-	explicit interpreter(std::wstring input)
-		: parser(std::move(input))
+	explicit interpreter(std::wstring input, bool repl_mode = false)
+		: parser(std::move(input)), m_repl_mode(repl_mode)
 	{
 	}
 

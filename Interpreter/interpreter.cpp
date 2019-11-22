@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include "stringify_visitor.h"
 #include "eval_visitor.h"
+#include "exec_visitor.h"
 
 void interpreter::ensure_parsed()
 {
@@ -13,7 +14,13 @@ void interpreter::ensure_parsed()
 
 void interpreter::do_parse()
 {
-	this->parsed_ast = this->parser.parse();
+	if (this->m_repl_mode)
+	{
+		this->parsed_ast = this->parser.parse_repl();
+	} else
+	{
+		this->parsed_ast = this->parser.parse();
+	}
 }
 
 std::wstring interpreter::tokenize()
@@ -33,10 +40,8 @@ std::wstring interpreter::stringify_ast()
 	return visitor.get_string();
 }
 
-std::wstring interpreter::interpret()
+std::wstring interpreter::interpret_repl() const
 {
-	this->ensure_parsed();
-
 	eval_visitor eval;
 	eval.visit(*this->parsed_ast);
 	
@@ -48,4 +53,26 @@ std::wstring interpreter::interpret()
 	}
 
 	return std::to_wstring(result);
+}
+
+std::wstring interpreter::interpret_program() const
+{
+	exec_visitor eval;
+	eval.visit(*this->parsed_ast);
+
+	// TODO: output?
+	
+	return std::wstring(L"done");
+}
+
+std::wstring interpreter::interpret()
+{
+	this->ensure_parsed();
+
+	if (this->m_repl_mode)
+	{
+		return interpret_repl();
+	}
+
+	throw interpret_except("Not implemented");
 }

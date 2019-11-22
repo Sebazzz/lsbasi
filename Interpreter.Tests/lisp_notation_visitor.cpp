@@ -5,7 +5,7 @@
 std::wstring do_lsp(std::wstring input)
 {
     parser parser(std::move(input));
-    const auto result = parser.parse();
+    const auto result = parser.parse_repl();
 
     lisp_notation_visitor visitor;
     visitor.visit(*result);
