@@ -157,7 +157,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="interpreter.cpp" />
+    <ClCompile Include="interpreter_repl.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="lisp_notation_visitor.cpp" />
     <ClCompile Include="main.cpp" />
