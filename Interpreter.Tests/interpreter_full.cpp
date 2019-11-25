@@ -1,6 +1,5 @@
 #include "catch.hpp"
 #include "../Interpreter/interpreter.h"
-#include "../Interpreter/interpret_except.h"
 
 std::wstring do_interpret_program(std::wstring input)
 {

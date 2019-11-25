@@ -1,6 +1,7 @@
 #include "lexer.h"
 #include "interpret_except.h"
 #include <map>
+#include "util.h"
 
 bool lexer::is_at_end() const
 {
@@ -97,7 +98,7 @@ token lexer::read_operator()
 	}
 }
 
-static std::map<std::wstring, token> reserved_keywords {
+static std::map<std::wstring, token, case_insensitive_string_comparer> reserved_keywords {
 	{ L"BEGIN", token(token_type::begin, L"BEGIN" )},
 	{ L"END", token(token_type::end, L"END" )}
 };

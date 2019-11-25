@@ -4,10 +4,11 @@
 #include <map>
 #include <stack>
 #include "eval_visitor.h"
+#include "util.h"
 
 struct stack_context
 {
-	std::map<ast::var_identifier, double> variables;
+	std::map<ast::var_identifier, double, case_insensitive_string_comparer> variables;
 };
 
 class stack
