@@ -108,7 +108,7 @@ token lexer::read_identifier_or_keyword()
 	std::wstring identifier;
 
 	// [A-z][A-z0-9]+
-	while (!this->is_at_end() && std::isalnum(this->currentChar))
+	while (!this->is_at_end() && (std::isalnum(this->currentChar) || this->currentChar == '_'))
 	{
 		identifier += this->currentChar;
 		this->advance();
@@ -150,7 +150,7 @@ token lexer::get_next_token()
 			continue;
 		}
 
-		if (isalpha(this->currentChar))
+		if (std::isalpha(this->currentChar) || this->currentChar == '_')
 		{
 			return this->read_identifier_or_keyword();
 		}

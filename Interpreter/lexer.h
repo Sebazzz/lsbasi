@@ -39,7 +39,8 @@ public:
 		this->pos = 0;
 		this->currentChar = !this->input.empty() ? this->input[this->pos] : 0;
 	}
-	
+
+	bool is_identifier_char();
 	/**
 	 * Reads the next token from the string
 	 */

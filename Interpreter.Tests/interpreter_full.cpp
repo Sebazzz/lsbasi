@@ -48,6 +48,12 @@ BEGIN       \
    _a := 2;  \
 END.        \
 ") == std::wstring(L"done") );
+
+    REQUIRE( do_interpret_program(L"\
+BEGIN       \
+   _a_b := 2;  \
+END.        \
+") == std::wstring(L"done") );
 }
 
 TEST_CASE( "Interpretation succeeds - program (division using 'div' keyword)", "[interpreter_program]" ) {
