@@ -157,6 +157,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="case_insensitive_string_comparer.cpp" />
     <ClCompile Include="interpreter_full.cpp" />
     <ClCompile Include="interpreter_repl.cpp" />
     <ClCompile Include="lexer.cpp" />
