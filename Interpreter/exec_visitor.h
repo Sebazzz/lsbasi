@@ -6,19 +6,59 @@
 #include "eval_visitor.h"
 #include "util.h"
 
-struct stack_context
-{
-	std::map<ast::var_identifier, double, case_insensitive_string_comparer> variables;
-};
-
-class stack
+class variable_register
 {
 private:
-	std::stack<stack_context> m_stack;
+	struct var
+	{
+		double value;
+		bool is_from_parent_scope;
+	};
+	
+	std::map<ast::var_identifier, var, case_insensitive_string_comparer> m_variables;
+
+	void set_from_parent(const ast::var_identifier& identifier, double value);
+
+	/**
+	 * Contains a pointer to the parent scope. I believe raw pointer usage is justified because
+	 * we always either have a previous or we don't but the previous can never be dangling.
+	 */
+	variable_register* m_previous = nullptr;
 
 public:
-	stack_context& current_context();
-	stack_context& push();
+	double get(const ast::var_identifier& identifier);
+
+	void set(const ast::var_identifier& identifier, double value);
+
+	static std::unique_ptr<variable_register> create_from_parent_scope(const variable_register* parent);
+	
+	void copy_to_parent();
+};
+
+struct scope_context
+{
+	std::unique_ptr<variable_register> variables;
+};
+
+class scope_manager
+{
+private:
+	std::stack<scope_context> m_scope;
+
+public:
+	/**
+	 * Gets the current context. Throws if not available.
+	 */
+	scope_context& current_context();
+
+	/**
+	 * 
+	 */
+	scope_context& push();
+
+	/**
+	 * Reverts to the previous scope
+	 */
 	void pop();
 };
 
@@ -26,7 +66,7 @@ class exec_visitor :
 	public eval_visitor
 {
 private:
-	stack m_stack;
+	scope_manager m_stack;
 	std::wstring m_last_value;
 	
 public:
