@@ -98,12 +98,6 @@ token lexer::read_operator()
 	}
 }
 
-static std::map<std::wstring, token, case_insensitive_string_comparer> reserved_keywords {
-	{ L"BEGIN", token(token_type::begin, L"BEGIN" )},
-	{ L"DIV", token(token_type::divide, L"DIV" )},
-	{ L"END", token(token_type::end, L"END" )}
-};
-
 token lexer::read_identifier_or_keyword()
 {
 	std::wstring identifier;
@@ -114,6 +108,12 @@ token lexer::read_identifier_or_keyword()
 		identifier += this->currentChar;
 		this->advance();
 	}
+
+	static std::map<std::wstring, token, case_insensitive_string_comparer> reserved_keywords {
+		{ L"BEGIN", token(token_type::begin, L"BEGIN" )},
+		{ L"DIV", token(token_type::divide, L"DIV" )},
+		{ L"END", token(token_type::end, L"END" )}
+	};
 
 	const auto reserved_keyword = reserved_keywords.find(identifier);
 	if (reserved_keyword != reserved_keywords.end())
