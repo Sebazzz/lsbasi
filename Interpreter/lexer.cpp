@@ -45,6 +45,23 @@ bool lexer::skip_whitespace()
 	return hasSkippedWhitespace;
 }
 
+bool lexer::skip_comment()
+{
+	if (this->currentChar != '{')
+	{
+		return false;
+	}
+	
+	do
+	{
+		this->advance();
+	} while (!this->is_at_end() && this->currentChar != '}');
+	
+	this->advance();
+
+	return true;
+}
+
 token lexer::read_digit()
 {
 	// This var holds our lexeme: what makes up our digit token
@@ -151,6 +168,11 @@ token lexer::get_next_token()
 	while (!this->is_at_end())
 	{
 		if (this->skip_whitespace())
+		{
+			continue;
+		}
+
+		if (this->skip_comment())
 		{
 			continue;
 		}

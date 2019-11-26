@@ -27,7 +27,8 @@ class lexer
 	[[nodiscard]] wchar_t peek() const; // Considered returning a std::optional instead, but a constant works just as well
 
 	bool skip_whitespace();
-	
+	bool skip_comment();
+
 	token read_digit();
 	token read_operator();
 	token read_identifier_or_keyword();
