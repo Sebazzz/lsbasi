@@ -1,9 +1,10 @@
 #include "var.h"
+#include <utility>
 #include "ast_node_visitor.h"
 
 using namespace ast;
 
-var::var(var_identifier identifier): ast_node(token_type::identifier), m_identifier(identifier)
+var::var(var_identifier identifier): ast_node(token_type::identifier), m_identifier(std::move(identifier))
 {
 }
 
