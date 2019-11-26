@@ -23,20 +23,29 @@ const wchar_t* token::getTokenTypeAsString() const
 	case token_type::multiply:
 		return L"mul";
 
-	case token_type::divide:
-		return L"div";
+	case token_type::divide_integer:
+		return L"idiv";
+
+	case token_type::divide_real:
+		return L"rdiv";
 		
 	case token_type::eof:
 		return L"eof";
 
-	case token_type::integer:
+	case token_type::integer_const:
 		return L"int";
+
+	case token_type::real_const:
+		return L"real";
 
 	case token_type::group_start:
 		return L"group_start";
 
 	case token_type::group_end:
 		return L"group_end";
+
+	case token_type::program:
+		return L"prog";
 
 	case token_type::begin:
 		return L"begin";
@@ -55,6 +64,15 @@ const wchar_t* token::getTokenTypeAsString() const
 		
 	case token_type::identifier:
 		return L"idf";
+
+	case token_type::integer_type:
+		return L"int_t";
+		
+	case token_type::real_type:
+		return L"real_t";
+
+	case token_type::var_decl:
+		return L"var_decl";
 		
 	default:
 		return L"?";

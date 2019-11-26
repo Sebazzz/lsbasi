@@ -62,7 +62,7 @@ token lexer::read_digit()
 		allDigits += this->currentChar;
 	}
 	
-	return token(token_type::integer, allDigits);
+	return token(token_type::integer_const, allDigits);
 }
 
 token lexer::read_operator()
@@ -83,7 +83,7 @@ token lexer::read_operator()
 
 	case '/':
 		this->advance();
-		return token(token_type::divide, std::wstring());
+		return token(token_type::divide_real, std::wstring());
 
 	case '(':
 		this->advance();
@@ -110,8 +110,12 @@ token lexer::read_identifier_or_keyword()
 	}
 
 	static std::map<std::wstring, token, case_insensitive_string_comparer> reserved_keywords {
+		{ L"PROGRAM", token(token_type::program, L"PROGRAM" )},
+		{ L"INTEGER", token(token_type::integer_type, L"INTEGER" )},
+		{ L"REAL", token(token_type::real_type, L"REAL" )},
+		{ L"VAR", token(token_type::var_decl, L"VAR" )},
 		{ L"BEGIN", token(token_type::begin, L"BEGIN" )},
-		{ L"DIV", token(token_type::divide, L"DIV" )},
+		{ L"DIV", token(token_type::divide_integer, L"DIV" )},
 		{ L"END", token(token_type::end, L"END" )}
 	};
 

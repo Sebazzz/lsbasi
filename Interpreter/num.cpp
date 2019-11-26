@@ -3,7 +3,7 @@
 
 using namespace ast;
 
-num::num(const num_value value): ast_node(token_type::integer), m_value(value)
+num::num(const num_value value): ast_node(token_type::integer_const), m_value(value)
 {
 }
 

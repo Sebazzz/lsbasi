@@ -92,7 +92,7 @@ ast_ptr parser::handle_integer(std::vector<token>::iterator& it) const
 		throw interpret_except("Found end while searching for integer");
 	}
 
-	if (it->type() != token_type::integer)
+	if (it->type() != token_type::integer_const)
 	{
 		throw interpret_except("Expected integer", it->to_string());
 	}
@@ -180,7 +180,7 @@ ast_ptr parser::handle_term(std::vector<token>::iterator& it) const
 		switch (operatorType)
 		{
 			case token_type::multiply:
-			case token_type::divide:
+			case token_type::divide_integer:
 				++it;
 				result = make_ast_ptr<bin_op>(result, operatorType, handle_factor(it));
 				break;

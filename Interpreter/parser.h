@@ -4,28 +4,39 @@
 #include <vector>
 #include "compound.h"
 
-
 // Grammar:
 //
-// program:    compound DOT
+// program:         "PROGRAM" var SEMI block DOT
 //
-// compound:   BEGIN statement_list END
+// block:           declarations compound
 //
-// statement_list: statement |  statement SEMI statement
+// declarations:    VAR (var_decl SEMI) | empty
 //
-// statement:  compound | assign | empty
+// var:             ID (COMMA ID) COLON type_spec
 //
-// assign:     var ASSIGN expr
+// type_spec:       "INTEGER" | "REAL"
+//
+// compound:        BEGIN statement_list END
+//
+// statement_list:  statement |  statement SEMI statement
+//
+// statement:       compound | assign | empty
+//
+// assign:          var ASSIGN expr
 //
 // empty:
 // 
-// expression: term ((PLUS|MIN) term)*
+// expression:      term ((PLUS|MIN) term)*
 // 
-// term:       factor ((MUL|DIV) factor)*
+// term:            factor ((MUL|DIV) factor)*
 // 
-// factor:     (PLUS|MINUS) factor | integer | group | var
+// factor:          (PLUS|MINUS) factor |
+//                  integer |
+//                  real |
+//                  group |
+//                  var
 // 
-// group:      "(" expression ")"
+// group:           "(" expression ")"
 
 using ast_ptr = ast::ast_ptr;
 

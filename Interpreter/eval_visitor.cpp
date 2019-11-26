@@ -30,7 +30,7 @@ void eval_visitor::visit(ast::bin_op& binaryOperator)
 		result *= rightVal;
 		break;
 		
-	case token_type::divide:
+	case token_type::divide_integer:
 		divide_interpret(result, static_cast<double>(rightVal));
 		break;
 		
