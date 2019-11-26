@@ -19,6 +19,17 @@ TEST_CASE( "Lexer tokenize test - single line", "[lexer]" ) {
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(.)") );
 }
 
+TEST_CASE( "Lexer tokenize test - single line + real", "[lexer]" ) {
+    lexer lex(L"BEGIN a := 2.75; END.");
+
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(begin,BEGIN)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(idf,a)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(:=)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(real,2.75)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(semi)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(end,END)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(.)") );
+}
 
 TEST_CASE( "Lexer tokenize test - multiline", "[lexer]" ) {
     lexer lex(L"\

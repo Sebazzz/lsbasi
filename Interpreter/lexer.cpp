@@ -67,11 +67,16 @@ token lexer::read_digit()
 	// This var holds our lexeme: what makes up our digit token
 	std::wstring allDigits(1, this->currentChar);
 
+	token_type type = token_type::integer_const;
+
 	while (!this->is_at_end())
 	{
 		this->advance();
-		
-		if (!isdigit(this->currentChar))
+
+		if (this->currentChar == '.')
+		{
+			type = token_type::real_const;
+		} else if (!isdigit(this->currentChar))
 		{
 			break;
 		}
@@ -79,7 +84,7 @@ token lexer::read_digit()
 		allDigits += this->currentChar;
 	}
 	
-	return token(token_type::integer_const, allDigits);
+	return token(type, allDigits);
 }
 
 token lexer::read_operator()
