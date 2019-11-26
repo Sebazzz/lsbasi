@@ -3,6 +3,7 @@
 #include "ast_node.h"
 #include <vector>
 #include "compound.h"
+#include "block.h"
 
 // Grammar:
 //
@@ -56,9 +57,14 @@ private:
 	ast_ptr handle_group(std::vector<token>::iterator& it) const;
 	ast_ptr handle_term(std::vector<token>::iterator& it) const;
 	ast_ptr handle_expr(std::vector<token>::iterator& it) const;
+	
 	ast_ptr handle_program(std::vector<token>::iterator& it) const;
-	ast_ptr handle_compound(std::vector<token>::iterator& it) const;
+	void handle_var_decl_list(std::vector<token>::iterator& it, ast::var_decl_list& var_declaration_list) const;
+	
+	ast::ast_node_ptr<ast::block> handle_block(std::vector<token>::iterator& it) const;
+	ast::compound_ptr handle_compound(std::vector<token>::iterator& it) const;
 	void handle_statement_list(std::vector<token>::iterator& it, ast::statement_list& statement_list) const;
+	
 	ast_ptr handle_statement(std::vector<token>::iterator& it) const;
 	ast_ptr handle_assign(std::vector<token>::iterator& it) const;
 

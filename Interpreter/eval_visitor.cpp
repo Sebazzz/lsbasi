@@ -33,6 +33,11 @@ void eval_visitor::visit(ast::bin_op& binaryOperator)
 	case token_type::divide_integer:
 		divide_interpret(result, static_cast<double>(rightVal));
 		break;
+
+	// FIXME: until we implement real division
+	case token_type::divide_real:
+		divide_interpret(result, static_cast<double>(rightVal));
+		break;
 		
 	default:
 		throw interpret_except("Invalid operator for bin_op", std::to_string(static_cast<int>(binaryOperator.op())));

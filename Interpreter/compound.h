@@ -1,7 +1,5 @@
 #pragma once
 #include "ast_node.h"
-#include "token_type.h"
-#include <utility>
 #include <vector>
 
 namespace ast
@@ -30,7 +28,7 @@ public:
 
 	~compound() = default;
 
-	const statement_list& statements() const;
+	[[nodiscard]] const statement_list& statements() const;
 	
 	void accept(ast_node_visitor& visitor) override;
 };

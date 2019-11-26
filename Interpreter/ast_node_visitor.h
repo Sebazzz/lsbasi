@@ -7,6 +7,9 @@
 #include "assign.h"
 #include "var.h"
 #include "empty.h"
+#include "block.h"
+#include "program.h"
+#include "var_decl.h"
 
 class ast_node_visitor
 {
@@ -53,6 +56,21 @@ public:
 	 * Visit a empty statement - default implementation is no-op
 	 */
 	virtual void visit(ast::empty& empty_statement);
+
+	/**
+	 * Visit a program statement - default implementation is visit of var and block
+	 */
+	virtual void visit(ast::program& program);
+
+	/**
+	 * Visit a variable declaration - default implementation is no-op
+	 */
+	virtual void visit(ast::var_decl& var_decl);
+
+	/**
+	 * Visit a block - default implementation visits var declarations and compound
+	 */
+	virtual void visit(ast::block& block);
 	
 };
 

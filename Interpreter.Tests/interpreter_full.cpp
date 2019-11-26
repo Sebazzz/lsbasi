@@ -54,6 +54,7 @@ END.        \
 ") == std::wstring(L"done") );
 
     REQUIRE( do_interpret_program(L"\
+PROGRAM Semi;                           \
 BEGIN       \
    _a_b := 2;  \
 END.        \

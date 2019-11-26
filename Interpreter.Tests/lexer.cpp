@@ -38,7 +38,7 @@ TEST_CASE( "Lexer tokenize test - single line - division int", "[lexer]" ) {
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(idf,a)") );
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(:=)") );
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(int,2)") );
-    REQUIRE( do_lex(lex) == std::wstring(L"TOK(idiv, DIV)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(idiv,DIV)") );
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(int,4)") );
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(semi)") );
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(end,END)") );

@@ -46,3 +46,23 @@ void ast_node_visitor::visit(ast::empty&)
 {
 	// For derived classes to implement
 }
+
+void ast_node_visitor::visit(ast::program& program)
+{
+	program.block()->accept(*this);
+}
+
+void ast_node_visitor::visit(ast::var_decl&)
+{
+	// For derived classes to implement
+}
+
+void ast_node_visitor::visit(ast::block& block)
+{
+	for (auto& var_decl : block.var_declarations())
+	{
+		var_decl->accept(*this);
+	}
+
+	block.compound()->accept(*this);
+}

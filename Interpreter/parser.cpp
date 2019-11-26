@@ -7,6 +7,7 @@
 #include "empty.h"
 #include "var.h"
 #include "assign.h"
+#include "program.h"
 
 using namespace ast;
 
@@ -181,6 +182,7 @@ ast_ptr parser::handle_term(std::vector<token>::iterator& it) const
 		{
 			case token_type::multiply:
 			case token_type::divide_integer:
+			case token_type::divide_real: // FIXME: until we implement real division
 				++it;
 				result = make_ast_ptr<bin_op>(result, operatorType, handle_factor(it));
 				break;
@@ -220,8 +222,39 @@ ast_ptr parser::handle_expr(std::vector<token>::iterator& it) const
 
 ast_ptr parser::handle_program(std::vector<token>::iterator& it) const
 {
-	const auto ast = handle_compound(it);
+	// PROGRAM
+	if (it->type() != token_type::program)
+	{
+		throw interpret_except("Expected 'program' header", it->to_string());
+	}
+	++it;
 
+	// variable
+	if (this->is_at_end(it))
+	{
+		throw interpret_except("Unexpected end of program");
+	}
+
+	if (it->type() != token_type::identifier)
+	{
+		throw interpret_except("Expected program identifier", it->to_string());
+	}
+
+	program_identifier identifier = it->value();
+	++it;
+
+	// block
+	if (this->is_at_end(it))
+	{
+		throw interpret_except("Unexpected end of program");
+	}
+	if (it->type() != token_type::semicolon)
+	{
+		throw interpret_except("Unexpected end of program - semicolon expected", it->to_string());
+	}
+	++it;
+	
+	auto block = handle_block(it);
 	if (this->is_at_end(it))
 	{
 		throw interpret_except("Unexpected end of program");
@@ -233,16 +266,35 @@ ast_ptr parser::handle_program(std::vector<token>::iterator& it) const
 	}
 
 	++it;
-	
 	if (!this->is_at_end(it))
 	{
-		throw interpret_except("Expected end of program");
+		throw interpret_except("Expected end of program", it->to_string());
 	}
 
-	return ast;
+	return make_ast_ptr<program>(identifier, block);
 }
 
-ast_ptr parser::handle_compound(std::vector<token>::iterator& it) const
+void parser::handle_var_decl_list(std::vector<token>::iterator&, ast::var_decl_list&) const
+{
+	
+}
+
+ast::ast_node_ptr<ast::block> parser::handle_block(std::vector<token>::iterator& it) const
+{
+	if (this->is_at_end(it))
+	{
+		throw interpret_except("Expected either variable declaration list or compound statement but found end of program instead");
+	}
+	
+	var_decl_list variable_declaration_list;
+	handle_var_decl_list(it, variable_declaration_list);
+
+	const auto compound = handle_compound(it);
+	
+	return make_ast_node_ptr<block>(variable_declaration_list, compound);
+}
+
+compound_ptr parser::handle_compound(std::vector<token>::iterator& it) const
 {
 	if (this->is_at_end(it) )
 	{
