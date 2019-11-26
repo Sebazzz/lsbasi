@@ -8,11 +8,11 @@ template <typename T>
 void add_interpret(T& result, T operand)
 {
 	if (result > 0 && operand > std::numeric_limits<T>::max() - result) {
-        throw interpret_except("Integer overflow");
+        throw interpret_except("Integer overflow", std::to_string(result));
     }
 
 	if (result < 0 && operand < std::numeric_limits<T>::min() - result) {
-		throw interpret_except("Integer underflow");
+		throw interpret_except("Integer underflow",  std::to_string(result));
 	}
 
 	result = result + operand;
@@ -27,11 +27,11 @@ inline void add_interpret(double& result, double operand)
 	result = result + operand;
 
 	if (std::fetestexcept(FE_OVERFLOW)) {
-        throw interpret_except("Floating point overflow");
+        throw interpret_except("Floating point overflow", std::to_string(result));
 	}
 
 	if (std::fetestexcept(FE_UNDERFLOW)) {
-        throw interpret_except("Floating point underflow");
+        throw interpret_except("Floating point underflow", std::to_string(result));
 	}
 }
 
@@ -46,7 +46,7 @@ void divide_interpret(T& result, T operand)
 {
 	if (operand == 0)
 	{
-		throw interpret_except("Divide by zero");
+		throw interpret_except("Divide by zero",  std::to_string(result));
 	}
 
 	result /= operand;

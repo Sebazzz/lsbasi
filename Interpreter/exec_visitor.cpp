@@ -14,7 +14,7 @@ double variable_register::get(const ast::var_identifier& identifier)
 	// Check if it exists
 	if (var_val == this->m_variables.end())
 	{
-		throw interpret_except("Unknown variable in this scope");
+		throw interpret_except("Unknown variable in this scope", identifier);
 	}
 
 	return var_val->second.value;

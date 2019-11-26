@@ -75,5 +75,5 @@ void rpn_visitor::visit(ast::unary_op& unaryOperator)
 		this->string_buf += op_to_string(unaryOperator.op());
 	}
 
-	throw interpret_except("Unsupported unary operator");
+	throw interpret_except("Unsupported unary operator", std::to_string(static_cast<int>(unaryOperator.get_token())));
 }

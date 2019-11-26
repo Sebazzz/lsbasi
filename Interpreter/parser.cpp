@@ -34,7 +34,7 @@ ast_ptr parser::parse_repl()
 	if (!this->is_at_end(it))
 	{
 		// If we have still tokens left, we hit an unexpected token
-		throw interpret_except("Unexpected token found");
+		throw interpret_except("Unexpected token found", it->to_string());
 	}
 
 	return result;
@@ -50,7 +50,7 @@ ast_ptr parser::parse()
 	if (!this->is_at_end(it))
 	{
 		// If we have still tokens left, we hit an unexpected token
-		throw interpret_except("Unexpected token found at end of program");
+		throw interpret_except("Unexpected token found at end of program", it->to_string());
 	}
 
 	return result;
@@ -94,7 +94,7 @@ ast_ptr parser::handle_integer(std::vector<token>::iterator& it) const
 
 	if (it->type() != token_type::integer)
 	{
-		throw interpret_except("Expected integer");
+		throw interpret_except("Expected integer", it->to_string());
 	}
 	
 	try
@@ -161,7 +161,12 @@ ast_ptr parser::handle_group(std::vector<token>::iterator& it) const
 		return result;
 	}
 
-	throw interpret_except("Expected to find end-of-group");
+	if (this->is_at_end(it))
+	{
+		throw interpret_except("Expected to find end-of-group", "end of program");
+	}
+
+	throw interpret_except("Expected to find end-of-group", it->to_string());
 }
 
 ast_ptr parser::handle_term(std::vector<token>::iterator& it) const
@@ -222,9 +227,9 @@ ast_ptr parser::handle_program(std::vector<token>::iterator& it) const
 		throw interpret_except("Unexpected end of program");
 	}
 	
-	if (this->is_at_end(it) || it->type() != token_type::dot)
+	if (it->type() != token_type::dot)
 	{
-		throw interpret_except("Unexpected end of program - dot expected");
+		throw interpret_except("Unexpected end of program - dot expected", it->to_string());
 	}
 
 	++it;
@@ -239,9 +244,14 @@ ast_ptr parser::handle_program(std::vector<token>::iterator& it) const
 
 ast_ptr parser::handle_compound(std::vector<token>::iterator& it) const
 {
-	if (this->is_at_end(it) || it->type() != token_type::begin)
+	if (this->is_at_end(it) )
 	{
-		throw interpret_except("Expected BEGIN");
+		throw interpret_except("Expected BEGIN", "end of program");
+	}
+
+	if (it->type() != token_type::begin)
+	{
+		throw interpret_except("Expected BEGIN", it->to_string());
 	}
 
 	++it;
@@ -249,9 +259,14 @@ ast_ptr parser::handle_compound(std::vector<token>::iterator& it) const
 	statement_list statement_list;
 	handle_statement_list(it, statement_list);
 
-	if (this->is_at_end(it) || it->type() != token_type::end)
+	if (this->is_at_end(it))
 	{
-		throw interpret_except("Expected END");
+		throw interpret_except("Expected END", "end of program");
+	}
+
+	if (it->type() != token_type::end)
+	{
+		throw interpret_except("Expected END", it->to_string());
 	}
 	
 	++it;
@@ -263,7 +278,7 @@ void parser::handle_statement_list(std::vector<token>::iterator& it, statement_l
 {
 	if (this->is_at_end(it))
 	{
-		throw interpret_except("Expected statement");
+		throw interpret_except("Expected statement", "end of program");
 	}
 
 	while (true)
@@ -307,13 +322,13 @@ ast_ptr parser::handle_statement(std::vector<token>::iterator& it) const
 		return make_ast_ptr<empty>();
 	}
 
-	if (it -> type() == token_type::identifier)
+	if (it->type() == token_type::identifier)
 	{
 		// Assignment
 		return this->handle_assign(it);
 	}
 
-	throw interpret_except("Unexpected token in statement");
+	throw interpret_except("Unexpected token in statement", it->to_string());
 }
 
 ast_ptr parser::handle_assign(std::vector<token>::iterator& it) const
@@ -326,9 +341,14 @@ ast_ptr parser::handle_assign(std::vector<token>::iterator& it) const
 	const auto identifier = make_ast_node_ptr<var>(it->value());
 	++it;
 
-	if (this->is_at_end(it) || it->type() != token_type::assign)
+	if (this->is_at_end(it))
 	{
-		throw interpret_except("Expected assignment");
+		throw interpret_except("Expected assignment", "end of program");
+	}
+
+	if (it->type() != token_type::assign)
+	{
+		throw interpret_except("Expected assignment", it->to_string());
 	}
 
 	++it;

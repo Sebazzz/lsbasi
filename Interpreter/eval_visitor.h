@@ -48,7 +48,7 @@ double eval_visitor::accept(T& node)
 
 	if (this->m_stack.empty())
 	{
-		throw interpret_except("Previous node accept did not yield a value");
+		throw interpret_except("Previous node accept did not yield a value", typeid(node).name());
 	}
 
 	const double val = this->m_stack.top();
