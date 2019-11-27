@@ -11,6 +11,7 @@ std::wstring do_interpret_program(std::wstring input)
 TEST_CASE( "Interpretation succeeds - program", "[interpreter_program]" ) {
     REQUIRE( do_interpret_program(L"\
 PROGRAM Simple;\
+VAR a: INTEGER; b: REAL;\
 BEGIN       \
    a := 2;  \
 END.        \
@@ -18,6 +19,7 @@ END.        \
 
 	REQUIRE( do_interpret_program(L"\
 PROGRAM Semi;                           \
+VAR a, b, c, number: REAL;\
 BEGIN                                   \
     BEGIN                               \
         number := 2;                    \
@@ -48,6 +50,7 @@ ENd.                                    \
 TEST_CASE( "Interpretation succeeds - program (vars with underscore)", "[interpreter_program]" ) {
     REQUIRE( do_interpret_program(L"\
 PROGRAM Semi;                           \
+VAR _a: INTEGER;\
 BEGIN       \
    _a := 2;  \
 END.        \
@@ -55,6 +58,7 @@ END.        \
 
     REQUIRE( do_interpret_program(L"\
 PROGRAM Semi;                           \
+VAR _a_b: INTEGER;\
 BEGIN       \
    _a_b := 2;  \
 END.        \
@@ -64,6 +68,7 @@ END.        \
 TEST_CASE( "Interpretation succeeds - program (division using 'div' keyword)", "[interpreter_program]" ) {
     REQUIRE( do_interpret_program(L"\
 PROGRAM Semi;                           \
+VAR _a: INTEGER;\
 BEGIN       \
    _a := 2 div 3;  \
 END.        \
