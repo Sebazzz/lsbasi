@@ -219,6 +219,7 @@
     <ClCompile Include="interpreter.cpp" />
     <ClCompile Include="interpret_except.cpp" />
     <ClCompile Include="lexer.cpp" />
+    <ClCompile Include="lexer_iterator.cpp" />
     <ClCompile Include="lisp_notation_visitor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="num.cpp" />
@@ -247,6 +248,7 @@
     <ClInclude Include="invoke_repl_visitor.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="interpret_math.h" />
+    <ClInclude Include="lexer_iterator.h" />
     <ClInclude Include="lisp_notation_visitor.h" />
     <ClInclude Include="num.h" />
     <ClInclude Include="parser.h" />

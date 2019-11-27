@@ -1,5 +1,6 @@
 #pragma once
 #include "lexer.h"
+#include "lexer_iterator.h"
 #include "ast_node.h"
 #include <vector>
 #include "compound.h"
@@ -46,35 +47,29 @@ class parser
 private:
 	lexer lexer;
 	
-	std::vector<token> tokens;
-
-	void ensure_tokenized();
 	void do_tokenize();
 
-	ast_ptr handle_integer(std::vector<token>::iterator& it) const;
-	ast_ptr handle_unary(std::vector<token>::iterator& it) const;
-	ast_ptr handle_factor(std::vector<token>::iterator& it) const;
-	ast_ptr handle_group(std::vector<token>::iterator& it) const;
-	ast_ptr handle_term(std::vector<token>::iterator& it) const;
-	ast_ptr handle_expr(std::vector<token>::iterator& it) const;
+	ast_ptr handle_integer(lexer_iterator& it) const;
+	ast_ptr handle_unary(lexer_iterator& it) const;
+	ast_ptr handle_factor(lexer_iterator& it) const;
+	ast_ptr handle_group(lexer_iterator& it) const;
+	ast_ptr handle_term(lexer_iterator& it) const;
+	ast_ptr handle_expr(lexer_iterator& it) const;
 	
-	ast_ptr handle_program(std::vector<token>::iterator& it) const;
-	void handle_var_decl_list(std::vector<token>::iterator& it, ast::var_decl_list& var_declaration_list) const;
+	ast_ptr handle_program(lexer_iterator& it) const;
+	void handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_declaration_list) const;
 	
-	ast::ast_node_ptr<ast::block> handle_block(std::vector<token>::iterator& it) const;
-	ast::compound_ptr handle_compound(std::vector<token>::iterator& it) const;
-	void handle_statement_list(std::vector<token>::iterator& it, ast::statement_list& statement_list) const;
+	ast::ast_node_ptr<ast::block> handle_block(lexer_iterator& it) const;
+	ast::compound_ptr handle_compound(lexer_iterator& it) const;
+	void handle_statement_list(lexer_iterator& it, ast::statement_list& statement_list) const;
 	
-	ast_ptr handle_statement(std::vector<token>::iterator& it) const;
-	ast_ptr handle_assign(std::vector<token>::iterator& it) const;
+	ast_ptr handle_statement(lexer_iterator& it) const;
+	ast_ptr handle_assign(lexer_iterator& it) const;
 
-	inline bool is_at_end(std::vector<token>::iterator& it) const;
-	
 public:
 	explicit parser(std::wstring input)
 		: lexer(std::move(input))
 	{
-		this->tokens.reserve(3);
 	}
 
 	/**

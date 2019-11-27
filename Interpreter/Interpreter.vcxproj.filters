@@ -108,6 +108,9 @@
     <ClCompile Include="program.cpp">
       <Filter>Source Files\ast</Filter>
     </ClCompile>
+    <ClCompile Include="lexer_iterator.cpp">
+      <Filter>Source Files\lexing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -190,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="var_decl.h">
       <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="lexer_iterator.h">
+      <Filter>Header Files\lexing</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

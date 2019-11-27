@@ -14,26 +14,30 @@ using namespace ast;
 
 std::wstring parser::stringify_parse_tree()
 {
-	this->ensure_tokenized();
-
+    lexer_iterator it(this->lexer);
+	
 	std::wstring buffer;
-	for (const auto& token : this->tokens)
-	{
-		buffer.append(token.to_string());
-		buffer.append(L" ");
-	}
 
+	it.advance();
+	while (!it.is_at_end())
+	{
+		buffer.append(it->to_string());
+		buffer.append(L" ");
+		
+		it.advance();
+	}
+	
 	return buffer;
 }
 
 ast_ptr parser::parse_repl()
 {
-	this->ensure_tokenized();
-
-	auto it = this->tokens.begin();
+    lexer_iterator it(this->lexer);
+	it.advance();
+	
 	const ast_ptr result = handle_expr(it);
 	
-	if (!this->is_at_end(it))
+	if (!it.is_at_end())
 	{
 		// If we have still tokens left, we hit an unexpected token
 		throw interpret_except("Unexpected token found", it->to_string());
@@ -44,12 +48,12 @@ ast_ptr parser::parse_repl()
 
 ast_ptr parser::parse()
 {
-	this->ensure_tokenized();
-
-	auto it = this->tokens.begin();
+    lexer_iterator it(this->lexer);
+	it.advance();
+	
 	const ast_ptr result = handle_program(it);
 
-	if (!this->is_at_end(it))
+	if (!it.is_at_end())
 	{
 		// If we have still tokens left, we hit an unexpected token
 		throw interpret_except("Unexpected token found at end of program", it->to_string());
@@ -58,45 +62,9 @@ ast_ptr parser::parse()
 	return result;
 }
 
-void parser::ensure_tokenized()
+ast_ptr parser::handle_integer(lexer_iterator& it) const
 {
-	if (this->tokens.empty())
-	{
-		this->do_tokenize();
-	}
-}
-
-void parser::do_tokenize()
-{
-	// Read all
-	while (true)
-	{
-		token current = this->lexer.get_next_token();
-		if (current.type() == token_type::eof)
-		{
-			break;
-		}
-
-		this->tokens.push_back(current);
-	}
-
-	// We may just have gotten whitespace
-	if (this->tokens.empty())
-	{
-		throw interpret_except("No tokens were parsed");
-	}
-}
-
-ast_ptr parser::handle_integer(std::vector<token>::iterator& it) const
-{
-	if (this->is_at_end(it))
-	{
-		throw interpret_except("Found end while searching for integer");
-	}
-
-	if (it->type() != token_type::integer_const)
-	{
-	}
+	it.ensure_token("Found end while searching for integer");
 
 	try
 	{
@@ -105,14 +73,14 @@ ast_ptr parser::handle_integer(std::vector<token>::iterator& it) const
 		case token_type::integer_const:
 			{
 				const auto val_i = std::stoi(it->value());
-				++it;
+				it.advance();
 				return make_ast_ptr<num>(val_i);
 			}
 
 		case token_type::real_const:
 			{
 				const auto val_r = std::stod(it->value());
-				++it;
+				it.advance();
 				return make_ast_ptr<num>(val_r);
 			}
 			
@@ -128,7 +96,7 @@ ast_ptr parser::handle_integer(std::vector<token>::iterator& it) const
 	}
 }
 
-ast_ptr parser::handle_unary(std::vector<token>::iterator& it) const
+ast_ptr parser::handle_unary(lexer_iterator& it) const
 {
 	const auto tokenType = it->type();
 	if (tokenType != token_type::plus && tokenType != token_type::minus)
@@ -136,16 +104,13 @@ ast_ptr parser::handle_unary(std::vector<token>::iterator& it) const
 		throw interpret_except("Expected unary operation");
 	}
 
-	++it;
+	it.advance();
 	return make_ast_ptr<unary_op>(tokenType, handle_factor(it));
 }
 
-ast_ptr parser::handle_factor(std::vector<token>::iterator& it) const
+ast_ptr parser::handle_factor(lexer_iterator& it) const
 {
-	if (this->is_at_end(it))
-	{
-		throw interpret_except("Found end while searching for factor");
-	}
+	it.ensure_token("Found end while searching for factor");
 	
 	if (it->type() == token_type::group_start)
 	{
@@ -155,7 +120,7 @@ ast_ptr parser::handle_factor(std::vector<token>::iterator& it) const
 	if (it->type() == token_type::identifier)
 	{
 		const auto identifier = make_ast_node_ptr<var>(it->value());
-		++it;
+		it.advance();
 		return identifier;
 	}
 
@@ -167,31 +132,23 @@ ast_ptr parser::handle_factor(std::vector<token>::iterator& it) const
 	return handle_integer(it);
 }
 
-ast_ptr parser::handle_group(std::vector<token>::iterator& it) const
+ast_ptr parser::handle_group(lexer_iterator& it) const
 {
-	++it; // Skip the current "start group" token
+	it.skip_required(token_type::group_start); // Skip the current "start group" token
 
 	const ast_ptr result = this->handle_expr(it);
-	if (!this->is_at_end(it) && it->type() == token_type::group_end)
-	{
-		++it;
-		return result;
-	}
 
-	if (this->is_at_end(it))
-	{
-		throw interpret_except("Expected to find end-of-group", "end of program");
-	}
-
-	throw interpret_except("Expected to find end-of-group", it->to_string());
+	it.skip_required(token_type::group_end);
+	
+	return result;
 }
 
-ast_ptr parser::handle_term(std::vector<token>::iterator& it) const
+ast_ptr parser::handle_term(lexer_iterator& it) const
 {
 	// We expect a factor with possibly a multiply or divide
 	ast_ptr result = handle_factor(it);
 
-	while (!this->is_at_end(it))
+	while (!it.is_at_end())
 	{
 		const auto operatorType = it->type();
 		switch (operatorType)
@@ -199,7 +156,7 @@ ast_ptr parser::handle_term(std::vector<token>::iterator& it) const
 			case token_type::multiply:
 			case token_type::divide_integer:
 			case token_type::divide_real: // FIXME: until we implement real division
-				++it;
+				it.advance();
 				result = make_ast_ptr<bin_op>(result, operatorType, handle_factor(it));
 				break;
 
@@ -212,18 +169,18 @@ ast_ptr parser::handle_term(std::vector<token>::iterator& it) const
 	return result;
 }
 
-ast_ptr parser::handle_expr(std::vector<token>::iterator& it) const
+ast_ptr parser::handle_expr(lexer_iterator& it) const
 {
 	ast_ptr result = handle_term(it);
 	
-	while (!this->is_at_end(it))
+	while (!it.is_at_end())
 	{
 		const auto operatorType = it->type();
 		switch (operatorType)
 		{
 			case token_type::plus:
 			case token_type::minus:
-				++it;
+				it.advance();
 				result = make_ast_ptr<bin_op>(result, operatorType, handle_term(it));
 				break;
 
@@ -236,53 +193,22 @@ ast_ptr parser::handle_expr(std::vector<token>::iterator& it) const
 	return result;
 }
 
-ast_ptr parser::handle_program(std::vector<token>::iterator& it) const
+ast_ptr parser::handle_program(lexer_iterator& it) const
 {
 	// PROGRAM
-	if (it->type() != token_type::program)
-	{
-		throw interpret_except("Expected 'program' header", it->to_string());
-	}
-	++it;
+	it.skip_required(token_type::program);
 
 	// variable
-	if (this->is_at_end(it))
-	{
-		throw interpret_except("Unexpected end of program");
-	}
-
-	if (it->type() != token_type::identifier)
-	{
-		throw interpret_except("Expected program identifier", it->to_string());
-	}
-
-	program_identifier identifier = it->value();
-	++it;
+	program_identifier identifier = it.expect(token_type::identifier).value();
+	it.advance();
 
 	// block
-	if (this->is_at_end(it))
-	{
-		throw interpret_except("Unexpected end of program");
-	}
-	if (it->type() != token_type::semicolon)
-	{
-		throw interpret_except("Unexpected end of program - semicolon expected", it->to_string());
-	}
-	++it;
+	it.skip_required(token_type::semicolon);
 	
-	auto block = handle_block(it);
-	if (this->is_at_end(it))
-	{
-		throw interpret_except("Unexpected end of program");
-	}
+	auto block = this->handle_block(it);
+	it.skip_required(token_type::dot);
 	
-	if (it->type() != token_type::dot)
-	{
-		throw interpret_except("Unexpected end of program - dot expected", it->to_string());
-	}
-
-	++it;
-	if (!this->is_at_end(it))
+	if (!it.is_at_end())
 	{
 		throw interpret_except("Expected end of program", it->to_string());
 	}
@@ -290,13 +216,8 @@ ast_ptr parser::handle_program(std::vector<token>::iterator& it) const
 	return make_ast_ptr<program>(identifier, block);
 }
 
-ast::ast_node_ptr<ast::block> parser::handle_block(std::vector<token>::iterator& it) const
+ast::ast_node_ptr<ast::block> parser::handle_block(lexer_iterator& it) const
 {
-	if (this->is_at_end(it))
-	{
-		throw interpret_except("Expected either variable declaration list or compound statement but found end of program instead");
-	}
-	
 	var_decl_list variable_declaration_list;
 	handle_var_decl_list(it, variable_declaration_list);
 
@@ -305,7 +226,7 @@ ast::ast_node_ptr<ast::block> parser::handle_block(std::vector<token>::iterator&
 	return make_ast_node_ptr<block>(variable_declaration_list, compound);
 }
 
-void parser::handle_var_decl_list(std::vector<token>::iterator& it, ast::var_decl_list& var_declaration_list) const
+void parser::handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_declaration_list) const
 {
 	if (it->type() != token_type::var_decl)
 	{
@@ -313,50 +234,31 @@ void parser::handle_var_decl_list(std::vector<token>::iterator& it, ast::var_dec
 		return;
 	}
 
-	++it;
+	it.advance();
 
 	std::vector<var_identifier> identifiers;
 	do
 	{
-		if (this->is_at_end(it))
-		{
-			throw interpret_except("Expected variable identifier but found end of program instead");
-		}
-
 		// Get the identifiers
 		identifiers.clear();
 		do
 		{
-			if (it->type() != token_type::identifier)
-			{
-				throw interpret_except("Expected identifier", it->to_string());
-			}
-
-			auto identifier = it->value();
-			++it;
+			auto identifier = it.expect(token_type::identifier).value();
+			it.advance();
 
 			identifiers.push_back(identifier);
 
-			if (!this->is_at_end(it) && it->type() == token_type::comma)
+			if (it->type() == token_type::comma)
 			{
-				++it;
+				it.advance();
 			}
 
 			// Yes, this allows a trailing comma. I call that a language _feature_ :)
-		}while (!this->is_at_end(it) && it->type() != token_type::colon);
+		}while (it->type() != token_type::colon);
 
-		if (this->is_at_end(it))
-		{
-			throw interpret_except("Expected colon but found end of program instead");
-		}
-		++it;
+		it.skip_required(token_type::colon);
 
 		// Get the type
-		if (this->is_at_end(it))
-		{
-			throw interpret_except("Expected type specification, but found end of program instead");
-		}
-
 		var_type v_type;
 		switch (it->type())
 		{
@@ -376,65 +278,30 @@ void parser::handle_var_decl_list(std::vector<token>::iterator& it, ast::var_dec
 			);
 		}
 
-		++it;
-
-		if (this->is_at_end(it))
-		{
-			return;
-		}
-
-		if (it->type() != token_type::semicolon)
-		{
-			throw interpret_except("Expected semicolon", it->to_string());
-		}
-		++it;
-	} while (!this->is_at_end(it) && it->type() != token_type::begin);
+		it.advance();
+		it.skip_required(token_type::semicolon);
+	} while (!it.is_at_end() && it->type() != token_type::begin);
 }
 
-compound_ptr parser::handle_compound(std::vector<token>::iterator& it) const
+compound_ptr parser::handle_compound(lexer_iterator& it) const
 {
-	if (this->is_at_end(it) )
-	{
-		throw interpret_except("Expected BEGIN", "end of program");
-	}
-
-	if (it->type() != token_type::begin)
-	{
-		throw interpret_except("Expected BEGIN", it->to_string());
-	}
-
-	++it;
+	it.skip_required(token_type::begin);
 
 	statement_list statement_list;
 	handle_statement_list(it, statement_list);
 
-	if (this->is_at_end(it))
-	{
-		throw interpret_except("Expected END", "end of program");
-	}
-
-	if (it->type() != token_type::end)
-	{
-		throw interpret_except("Expected END", it->to_string());
-	}
-	
-	++it;
+	it.skip_required(token_type::end);
 
 	return make_ast_node_ptr<compound>(statement_list);
 }
 
-void parser::handle_statement_list(std::vector<token>::iterator& it, statement_list& statement_list) const
+void parser::handle_statement_list(lexer_iterator& it, statement_list& statement_list) const
 {
-	if (this->is_at_end(it))
-	{
-		throw interpret_except("Expected statement", "end of program");
-	}
-
 	while (true)
 	{
 		statement_list.push_back(this->handle_statement(it));
 
-		if (this->is_at_end(it))
+		if (it.is_at_end())
 		{
 			// We will fail further up the call stack, but ignore this in this function
 			return;
@@ -447,17 +314,14 @@ void parser::handle_statement_list(std::vector<token>::iterator& it, statement_l
 		}
 
 		// Prepare for next statement
-		++it;
+		it.advance();
 	}
 	
 }
 
-ast_ptr parser::handle_statement(std::vector<token>::iterator& it) const
+ast_ptr parser::handle_statement(lexer_iterator& it) const
 {
-	if (this->is_at_end(it))
-	{
-		throw interpret_except("Found end while searching for statement");
-	}
+	it.ensure_token("Found end while searching for statement");
 
 	if (it->type() == token_type::begin)
 	{
@@ -480,41 +344,20 @@ ast_ptr parser::handle_statement(std::vector<token>::iterator& it) const
 	throw interpret_except("Unexpected token in statement", it->to_string());
 }
 
-ast_ptr parser::handle_assign(std::vector<token>::iterator& it) const
+ast_ptr parser::handle_assign(lexer_iterator& it) const
 {
-	if (this->is_at_end(it))
-	{
-		throw interpret_except("Found end while handling assignment");
-	}
+	it.ensure_token("Found end while handling assignment");
 
 	const auto identifier = make_ast_node_ptr<var>(it->value());
-	++it;
+	it.advance();
 
-	if (this->is_at_end(it))
-	{
-		throw interpret_except("Expected assignment", "end of program");
-	}
+	it.skip_required(token_type::assign);
 
-	if (it->type() != token_type::assign)
-	{
-		throw interpret_except("Expected assignment", it->to_string());
-	}
-
-	++it;
-
-	if (this->is_at_end(it))
-	{
-		// We could just do this check further down the stack, however,
-		// if we handle it here, the error message is more clear
-		throw interpret_except("Expected expression in assignment");
-	}
-
+	// We could just do this check further down the stack, however,
+	// if we handle it here, the error message is more clear
+	it.ensure_token("Expected expression in assignment");
+	
 	const auto expression = this->handle_expr(it);
 
 	return make_ast_ptr<assign>(identifier, expression);
-}
-
-bool parser::is_at_end(std::vector<token>::iterator& it) const
-{
-	return it == this->tokens.end();
 }

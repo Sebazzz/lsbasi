@@ -13,6 +13,8 @@ public:
 	explicit interpret_except(const std::string& message, const std::string& actual);
 
 	explicit interpret_except(const std::string& message, const std::wstring& actual);
+	
+	explicit interpret_except(const std::string& message, const wchar_t* actual);
 
 	explicit interpret_except(exception const& _Other);
 
