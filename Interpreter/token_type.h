@@ -28,6 +28,8 @@ enum class token_type
 	end,
 	dot,
 	assign,
+	comma,
+	colon,
 	semicolon,
 	identifier,
 	

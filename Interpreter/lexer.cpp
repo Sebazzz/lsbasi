@@ -194,10 +194,22 @@ token lexer::get_next_token()
 			return make_simple_token(token_type::assign);
 		}
 
+		if (this->currentChar == L':')
+		{
+			this->advance();
+			return make_simple_token(token_type::colon);
+		}
+
 		if (this->currentChar == L';')
 		{
 			this->advance();
 			return make_simple_token(token_type::semicolon);
+		}
+
+		if (this->currentChar == L',')
+		{
+			this->advance();
+			return make_simple_token(token_type::comma);
 		}
 
 		if (this->currentChar == L'.')

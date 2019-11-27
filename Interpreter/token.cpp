@@ -61,6 +61,12 @@ const wchar_t* token::getTokenTypeAsString() const
 
 	case token_type::semicolon:
 		return L"semi";
+
+	case token_type::colon:
+		return L"colon";
+
+	case token_type::comma:
+		return L"comma";
 		
 	case token_type::identifier:
 		return L"idf";

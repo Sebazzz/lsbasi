@@ -8,6 +8,7 @@
 #include "var.h"
 #include "assign.h"
 #include "program.h"
+#include "var_decl.h"
 
 using namespace ast;
 
@@ -274,11 +275,6 @@ ast_ptr parser::handle_program(std::vector<token>::iterator& it) const
 	return make_ast_ptr<program>(identifier, block);
 }
 
-void parser::handle_var_decl_list(std::vector<token>::iterator&, ast::var_decl_list&) const
-{
-	
-}
-
 ast::ast_node_ptr<ast::block> parser::handle_block(std::vector<token>::iterator& it) const
 {
 	if (this->is_at_end(it))
@@ -292,6 +288,92 @@ ast::ast_node_ptr<ast::block> parser::handle_block(std::vector<token>::iterator&
 	const auto compound = handle_compound(it);
 	
 	return make_ast_node_ptr<block>(variable_declaration_list, compound);
+}
+
+void parser::handle_var_decl_list(std::vector<token>::iterator& it, ast::var_decl_list& var_declaration_list) const
+{
+	if (it->type() != token_type::var_decl)
+	{
+		// This is not a variable declaration. Lets return control and hope the next parsing step knows what to do with it.
+		return;
+	}
+
+	++it;
+
+	std::vector<var_identifier> identifiers;
+	do
+	{
+		if (this->is_at_end(it))
+		{
+			throw interpret_except("Expected variable identifier but found end of program instead");
+		}
+
+		// Get the identifiers
+		identifiers.clear();
+		do
+		{
+			if (it->type() != token_type::identifier)
+			{
+				throw interpret_except("Expected identifier", it->to_string());
+			}
+
+			auto identifier = it->value();
+			++it;
+
+			identifiers.push_back(identifier);
+
+			if (!this->is_at_end(it) && it->type() == token_type::comma)
+			{
+				++it;
+			}
+
+			// Yes, this allows a trailing comma. I call that a language _feature_ :)
+		}while (!this->is_at_end(it) && it->type() != token_type::colon);
+
+		if (this->is_at_end(it))
+		{
+			throw interpret_except("Expected colon but found end of program instead");
+		}
+		++it;
+
+		// Get the type
+		if (this->is_at_end(it))
+		{
+			throw interpret_except("Expected type specification, but found end of program instead");
+		}
+
+		var_type v_type;
+		switch (it->type())
+		{
+			case token_type::integer_type:
+				v_type = var_type::integer;
+			break;
+			case token_type::real_type:
+				v_type = var_type::real;
+			break;
+			default: throw interpret_except("Expected type specification", it->to_string());
+		}
+
+		for (auto && identifier : identifiers)
+		{
+			var_declaration_list.push_back(
+				make_ast_node_ptr<var_decl>(identifier, v_type)
+			);
+		}
+
+		++it;
+
+		if (this->is_at_end(it))
+		{
+			return;
+		}
+
+		if (it->type() != token_type::semicolon)
+		{
+			throw interpret_except("Expected semicolon", it->to_string());
+		}
+		++it;
+	} while (!this->is_at_end(it) && it->type() != token_type::begin);
 }
 
 compound_ptr parser::handle_compound(std::vector<token>::iterator& it) const
