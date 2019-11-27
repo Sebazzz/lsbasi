@@ -1,5 +1,6 @@
 #include "stringify_visitor.h"
 #include "token.h"
+#include "interpret_except.h"
 
 std::wstring& stringify_visitor::get_string()
 {
@@ -23,7 +24,18 @@ void stringify_visitor::visit(ast::bin_op& binaryOperator)
 
 void stringify_visitor::visit(ast::num& number)
 {
-	this->string_buf.append(std::to_wstring(number.value()));
+	switch (number.type())
+	{
+	case ast::var_type::integer:
+		this->string_buf.append(std::to_wstring(number.value_integer()));
+		break;
+	case ast::var_type::real:
+		this->string_buf.append(std::to_wstring(number.value_real()));
+		break;
+	default:
+		throw interpret_except("Unsupported number type", std::to_string(static_cast<int>(number.type())))
+		;
+	}
 }
 
 void stringify_visitor::visit(ast::ast_node& node)

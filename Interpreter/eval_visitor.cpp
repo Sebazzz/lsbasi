@@ -48,7 +48,18 @@ void eval_visitor::visit(ast::bin_op& binaryOperator)
 
 void eval_visitor::visit(ast::num& number)
 {
-	this->register_visit_result(number.value());
+	switch (number.type())
+	{
+	case ast::var_type::integer:
+		this->register_visit_result(number.value_integer());
+		break;
+	case ast::var_type::real:
+		this->register_visit_result(number.value_real());
+		break;
+	default:
+		throw interpret_except("Unsupported number type", std::to_string(static_cast<int>(number.type())))
+		;
+	}
 }
 
 void eval_visitor::visit(ast::ast_node& node)

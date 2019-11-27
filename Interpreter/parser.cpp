@@ -96,14 +96,29 @@ ast_ptr parser::handle_integer(std::vector<token>::iterator& it) const
 
 	if (it->type() != token_type::integer_const)
 	{
-		throw interpret_except("Expected integer", it->to_string());
 	}
-	
+
 	try
 	{
-		const auto val = std::stoi(it->value());
-		++it;
-		return make_ast_ptr<num>(val);
+		switch (it->type())
+		{
+		case token_type::integer_const:
+			{
+				const auto val_i = std::stoi(it->value());
+				++it;
+				return make_ast_ptr<num>(val_i);
+			}
+
+		case token_type::real_const:
+			{
+				const auto val_r = std::stod(it->value());
+				++it;
+				return make_ast_ptr<num>(val_r);
+			}
+			
+		default:
+			throw interpret_except("Expected integer or real", it->to_string());
+		}
 	} catch (std::invalid_argument& e)
 	{
 		throw interpret_except(e);
