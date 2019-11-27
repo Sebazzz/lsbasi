@@ -12,12 +12,13 @@ private:
 	struct var
 	{
 		double value;
+		ast::var_type type;
 		bool is_from_parent_scope;
 	};
 	
 	std::map<ast::var_identifier, var, case_insensitive_string_comparer> m_variables;
 
-	void set_from_parent(const ast::var_identifier& identifier, double value);
+	void set_from_parent(const ast::var_identifier& identifier, const var& var_info);
 
 	/**
 	 * Contains a pointer to the parent scope. I believe raw pointer usage is justified because
@@ -27,6 +28,8 @@ private:
 
 public:
 	double get(const ast::var_identifier& identifier);
+
+	void declare(const ast::var_identifier& identifier, ast::var_type type);
 
 	void set(const ast::var_identifier& identifier, double value);
 
@@ -81,6 +84,8 @@ public:
 	void visit(ast::compound& compound) override;
 	void visit(ast::assign& assign) override;
 	void visit(ast::var& var) override;
+	void visit(ast::var_decl& var_decl) override;
+	void visit(ast::block& block) override;
 	
 	[[nodiscard]] std::wstring last_value() const;
 };

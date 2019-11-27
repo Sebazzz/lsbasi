@@ -19,7 +19,8 @@ END.        \
 
 	REQUIRE( do_interpret_program(L"\
 PROGRAM Semi;                           \
-VAR a, b, c, number: REAL;\
+VAR a, b, c: REAL;\
+    x, number: INTEGER;\
 BEGIN                                   \
     BEGIN                               \
         number := 2;                    \
@@ -35,6 +36,8 @@ END.                                    \
 TEST_CASE( "Interpretation succeeds - program (case insensitive)", "[interpreter_program]" ) {
 	REQUIRE( do_interpret_program(L"\
 PROGRAM Semi;                           \
+VAR a, b, c: REAL;\
+    x, number: INTEGER;\
 begIN                                   \
     BegiN                               \
         NUMBer := 2;                    \

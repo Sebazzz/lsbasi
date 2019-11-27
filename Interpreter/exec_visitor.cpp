@@ -1,9 +1,10 @@
 #include "exec_visitor.h"
 #include "interpret_except.h"
 
-void variable_register::set_from_parent(const ast::var_identifier& identifier, double value)
+
+void variable_register::set_from_parent(const ast::var_identifier& identifier, const var& var_info)
 {
-	var v { value, true };
+	var v = {var_info.value, var_info.type, true};
 	this->m_variables.insert_or_assign(identifier, v);
 }
 
@@ -20,19 +21,35 @@ double variable_register::get(const ast::var_identifier& identifier)
 	return var_val->second.value;
 }
 
+void variable_register::declare(const ast::var_identifier& identifier, ast::var_type type)
+{
+	var v { 0, type, false };
+	const auto success = this->m_variables.try_emplace(identifier, v);
+
+	if (!success.second)
+	{
+		throw interpret_except("Duplicate declaration", identifier);
+	}
+}
+
 void variable_register::set(const ast::var_identifier& identifier, double value)
 {
-	var v { value, false };
-	this->m_variables.insert_or_assign(identifier, v);
+	try
+	{
+		this->m_variables.at(identifier).value = value;
+	} catch (std::exception&)
+	{
+		throw interpret_except("Undeclared variable", identifier);
+	}
 }
 
 std::unique_ptr<variable_register> variable_register::create_from_parent_scope(const variable_register* parent)
 {
 	std::unique_ptr<variable_register> var_reg(new variable_register());
 
-	for (auto && pair : parent->m_variables)
-	{
-		var_reg->set_from_parent(pair.first, pair.second.value);
+	for (auto && pair : parent->m_variables) {	
+		const auto& var_info = pair.second;
+		var_reg->set_from_parent(pair.first, var_info);
 	}
 	
 	return var_reg;
@@ -96,9 +113,7 @@ void exec_visitor::visit(ast::ast_node& node)
 
 void exec_visitor::visit(ast::compound& compound)
 {
-	this->m_stack.push();
 	ast_node_visitor::visit(compound);
-	this->m_stack.pop();
 
 	this->register_visit_result(0);
 }
@@ -125,6 +140,20 @@ void exec_visitor::visit(ast::var& var)
 	// Lookup in current scope
 	const auto var_val = ctx.variables->get(var.identifier());
 	this->register_visit_result(var_val);
+}
+
+void exec_visitor::visit(ast::var_decl& var_decl)
+{
+	auto& current_context = this->m_stack.current_context();
+
+	current_context.variables->declare(var_decl.identifier(), var_decl.type());
+}
+
+void exec_visitor::visit(ast::block& block)
+{
+	this->m_stack.push();
+	ast_node_visitor::visit(block);
+	this->m_stack.pop();
 }
 
 std::wstring exec_visitor::last_value() const
