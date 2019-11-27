@@ -24,12 +24,12 @@ private:
 	/**
 	 * Interpret in REPL mode
 	 */
-	std::wstring interpret_repl() const;
+	[[nodiscard]] std::wstring interpret_repl() const;
 
 	/**
 	 * Interpret, expecting full program
 	 */
-	std::wstring interpret_program() const;
+	[[nodiscard]] std::wstring interpret_program() const;
 
 
 public:
