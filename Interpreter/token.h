@@ -9,8 +9,6 @@ private:
 	token_type _type;
 	std::wstring _value;
 	
-	[[nodiscard]] const wchar_t* getTokenTypeAsString() const;
-
 public:
 	[[nodiscard]] std::wstring value() const;
 
@@ -51,5 +49,7 @@ public:
 	[[nodiscard]] std::wstring to_string() const;
 
 	static token eof();
+
+	static const wchar_t* token_type_to_string(token_type type);
 };
 

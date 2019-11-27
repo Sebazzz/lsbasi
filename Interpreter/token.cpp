@@ -10,9 +10,9 @@ token_type token::type() const
 	return _type;
 }
 
-const wchar_t* token::getTokenTypeAsString() const
+const wchar_t* token::token_type_to_string(token_type type)
 {
-	switch (this->_type)
+	switch (type)
 	{
 	case token_type::plus:
 		return L"plus";
@@ -30,7 +30,7 @@ const wchar_t* token::getTokenTypeAsString() const
 		return L"rdiv";
 		
 	case token_type::eof:
-		return L"eof";
+		return L"end of file";
 
 	case token_type::integer_const:
 		return L"int";
@@ -87,7 +87,12 @@ const wchar_t* token::getTokenTypeAsString() const
 
 std::wstring token::to_string() const
 {
-	const wchar_t* tokenType = getTokenTypeAsString();
+	if (this->type() == token_type::eof)
+	{
+		return L"end of file";
+	}
+	
+	const wchar_t* tokenType = token_type_to_string(this->type());
 
 	if (this->_value.empty())
 	{
@@ -101,3 +106,4 @@ token token::eof()
 {
 	return token(token_type::eof, std::wstring());
 }
+
