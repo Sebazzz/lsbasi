@@ -25,7 +25,14 @@ public:
 	void visit(ast::var& var) override;
 	void visit(ast::var_decl& var_decl) override;
 	void visit(ast::block& block) override;
+	void visit(ast::program& program) override;
 	
 	[[nodiscard]] std::wstring last_value() const;
+
+	/**
+	 * Gets the global scope. This is primarily for unit testing purposes where we want to check if
+	 * the interpreter did its job.
+	 */
+	const scope_context& global_scope() const;
 };
 
