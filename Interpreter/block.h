@@ -1,21 +1,12 @@
 #pragma once
 #include "ast_common.h"
-#include <vector>
 
 namespace ast
 {
-	class block;
-	class compound;
-	class var_decl;
-	class procedure;
-
-	using compound_ptr = ast_node_ptr<compound>;
-
-	using procedure_decl_ptr = ast_node_ptr<procedure>;
 	using procedure_decl_list = std::vector<procedure_decl_ptr>;
-
-	using var_decl_ptr = ast_node_ptr<var_decl>;
 	using var_decl_list = std::vector<var_decl_ptr>;
+	
+	class block;
 }
 
 class ast::block final : public ast_node

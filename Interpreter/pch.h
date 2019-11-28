@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <string>
 #include <utility>
+#include <vector>
 
 // Private
 #include "ast_common.h"

@@ -20,4 +20,14 @@ namespace ast
 		symbol_value(int value) : int_val(value){}
 		symbol_value(double value) : real_val(value){}
 	};
+
+	// Fwd declarations
+	class compound;
+	class var_decl;
+	class procedure;
+
+	// Common pointer types
+	using compound_ptr = ast_node_ptr<compound>;
+	using procedure_decl_ptr = ast_node_ptr<procedure>;
+	using var_decl_ptr = ast_node_ptr<var_decl>;
 }
