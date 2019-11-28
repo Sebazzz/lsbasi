@@ -24,6 +24,7 @@ enum class token_type
 
 	// program definition
 	program,
+	procedure,
 	begin,
 	end,
 	dot,

@@ -12,7 +12,9 @@
 //
 // block:           declarations compound
 //
-// declarations:    VAR (var_decl SEMI) | empty
+// declarations:    VAR (var_decl SEMI)+ |
+//                  PROCEDURE ID SEMI block SEMI* |
+//                  empty
 //
 // var:             ID (COMMA ID) COLON type_spec
 //
