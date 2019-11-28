@@ -16,7 +16,7 @@ private:
 
 	/**
 	 * Contains a pointer to the parent scope. I believe raw pointer usage is justified because
-	 * we always either have a previous or we don't but the previous can never be dangling.
+	 * we always either have a previous scope (thus symbols) or we don't but the previous scope can never be dangling.
 	 */
 	symbol_table* m_previous = nullptr;
 
