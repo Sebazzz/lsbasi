@@ -3,16 +3,16 @@
 class symbol_table
 {
 private:
-	struct var
+	struct symbol_info
 	{
 		double value;
 		ast::var_type type;
 		bool is_from_parent_scope;
 	};
 	
-	std::map<ast::var_identifier, var, case_insensitive_string_comparer> m_variables;
+	std::map<ast::var_identifier, symbol_info, case_insensitive_string_comparer> m_variables;
 
-	void set_from_parent(const ast::var_identifier& identifier, const var& var_info);
+	void set_from_parent(const ast::var_identifier& identifier, const symbol_info& var_info);
 
 	/**
 	 * Contains a pointer to the parent scope. I believe raw pointer usage is justified because

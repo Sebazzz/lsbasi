@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "symbol_table.h"
 
-void symbol_table::set_from_parent(const ast::var_identifier& identifier, const var& var_info)
+void symbol_table::set_from_parent(const ast::var_identifier& identifier, const symbol_info& var_info)
 {
-	var v = {var_info.value, var_info.type, true};
+	symbol_info v = {var_info.value, var_info.type, true};
 	this->m_variables.insert_or_assign(identifier, v);
 }
 
@@ -22,7 +22,7 @@ double symbol_table::get(const ast::var_identifier& identifier)
 
 void symbol_table::declare(const ast::var_identifier& identifier, ast::var_type type)
 {
-	var v { 0, type, false };
+	symbol_info v { 0, type, false };
 	const auto success = this->m_variables.try_emplace(identifier, v);
 
 	if (!success.second)
