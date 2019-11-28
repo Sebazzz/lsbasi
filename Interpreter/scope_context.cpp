@@ -2,6 +2,22 @@
 #include "scope_context.h"
 #include "memory_table.h"
 
+scope_context::scope_context(const scope_context& other): memory(new memory_table(*other.memory))
+{
+}
+
+scope_context::scope_context(scope_context&& other) noexcept: memory(std::move(other.memory))
+{
+}
+
+scope_context& scope_context::operator=(const scope_context& other)
+{
+	if (this == &other)
+		return *this;
+	memory = std::make_unique<memory_table>(*other.memory);
+	return *this;
+}
+
 scope_context& scope_manager::current_context()
 {
 	// At the top of our program we only have the global scope
@@ -23,10 +39,10 @@ scope_context& scope_manager::push()
 	if (!this->m_scope.empty())
 	{
 		const auto& top_scope = this->m_scope.top();
-		this->m_scope.push(scope_context { memory_table::create_from_parent_scope(top_scope.memory.get()) });
+		this->m_scope.push(scope_context(memory_table::create_from_parent_scope(top_scope.memory.get())));
 	} else
 	{
-		this->m_scope.push(scope_context { memory_table::create_from_parent_scope(this->m_global_scope->memory.get()) });
+		this->m_scope.push(scope_context(memory_table::create_from_parent_scope(this->m_global_scope->memory.get())));
 	}
 	
 	return this->m_scope.top();

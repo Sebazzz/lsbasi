@@ -1,9 +1,24 @@
 #pragma once
+#include "pch.h"
+
 class memory_table;
 
 struct scope_context
 {
 	std::unique_ptr<memory_table> memory;
+
+	scope_context() = default;
+	~scope_context() = default;
+
+	explicit scope_context(const std::unique_ptr<memory_table>& memory_table): memory(memory_table.get())
+	{
+	}
+	
+	scope_context(const scope_context& other);
+
+	scope_context(scope_context&& other) noexcept;
+
+	scope_context& operator=(const scope_context& other);
 };
 
 class scope_manager

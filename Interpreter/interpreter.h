@@ -1,6 +1,7 @@
 #pragma once
-#include "lexer.h"
 #include "parser.h"
+#include "memory_table.h"
+#include "scope_context.h"
 
 /**
  *
@@ -26,12 +27,16 @@ private:
 	/**
 	 * Interpret, expecting full program
 	 */
-	[[nodiscard]] std::wstring interpret_program() const;
+	[[nodiscard]] std::wstring interpret_program();
 
-
+	/**
+	 * After interpretation, contains the global scope
+	 */
+	scope_context m_global_scope;
+	
 public:
 	explicit interpreter(std::wstring input, bool repl_mode = false)
-		: parser(std::move(input)), m_repl_mode(repl_mode)
+		: parser(std::move(input)), m_repl_mode(repl_mode), m_global_scope()
 	{
 	}
 
@@ -49,5 +54,10 @@ public:
 	 * Interprets (executes) the string
 	 */
 	std::wstring interpret();
+
+	/**
+	 * Gets the global scope after interpretation
+	 */
+	scope_context global_scope() const;
 };
 

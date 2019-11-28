@@ -3,6 +3,7 @@
 #include "stringify_visitor.h"
 #include "eval_visitor.h"
 #include "exec_visitor.h"
+#include "memory_table.h"
 
 void interpreter::ensure_parsed()
 {
@@ -55,12 +56,13 @@ std::wstring interpreter::interpret_repl() const
 	return std::to_wstring(result.value.real_val);
 }
 
-std::wstring interpreter::interpret_program() const
+std::wstring interpreter::interpret_program()
 {
 	exec_visitor eval;
 	eval.visit(*this->parsed_ast);
 
-	// TODO: output?
+	// Load global scope
+	this->m_global_scope = eval.global_scope();
 	
 	return std::wstring(L"done");
 }
@@ -75,4 +77,9 @@ std::wstring interpreter::interpret()
 	}
 	
 	return interpret_program();
+}
+
+scope_context interpreter::global_scope() const
+{
+	return this->m_global_scope;
 }
