@@ -1,6 +1,4 @@
 #pragma once
-#include <exception>
-#include <string>
 
 class interpret_except: public std::exception
 {

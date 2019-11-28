@@ -1,5 +1,5 @@
 #pragma once
-#include "ast_node.h"
+#include "ast_common.h"
 #include "bin_op.h"
 #include "unary_op.h"
 #include "num.h"

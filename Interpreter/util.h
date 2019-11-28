@@ -1,6 +1,4 @@
 #pragma once
-#include <string>
-#include <algorithm>
 
 /**
  * For use in std::map - provides a case-insensitive way to compare strings.

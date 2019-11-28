@@ -1,17 +1,11 @@
 #pragma once
-#include "ast_node.h"
+#include "ast_common.h"
 #include "var.h"
 
 namespace ast
 {
-	enum class var_type {
-		integer,
-		real
-	};
-
 	class var_decl;
 }
-
 
 class ast::var_decl :
 	public ast_node

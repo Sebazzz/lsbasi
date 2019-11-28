@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "ast_node_visitor.h"
 
 void ast_node_visitor::visit(ast::ast_node& ast_node)

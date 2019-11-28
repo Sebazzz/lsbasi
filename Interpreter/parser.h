@@ -1,7 +1,7 @@
 #pragma once
 #include "lexer.h"
 #include "lexer_iterator.h"
-#include "ast_node.h"
+#include "ast_common.h"
 #include <vector>
 #include "compound.h"
 #include "block.h"

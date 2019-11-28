@@ -111,6 +111,9 @@
     <ClCompile Include="lexer_iterator.cpp">
       <Filter>Source Files\lexing</Filter>
     </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -196,6 +199,12 @@
     </ClInclude>
     <ClInclude Include="lexer_iterator.h">
       <Filter>Header Files\lexing</Filter>
+    </ClInclude>
+    <ClInclude Include="ast_common.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

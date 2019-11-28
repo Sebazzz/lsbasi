@@ -1,8 +1,5 @@
 #pragma once
-#include <string>
-#include <utility>
 #include "token.h"
-#include <optional>
 
 class lexer
 {

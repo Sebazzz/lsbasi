@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "interpret_except.h"
 
 interpret_except::interpret_except(const std::string& message)

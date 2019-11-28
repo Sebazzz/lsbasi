@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "token.h"
 
 std::wstring token::value() const

@@ -1,21 +1,11 @@
 #pragma once
 #include "var_decl.h"
-#include "ast_node.h"
+#include "ast_common.h"
 
 namespace ast
 {
-	union num_value
-	{
-		int int_val;
-		double real_val;
-
-		num_value(int value) : int_val(value){}
-		num_value(double value) : real_val(value){}
-	};
-
 	class num;	
 }
-
 
 class ast::num :
 	public ast_node
