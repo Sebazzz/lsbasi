@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "parser.h"
-#include "interpret_except.h"
 #include "num.h"
 #include "bin_op.h"
 #include "unary_op.h"

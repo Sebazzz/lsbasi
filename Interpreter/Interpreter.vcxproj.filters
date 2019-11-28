@@ -37,6 +37,12 @@
     <Filter Include="Source Files\interpreter">
       <UniqueIdentifier>{19da65f4-d1ba-4075-8661-872bdc83fbcc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ast_visitor\execution">
+      <UniqueIdentifier>{c99aa2e6-aa82-46cb-9059-d9527d3395e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ast_visitor\execution">
+      <UniqueIdentifier>{fd02d13f-5297-431f-9c53-c1757eb42811}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -58,9 +64,6 @@
       <Filter>Source Files\ast_visitor</Filter>
     </ClCompile>
     <ClCompile Include="stringify_visitor.cpp">
-      <Filter>Source Files\ast_visitor</Filter>
-    </ClCompile>
-    <ClCompile Include="eval_visitor.cpp">
       <Filter>Source Files\ast_visitor</Filter>
     </ClCompile>
     <ClCompile Include="rpn_visitor.cpp">
@@ -93,9 +96,6 @@
     <ClCompile Include="var.cpp">
       <Filter>Source Files\ast</Filter>
     </ClCompile>
-    <ClCompile Include="exec_visitor.cpp">
-      <Filter>Source Files\ast_visitor</Filter>
-    </ClCompile>
     <ClCompile Include="empty.cpp">
       <Filter>Source Files\ast</Filter>
     </ClCompile>
@@ -113,6 +113,18 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="symbol_table.cpp">
+      <Filter>Source Files\ast_visitor\execution</Filter>
+    </ClCompile>
+    <ClCompile Include="exec_visitor.cpp">
+      <Filter>Source Files\ast_visitor\execution</Filter>
+    </ClCompile>
+    <ClCompile Include="eval_visitor.cpp">
+      <Filter>Source Files\ast_visitor\execution</Filter>
+    </ClCompile>
+    <ClCompile Include="scope_context.cpp">
+      <Filter>Source Files\ast_visitor\execution</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -135,9 +147,6 @@
       <Filter>Header Files\ast_visitor</Filter>
     </ClInclude>
     <ClInclude Include="stringify_visitor.h">
-      <Filter>Header Files\ast_visitor</Filter>
-    </ClInclude>
-    <ClInclude Include="eval_visitor.h">
       <Filter>Header Files\ast_visitor</Filter>
     </ClInclude>
     <ClInclude Include="rpn_visitor.h">
@@ -182,9 +191,6 @@
     <ClInclude Include="empty.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
-    <ClInclude Include="exec_visitor.h">
-      <Filter>Header Files\ast_visitor</Filter>
-    </ClInclude>
     <ClInclude Include="util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -205,6 +211,18 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="exec_visitor.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="eval_visitor.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="scope_context.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="symbol_table.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

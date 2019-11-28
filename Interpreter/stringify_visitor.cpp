@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "stringify_visitor.h"
 #include "token.h"
-#include "interpret_except.h"
 
 std::wstring& stringify_visitor::get_string()
 {

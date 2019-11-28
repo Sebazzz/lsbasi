@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "rpn_visitor.h"
-#include "interpret_except.h"
 
 std::wstring& rpn_visitor::get_string()
 {

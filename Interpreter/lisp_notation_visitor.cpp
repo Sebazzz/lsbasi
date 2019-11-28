@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "lisp_notation_visitor.h"
-#include "interpret_except.h"
 
 std::wstring& lisp_notation_visitor::get_string()
 {

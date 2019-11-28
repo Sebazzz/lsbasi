@@ -5,7 +5,6 @@
 #include <iostream>
 #include <fstream>
 #include "interpreter.h"
-#include "interpret_except.h"
 #include "console_color.h"
 #include "rpn_visitor.h"
 #include "invoke_repl_visitor.h"

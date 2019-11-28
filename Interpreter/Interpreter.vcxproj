@@ -232,7 +232,9 @@
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="program.cpp" />
     <ClCompile Include="rpn_visitor.cpp" />
+    <ClCompile Include="scope_context.cpp" />
     <ClCompile Include="stringify_visitor.cpp" />
+    <ClCompile Include="symbol_table.cpp" />
     <ClCompile Include="token.cpp" />
     <ClCompile Include="unary_op.cpp" />
     <ClCompile Include="var.cpp" />
@@ -262,7 +264,9 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="program.h" />
     <ClInclude Include="rpn_visitor.h" />
+    <ClInclude Include="scope_context.h" />
     <ClInclude Include="stringify_visitor.h" />
+    <ClInclude Include="symbol_table.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="token_type.h" />
     <ClInclude Include="unary_op.h" />

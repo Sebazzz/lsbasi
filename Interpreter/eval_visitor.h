@@ -1,7 +1,6 @@
 #pragma once
 #include "ast_node_visitor.h"
 #include <stack>
-#include "interpret_except.h"
 
 class eval_visitor : public ast_node_visitor
 {

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "lexer_iterator.h"
-#include "interpret_except.h"
 
 void lexer_iterator::skip_required(token_type type)
 {

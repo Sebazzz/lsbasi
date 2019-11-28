@@ -1,69 +1,8 @@
 #pragma once
 #include "ast_node_visitor.h"
 #include "var.h"
-#include <map>
-#include <stack>
 #include "eval_visitor.h"
-#include "util.h"
-
-class variable_register
-{
-private:
-	struct var
-	{
-		double value;
-		ast::var_type type;
-		bool is_from_parent_scope;
-	};
-	
-	std::map<ast::var_identifier, var, case_insensitive_string_comparer> m_variables;
-
-	void set_from_parent(const ast::var_identifier& identifier, const var& var_info);
-
-	/**
-	 * Contains a pointer to the parent scope. I believe raw pointer usage is justified because
-	 * we always either have a previous or we don't but the previous can never be dangling.
-	 */
-	variable_register* m_previous = nullptr;
-
-public:
-	double get(const ast::var_identifier& identifier);
-
-	void declare(const ast::var_identifier& identifier, ast::var_type type);
-
-	void set(const ast::var_identifier& identifier, double value);
-
-	static std::unique_ptr<variable_register> create_from_parent_scope(const variable_register* parent);
-	
-	void copy_to_parent();
-};
-
-struct scope_context
-{
-	std::unique_ptr<variable_register> variables;
-};
-
-class scope_manager
-{
-private:
-	std::stack<scope_context> m_scope;
-
-public:
-	/**
-	 * Gets the current context. Throws if not available.
-	 */
-	scope_context& current_context();
-
-	/**
-	 * 
-	 */
-	scope_context& push();
-
-	/**
-	 * Reverts to the previous scope
-	 */
-	void pop();
-};
+#include "scope_context.h"
 
 class exec_visitor :
 	public eval_visitor
