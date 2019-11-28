@@ -77,3 +77,19 @@ BEGIN       \
 END.        \
 ") == std::wstring(L"done") );
 }
+
+TEST_CASE( "Interpretation succeeds - procedures", "[interpreter_program]" ) {
+    REQUIRE( do_interpret_program(L"\
+PROGRAM Semi;                           \
+VAR _a: INTEGER;\
+\
+PROCEDURE P1;\
+BEGIN {P1}\
+\
+END;\
+\
+BEGIN       \
+   _a := 2 div 3;  \
+END.        \
+") == std::wstring(L"done") );
+}

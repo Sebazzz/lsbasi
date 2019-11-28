@@ -7,6 +7,7 @@
 #include "var.h"
 #include "assign.h"
 #include "program.h"
+#include "procedure.h"
 #include "var_decl.h"
 
 using namespace ast;
@@ -215,14 +216,35 @@ ast_ptr parser::handle_program(lexer_iterator& it) const
 	return make_ast_ptr<program>(identifier, block);
 }
 
+ast_node_ptr<procedure> parser::handle_procedure(lexer_iterator& it) const
+{
+	it.skip_required(token_type::procedure);
+
+	// ID
+	const auto procedure_id = it.expect(token_type::identifier).value();
+	it.advance();
+
+	it.skip_required(token_type::semicolon);
+
+	// Expect block
+	auto block = this->handle_block(it);
+
+	it.skip_required(token_type::semicolon);
+
+	return make_ast_node_ptr<procedure>(procedure_id, block);
+}
+
 ast::ast_node_ptr<ast::block> parser::handle_block(lexer_iterator& it) const
 {
 	var_decl_list variable_declaration_list;
 	handle_var_decl_list(it, variable_declaration_list);
 
+	procedure_decl_list procedure_declaration_list;
+	handle_procedure_decl_list(it, procedure_declaration_list);
+
 	const auto compound = handle_compound(it);
 	
-	return make_ast_node_ptr<block>(variable_declaration_list, compound);
+	return make_ast_node_ptr<block>(variable_declaration_list, procedure_declaration_list, compound);
 }
 
 void parser::handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_declaration_list) const
@@ -279,7 +301,22 @@ void parser::handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_de
 
 		it.advance();
 		it.skip_required(token_type::semicolon);
-	} while (!it.is_at_end() && it->type() != token_type::begin);
+	} while (!it.is_at_end() && it->type() == token_type::identifier);
+}
+
+void parser::handle_procedure_decl_list(lexer_iterator& it, ast::procedure_decl_list& procedure_declaration_list) const
+{
+	if (it->type() != token_type::procedure)
+	{
+		// This is not a procedure declaration. Lets return control and hope the next parsing step knows what to do with it.
+		return;
+	}
+
+	do
+	{
+		auto procedure = this->handle_procedure(it);
+		procedure_declaration_list.push_back(procedure);
+	} while (!it.is_at_end() && it->type() == token_type::procedure);
 }
 
 compound_ptr parser::handle_compound(lexer_iterator& it) const

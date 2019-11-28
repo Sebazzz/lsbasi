@@ -230,6 +230,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="num.cpp" />
     <ClCompile Include="parser.cpp" />
+    <ClCompile Include="procedure.cpp" />
     <ClCompile Include="program.cpp" />
     <ClCompile Include="rpn_visitor.cpp" />
     <ClCompile Include="scope_context.cpp" />
@@ -262,6 +263,7 @@
     <ClInclude Include="num.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="procedure.h" />
     <ClInclude Include="program.h" />
     <ClInclude Include="rpn_visitor.h" />
     <ClInclude Include="scope_context.h" />

@@ -10,6 +10,7 @@
 #include "block.h"
 #include "program.h"
 #include "var_decl.h"
+#include "procedure.h"
 
 class ast_node_visitor
 {
@@ -61,6 +62,11 @@ public:
 	 * Visit a program statement - default implementation is visit of var and block
 	 */
 	virtual void visit(ast::program& program);
+
+	/**
+	 * Visit a program statement - default implementation is visit of var and block
+	 */
+	virtual void visit(ast::procedure& procedure);
 
 	/**
 	 * Visit a variable declaration - default implementation is no-op

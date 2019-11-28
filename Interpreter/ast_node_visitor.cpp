@@ -53,6 +53,11 @@ void ast_node_visitor::visit(ast::program& program)
 	program.block()->accept(*this);
 }
 
+void ast_node_visitor::visit(ast::procedure& procedure)
+{
+	procedure.block()->accept(*this);
+}
+
 void ast_node_visitor::visit(ast::var_decl&)
 {
 	// For derived classes to implement

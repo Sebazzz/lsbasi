@@ -126,6 +126,9 @@
     <ClCompile Include="scope_context.cpp">
       <Filter>Source Files\ast_visitor\execution</Filter>
     </ClCompile>
+    <ClCompile Include="procedure.cpp">
+      <Filter>Source Files\ast</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -223,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="symbol_table.h">
       <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="procedure.h">
+      <Filter>Header Files\ast</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
