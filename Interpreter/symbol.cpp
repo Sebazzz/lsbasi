@@ -9,7 +9,13 @@ symbol::symbol(symbol_type symbol, const symbol_identifier& cs): m_type(symbol),
 
 bool symbol::operator<(const symbol& rhs) const
 {
-	return std::tie(this->m_type, this->m_identifier) < std::tie(rhs.m_type, rhs.m_identifier);
+	if (this->m_type < rhs.m_type)
+		return true;
+	if (rhs.m_type < this->m_type)
+		return false;
+
+	const case_insensitive_string_comparer comparer;
+	return comparer(this->m_identifier, rhs.m_identifier);
 }
 
 procedure_symbol::procedure_symbol(ast::procedure_decl_ptr procedure): symbol(symbol_type::procedure, procedure->identifier()), m_procedure(std::move(procedure))
