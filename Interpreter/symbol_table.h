@@ -1,12 +1,40 @@
 #pragma once
 
+struct symbol_contents
+{
+	ast::symbol_value value;
+	ast::var_type type;
+
+	[[nodiscard]] std::wstring to_string() const
+	{
+		std::wstring output;
+		switch (this->type)
+		{
+		case ast::var_type::integer:
+			output += L"integer [";
+			output += std::to_wstring(this->value.int_val);
+			output += L"]";
+			break;
+		case ast::var_type::real:
+			output += L"real - [";
+			output += std::to_wstring(this->value.int_val);
+			output += L"]";
+			break;
+		default:
+			output = L"unknown"
+			;
+		}
+
+		return output;
+	}
+};
+
 class symbol_table
 {
 private:
 	struct symbol_info
 	{
-		double value;
-		ast::var_type type;
+		symbol_contents symbol_contents;
 		bool is_from_parent_scope;
 	};
 	
@@ -21,11 +49,13 @@ private:
 	symbol_table* m_previous = nullptr;
 
 public:
-	double get(const ast::var_identifier& identifier);
+	symbol_contents get(const ast::var_identifier& identifier);
 
 	void declare(const ast::var_identifier& identifier, ast::var_type type);
 
-	void set(const ast::var_identifier& identifier, double value);
+	void ensure_type(const ast::var_identifier& identifier, ast::var_type type);
+	
+	void set(const ast::var_identifier& identifier, ast::symbol_value value);
 
 	static std::unique_ptr<symbol_table> create_from_parent_scope(const symbol_table* parent);
 	

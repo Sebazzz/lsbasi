@@ -3,11 +3,11 @@
 
 void symbol_table::set_from_parent(const ast::var_identifier& identifier, const symbol_info& var_info)
 {
-	symbol_info v = {var_info.value, var_info.type, true};
+	symbol_info v = {var_info.symbol_contents, true};
 	this->m_variables.insert_or_assign(identifier, v);
 }
 
-double symbol_table::get(const ast::var_identifier& identifier)
+symbol_contents symbol_table::get(const ast::var_identifier& identifier)
 {
 	const auto var_val = this->m_variables.find(identifier);
 
@@ -17,7 +17,7 @@ double symbol_table::get(const ast::var_identifier& identifier)
 		throw interpret_except("Unknown variable in this scope", identifier);
 	}
 
-	return var_val->second.value;
+	return var_val->second.symbol_contents;
 }
 
 void symbol_table::declare(const ast::var_identifier& identifier, ast::var_type type)
@@ -31,11 +31,27 @@ void symbol_table::declare(const ast::var_identifier& identifier, ast::var_type 
 	}
 }
 
-void symbol_table::set(const ast::var_identifier& identifier, double value)
+void symbol_table::ensure_type(const ast::var_identifier& identifier, ast::var_type type)
+{
+	const auto var_info = this->m_variables.find(identifier);
+
+	// Check if it exists
+	if (var_info == this->m_variables.end())
+	{
+		throw interpret_except("Unknown variable in this scope", identifier);
+	}
+
+	if (var_info->second.symbol_contents.type != type)
+	{
+		throw interpret_except("Variable is not of expected type", identifier);
+	}
+}
+
+void symbol_table::set(const ast::var_identifier& identifier, ast::symbol_value value)
 {
 	try
 	{
-		this->m_variables.at(identifier).value = value;
+		this->m_variables.at(identifier).symbol_contents.value = value;
 	} catch (std::exception&)
 	{
 		throw interpret_except("Undeclared variable", identifier);
@@ -64,6 +80,6 @@ void symbol_table::copy_to_parent()
 	for (auto && pair : this->m_variables)
 	{
 		auto&& parent_var = this->m_previous->m_variables.find(pair.first);
-		parent_var->second.value = pair.second.value;
+		parent_var->second.symbol_contents = pair.second.symbol_contents;
 	}
 }

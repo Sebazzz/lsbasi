@@ -1,28 +1,29 @@
 #pragma once
 #include "ast_node_visitor.h"
 #include <stack>
+#include "symbol_table.h"
 
 class eval_visitor : public ast_node_visitor
 {
 private:
-	double m_result;
+	symbol_contents m_result;
 
 	/*
 	 * Hold the last evaluated items. This to work around that we don't have visitor with return type.
 	 */
-	std::stack<double> m_stack;
+	std::stack<symbol_contents> m_stack;
 
 protected:
 	/**
 	 * Helper function to visit the specified node and get the result back
 	 */
 	template <class T>
-	double accept(T& node);
+	symbol_contents accept(T& node);
 
 	/**
 	 * Helper method to register the result for further up the call stack
 	 */
-	void register_visit_result(double result);
+	void register_visit_result(symbol_contents result);
 
 public:
 	~eval_visitor() override = default;
@@ -37,11 +38,11 @@ public:
 	void visit(ast::ast_node& node) override;
 	void visit(ast::unary_op& unaryOperator) override;
 	
-	[[nodiscard]] double result() const;
+	[[nodiscard]] symbol_contents result() const;
 };
 
 template <class T>
-double eval_visitor::accept(T& node)
+symbol_contents eval_visitor::accept(T& node)
 {
 	node.accept(*this);
 
@@ -50,7 +51,7 @@ double eval_visitor::accept(T& node)
 		throw interpret_except("Previous node accept did not yield a value", typeid(node).name());
 	}
 
-	const double val = this->m_stack.top();
+	const symbol_contents val = this->m_stack.top();
 	this->m_stack.pop();
 	return val;
 }

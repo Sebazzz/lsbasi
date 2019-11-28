@@ -7,11 +7,13 @@ namespace ast
 	class num;	
 }
 
+struct symbol_contents;
+
 class ast::num :
 	public ast_node
 {
 private:
-	num_value m_value;
+	symbol_value m_value;
 	var_type m_type;
 
 public:
@@ -28,8 +30,8 @@ public:
 
 	~num() = default;
 
-	[[nodiscard]] int value_integer() const;
-	[[nodiscard]] double value_real() const;
+	[[nodiscard]] std::wstring val_to_string() const;
+	[[nodiscard]] symbol_contents to_symbol_contents() const;
 	[[nodiscard]] var_type type() const;
 	
 	void accept(ast_node_visitor& visitor) override;

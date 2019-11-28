@@ -45,14 +45,14 @@ std::wstring interpreter::interpret_repl() const
 	eval_visitor eval;
 	eval.visit(*this->parsed_ast);
 	
-	const double result = eval.result();
+	const auto result = eval.result();
 
-	if (round(result) == result)
+	if (result.type == ast::var_type::integer)
 	{
-		return std::to_wstring(static_cast<int>(result));
+		return std::to_wstring(result.value.int_val);
 	}
 
-	return std::to_wstring(result);
+	return std::to_wstring(result.value.real_val);
 }
 
 std::wstring interpreter::interpret_program() const

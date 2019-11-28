@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "num.h"
 #include "ast_node_visitor.h"
+#include "symbol_table.h"
 
 using namespace ast;
 
@@ -37,14 +38,26 @@ num& num::operator=(num&& other) noexcept
 	return *this;
 }
 
-int num::value_integer() const
+std::wstring num::val_to_string() const
 {
-	return this->m_value.int_val;
+	switch (this->type())
+	{
+	case ast::var_type::integer:
+		return std::to_wstring(this->m_value.int_val);
+	case ast::var_type::real:
+		return std::to_wstring(this->m_value.real_val);
+	default:
+		throw interpret_except("Unsupported number type", std::to_string(static_cast<int>(this->type())))
+		;
+	}
 }
 
-double num::value_real() const
+symbol_contents num::to_symbol_contents() const
 {
-	return this->m_value.real_val;
+	return {
+		this->m_value,
+		this->m_type
+	};
 }
 
 var_type num::type() const

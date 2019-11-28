@@ -13,7 +13,7 @@ void exec_visitor::visit(ast::compound& compound)
 {
 	ast_node_visitor::visit(compound);
 
-	this->register_visit_result(0);
+	this->register_visit_result({0, ast::var_type::integer });
 }
 
 void exec_visitor::visit(ast::assign& assign)
@@ -22,13 +22,22 @@ void exec_visitor::visit(ast::assign& assign)
 
 	// Get result
 	const auto assign_expr = assign.right();
-	const auto result = this->accept(*assign_expr);
+	auto result = this->accept(*assign_expr);
 
 	// Register result
 	const auto identifier = assign.left()->identifier();
-	ctx.symbols->set(identifier, result);
 
-	this->m_last_value = identifier + L" <- " + std::to_wstring(result);
+	// Implicit conversion if destination is real
+	if (ctx.symbols->get(identifier).type == ast::var_type::real && result.type == ast::var_type::integer)
+	{
+		result.value.real_val = result.value.int_val;
+		result.type = ast::var_type::real;
+	}
+	
+	ctx.symbols->ensure_type(identifier, result.type);
+	ctx.symbols->set(identifier, result.value);
+
+	this->m_last_value = identifier + L" <- " + result.to_string();
 }
 
 void exec_visitor::visit(ast::var& var)

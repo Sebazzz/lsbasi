@@ -12,12 +12,12 @@ namespace ast
 		real
 	};
 
-	union num_value
+	union symbol_value
 	{
 		int int_val;
 		double real_val;
 
-		num_value(int value) : int_val(value){}
-		num_value(double value) : real_val(value){}
+		symbol_value(int value) : int_val(value){}
+		symbol_value(double value) : real_val(value){}
 	};
 }

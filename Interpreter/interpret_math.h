@@ -3,6 +3,7 @@
 #include <cfenv>
 
 #include "interpret_except.h"
+#include "symbol_table.h"
 
 template <typename T>
 void add_interpret(T& result, T operand)
@@ -35,10 +36,44 @@ inline void add_interpret(double& result, double operand)
 	}
 }
 
+template <>
+inline void add_interpret(symbol_contents& result, const symbol_contents operand)
+{
+	const auto symbol_type = result.type;
+
+	switch (symbol_type)
+	{
+	case ast::var_type::integer:
+		add_interpret(result.value.int_val, operand.value.int_val);
+		break;
+	case ast::var_type::real:
+		add_interpret(result.value.real_val, operand.value.real_val);
+		break;
+	default: ;
+	}
+}
+
 template <typename T>
 void subtract_interpret(T& result, T operand)
 {
 	add_interpret(result, -1 * operand);
+}
+
+template <>
+inline void subtract_interpret(symbol_contents& result, const symbol_contents operand)
+{
+	const auto symbol_type = result.type;
+
+	switch (symbol_type)
+	{
+	case ast::var_type::integer:
+		subtract_interpret(result.value.int_val, operand.value.int_val);
+		break;
+	case ast::var_type::real:
+		subtract_interpret(result.value.real_val, operand.value.real_val);
+		break;
+	default: ;
+	}
 }
 
 template <typename T>
@@ -50,4 +85,45 @@ void divide_interpret(T& result, T operand)
 	}
 
 	result /= operand;
+}
+
+template <>
+inline void divide_interpret(symbol_contents& result, const symbol_contents operand)
+{
+	const auto symbol_type = result.type;
+
+	switch (symbol_type)
+	{
+	case ast::var_type::integer:
+		divide_interpret(result.value.int_val, operand.value.int_val);
+		break;
+	case ast::var_type::real:
+		divide_interpret(result.value.real_val, operand.value.real_val);
+		break;
+	default: ;
+	}
+}
+
+template <typename T>
+void multiply_interpret(T& result, T operand)
+{
+	// TODO: implement overflow detection
+	result *= operand;
+}
+
+template <>
+inline void multiply_interpret(symbol_contents& result, const symbol_contents operand)
+{
+	const auto symbol_type = result.type;
+
+	switch (symbol_type)
+	{
+	case ast::var_type::integer:
+		multiply_interpret(result.value.int_val, operand.value.int_val);
+		break;
+	case ast::var_type::real:
+		multiply_interpret(result.value.real_val, operand.value.real_val);
+		break;
+	default: ;
+	}
 }
