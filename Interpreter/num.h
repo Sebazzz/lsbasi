@@ -7,7 +7,7 @@ namespace ast
 	class num;	
 }
 
-struct symbol_contents;
+struct memory_contents;
 
 class ast::num :
 	public ast_node
@@ -31,7 +31,7 @@ public:
 	~num() = default;
 
 	[[nodiscard]] std::wstring val_to_string() const;
-	[[nodiscard]] symbol_contents to_symbol_contents() const;
+	[[nodiscard]] memory_contents to_symbol_contents() const;
 	[[nodiscard]] var_type type() const;
 	
 	void accept(ast_node_visitor& visitor) override;

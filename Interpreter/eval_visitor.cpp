@@ -2,7 +2,7 @@
 #include "eval_visitor.h"
 #include "interpret_math.h"
 
-void eval_visitor::register_visit_result(symbol_contents result)
+void eval_visitor::register_visit_result(memory_contents result)
 {
 	this->m_stack.push(result);
 }
@@ -13,8 +13,8 @@ eval_visitor::eval_visitor() : m_result { 0, ast::var_type::integer }
 
 void eval_visitor::visit(ast::bin_op& binaryOperator)
 {
-	symbol_contents result = this->accept(*binaryOperator.left());
-	symbol_contents right_val = this->accept(*binaryOperator.right());
+	memory_contents result = this->accept(*binaryOperator.left());
+	memory_contents right_val = this->accept(*binaryOperator.right());
 
 	// Implicit conversion to real
 	const bool operator_has_real_conversion = binaryOperator.op() == token_type::divide_real;
@@ -118,7 +118,7 @@ void eval_visitor::visit(ast::unary_op& unaryOperator)
 	// ReSharper restore CppSomeObjectMembersMightNotBeInitialized
 }
 
-symbol_contents eval_visitor::result() const
+memory_contents eval_visitor::result() const
 {
 	return this->m_result;
 }

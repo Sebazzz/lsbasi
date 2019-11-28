@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "scope_context.h"
-#include "symbol_table.h"
+#include "memory_table.h"
 
 scope_context& scope_manager::current_context()
 {
@@ -17,10 +17,10 @@ scope_context& scope_manager::push()
 	if (!this->m_scope.empty())
 	{
 		const auto& top_scope = this->m_scope.top();
-		this->m_scope.push(scope_context { symbol_table::create_from_parent_scope(top_scope.symbols.get()) });
+		this->m_scope.push(scope_context { memory_table::create_from_parent_scope(top_scope.symbols.get()) });
 	} else
 	{
-		this->m_scope.push(scope_context { std::make_unique<symbol_table>() });
+		this->m_scope.push(scope_context { std::make_unique<memory_table>() });
 	}
 	
 	return this->m_scope.top();

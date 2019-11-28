@@ -1,9 +1,9 @@
 #pragma once
-#include "symbol_table.h"
+#include "memory_table.h"
 
 struct scope_context
 {
-	std::unique_ptr<symbol_table> symbols;
+	std::unique_ptr<memory_table> symbols;
 };
 
 class scope_manager

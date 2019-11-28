@@ -1,6 +1,7 @@
 #pragma once
+#include "pch.h"
 
-struct symbol_contents
+struct memory_contents
 {
 	ast::symbol_value value;
 	ast::var_type type;
@@ -8,12 +9,12 @@ struct symbol_contents
 	[[nodiscard]] std::wstring to_string() const;
 };
 
-class symbol_table
+class memory_table
 {
 private:
 	struct symbol_info
 	{
-		symbol_contents symbol_contents;
+		memory_contents symbol_contents;
 		bool is_from_parent_scope;
 	};
 	
@@ -25,10 +26,10 @@ private:
 	 * Contains a pointer to the parent scope. I believe raw pointer usage is justified because
 	 * we always either have a previous scope (thus symbols) or we don't but the previous scope can never be dangling.
 	 */
-	symbol_table* m_previous = nullptr;
+	memory_table* m_previous = nullptr;
 
 public:
-	symbol_contents get(const ast::var_identifier& identifier);
+	memory_contents get(const ast::var_identifier& identifier);
 
 	void declare(const ast::var_identifier& identifier, ast::var_type type);
 
@@ -36,7 +37,7 @@ public:
 	
 	void set(const ast::var_identifier& identifier, ast::symbol_value value);
 
-	static std::unique_ptr<symbol_table> create_from_parent_scope(const symbol_table* parent);
+	static std::unique_ptr<memory_table> create_from_parent_scope(const memory_table* parent);
 	
 	void copy_to_parent();
 };

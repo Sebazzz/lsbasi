@@ -3,7 +3,7 @@
 #include <cfenv>
 
 #include "interpret_except.h"
-#include "symbol_table.h"
+#include "memory_table.h"
 
 template <typename T>
 void add_interpret(T& result, T operand)
@@ -37,7 +37,7 @@ inline void add_interpret(double& result, double operand)
 }
 
 template <>
-inline void add_interpret(symbol_contents& result, const symbol_contents operand)
+inline void add_interpret(memory_contents& result, const memory_contents operand)
 {
 	const auto symbol_type = result.type;
 
@@ -60,7 +60,7 @@ void subtract_interpret(T& result, T operand)
 }
 
 template <>
-inline void subtract_interpret(symbol_contents& result, const symbol_contents operand)
+inline void subtract_interpret(memory_contents& result, const memory_contents operand)
 {
 	const auto symbol_type = result.type;
 
@@ -88,7 +88,7 @@ void divide_interpret(T& result, T operand)
 }
 
 template <>
-inline void divide_interpret(symbol_contents& result, const symbol_contents operand)
+inline void divide_interpret(memory_contents& result, const memory_contents operand)
 {
 	const auto symbol_type = result.type;
 
@@ -112,7 +112,7 @@ void multiply_interpret(T& result, T operand)
 }
 
 template <>
-inline void multiply_interpret(symbol_contents& result, const symbol_contents operand)
+inline void multiply_interpret(memory_contents& result, const memory_contents operand)
 {
 	const auto symbol_type = result.type;
 

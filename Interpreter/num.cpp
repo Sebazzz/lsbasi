@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "num.h"
 #include "ast_node_visitor.h"
-#include "symbol_table.h"
+#include "memory_table.h"
 
 using namespace ast;
 
@@ -52,7 +52,7 @@ std::wstring num::val_to_string() const
 	}
 }
 
-symbol_contents num::to_symbol_contents() const
+memory_contents num::to_symbol_contents() const
 {
 	return {
 		this->m_value,

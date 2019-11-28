@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "symbol_table.h"
+#include "memory_table.h"
 #include "exec_visitor.h"
 
 exec_visitor::exec_visitor() = default;

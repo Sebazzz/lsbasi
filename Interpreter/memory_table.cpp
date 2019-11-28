@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "symbol_table.h"
+#include "memory_table.h"
 
-std::wstring symbol_contents::to_string() const
+std::wstring memory_contents::to_string() const
 {
 	std::wstring output;
 	switch (this->type)
@@ -23,13 +23,13 @@ std::wstring symbol_contents::to_string() const
 	return output;
 }
 
-void symbol_table::set_from_parent(const ast::var_identifier& identifier, const symbol_info& var_info)
+void memory_table::set_from_parent(const ast::var_identifier& identifier, const symbol_info& var_info)
 {
 	symbol_info v = {var_info.symbol_contents, true};
 	this->m_variables.insert_or_assign(identifier, v);
 }
 
-symbol_contents symbol_table::get(const ast::var_identifier& identifier)
+memory_contents memory_table::get(const ast::var_identifier& identifier)
 {
 	const auto var_val = this->m_variables.find(identifier);
 
@@ -42,7 +42,7 @@ symbol_contents symbol_table::get(const ast::var_identifier& identifier)
 	return var_val->second.symbol_contents;
 }
 
-void symbol_table::declare(const ast::var_identifier& identifier, ast::var_type type)
+void memory_table::declare(const ast::var_identifier& identifier, ast::var_type type)
 {
 	symbol_info v { 0, type, false };
 	const auto success = this->m_variables.try_emplace(identifier, v);
@@ -53,7 +53,7 @@ void symbol_table::declare(const ast::var_identifier& identifier, ast::var_type 
 	}
 }
 
-void symbol_table::ensure_type(const ast::var_identifier& identifier, ast::var_type type)
+void memory_table::ensure_type(const ast::var_identifier& identifier, ast::var_type type)
 {
 	const auto var_info = this->m_variables.find(identifier);
 
@@ -69,7 +69,7 @@ void symbol_table::ensure_type(const ast::var_identifier& identifier, ast::var_t
 	}
 }
 
-void symbol_table::set(const ast::var_identifier& identifier, ast::symbol_value value)
+void memory_table::set(const ast::var_identifier& identifier, ast::symbol_value value)
 {
 	try
 	{
@@ -80,9 +80,9 @@ void symbol_table::set(const ast::var_identifier& identifier, ast::symbol_value 
 	}
 }
 
-std::unique_ptr<symbol_table> symbol_table::create_from_parent_scope(const symbol_table* parent)
+std::unique_ptr<memory_table> memory_table::create_from_parent_scope(const memory_table* parent)
 {
-	std::unique_ptr<symbol_table> var_reg(new symbol_table());
+	std::unique_ptr<memory_table> var_reg(new memory_table());
 
 	for (auto && pair : parent->m_variables) {	
 		const auto& var_info = pair.second;
@@ -92,7 +92,7 @@ std::unique_ptr<symbol_table> symbol_table::create_from_parent_scope(const symbo
 	return var_reg;
 }
 
-void symbol_table::copy_to_parent()
+void memory_table::copy_to_parent()
 {
 	if (this->m_previous == nullptr)
 	{

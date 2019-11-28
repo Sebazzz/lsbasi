@@ -114,9 +114,6 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="symbol_table.cpp">
-      <Filter>Source Files\ast_visitor\execution</Filter>
-    </ClCompile>
     <ClCompile Include="exec_visitor.cpp">
       <Filter>Source Files\ast_visitor\execution</Filter>
     </ClCompile>
@@ -131,6 +128,9 @@
     </ClCompile>
     <ClCompile Include="symbol.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="memory_table.cpp">
+      <Filter>Source Files\ast_visitor\execution</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,14 +227,14 @@
     <ClInclude Include="scope_context.h">
       <Filter>Header Files\ast_visitor\execution</Filter>
     </ClInclude>
-    <ClInclude Include="symbol_table.h">
-      <Filter>Header Files\ast_visitor\execution</Filter>
-    </ClInclude>
     <ClInclude Include="procedure.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
     <ClInclude Include="symbol.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_table.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
