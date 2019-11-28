@@ -235,6 +235,7 @@
     <ClCompile Include="rpn_visitor.cpp" />
     <ClCompile Include="scope_context.cpp" />
     <ClCompile Include="stringify_visitor.cpp" />
+    <ClCompile Include="symbol.cpp" />
     <ClCompile Include="symbol_table.cpp" />
     <ClCompile Include="token.cpp" />
     <ClCompile Include="unary_op.cpp" />
@@ -268,6 +269,7 @@
     <ClInclude Include="rpn_visitor.h" />
     <ClInclude Include="scope_context.h" />
     <ClInclude Include="stringify_visitor.h" />
+    <ClInclude Include="symbol.h" />
     <ClInclude Include="symbol_table.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="token_type.h" />
