@@ -1,6 +1,28 @@
 #include "pch.h"
 #include "symbol_table.h"
 
+std::wstring symbol_contents::to_string() const
+{
+	std::wstring output;
+	switch (this->type)
+	{
+	case ast::var_type::integer:
+		output += L"integer [";
+		output += std::to_wstring(this->value.int_val);
+		output += L"]";
+		break;
+	case ast::var_type::real:
+		output += L"real - [";
+		output += std::to_wstring(this->value.int_val);
+		output += L"]";
+		break;
+	default:
+		output = L"unknown";
+	}
+
+	return output;
+}
+
 void symbol_table::set_from_parent(const ast::var_identifier& identifier, const symbol_info& var_info)
 {
 	symbol_info v = {var_info.symbol_contents, true};
