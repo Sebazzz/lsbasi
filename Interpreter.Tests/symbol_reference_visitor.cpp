@@ -1,5 +1,6 @@
  #include "catch.hpp"
 #include "../Interpreter/parser.h"
+#include "../Interpreter/symbol.h"
 #include "../Interpreter/symbol_reference_visitor.h"
 
 struct parse_result
@@ -125,6 +126,41 @@ END.        \
 
 	REQUIRE( typeid(*result.symbol_table->get(L"_a")) == typeid(variable_symbol) );
 	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(procedure_symbol) );
+}
+
+TEST_CASE( "Symbol lookup succeeds - nested procedures", "[symbol_reference_visitor]" ) {
+    const auto result = do_parse_program(L"\
+PROGRAM Part12;\
+VAR\
+   a : INTEGER;\
+\
+PROCEDURE P1;\
+VAR\
+   a : REAL;\
+   k : INTEGER;\
+\
+   PROCEDURE P2;\
+   VAR\
+      a, z : INTEGER;\
+   BEGIN {P2}\
+      z := 777;\
+   END;  {P2}\
+\
+BEGIN {P1}\
+\
+END;  {P1}\
+\
+BEGIN {Part12}\
+   a := 10;\
+END.  {Part12}\
+");
+
+	REQUIRE( typeid(*result.symbol_table->get(L"a")) == typeid(variable_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(procedure_symbol) );
+
+    auto proc_symbol = dynamic_cast<procedure_symbol&>(*result.symbol_table->get(L"P1"));
+	REQUIRE( typeid(*proc_symbol.procedure().symbol_table().get(L"P2")) == typeid(procedure_symbol) );
+	REQUIRE( typeid(*proc_symbol.procedure().symbol_table().get(L"k")) == typeid(variable_symbol) );
 }
     
 TEST_CASE( "Symbol lookup fails - program 1", "[symbol_reference_visitor]" ) {
