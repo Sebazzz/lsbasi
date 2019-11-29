@@ -23,6 +23,29 @@ bool symbol::operator<(const symbol& rhs) const
 	return comparer(this->m_identifier, rhs.m_identifier);
 }
 
+builtin_type_symbol::builtin_type_symbol(ast::var_type type): symbol(symbol_type::type, var_type_to_string(type)), m_type(type)
+{
+}
+
+ast::var_type builtin_type_symbol::type() const
+{
+	return this->m_type;
+}
+
+symbol_identifier builtin_type_symbol::var_type_to_string(ast::var_type type)
+{
+	switch (type)
+	{
+	case ast::var_type::integer:
+		return L"INTEGER";
+	case ast::var_type::real:
+		return L"REAL";
+	default:
+		throw std::logic_error("Unknown built-in variable type");
+		;
+	}
+}
+
 procedure_symbol::procedure_symbol(ast::procedure& procedure): symbol(symbol_type::procedure, procedure.identifier()), m_procedure(procedure)
 {
 }

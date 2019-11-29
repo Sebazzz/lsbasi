@@ -16,7 +16,8 @@ symbol_ptr make_symbol_ptr(TArgs&&... args)
 enum class symbol_type
 {
 	procedure,
-	variable
+	variable,
+	type
 };
 
 /**
@@ -38,6 +39,22 @@ public:
 	const std::wstring& identifier() const;
 
 	bool operator<(const symbol& rhs) const;
+};
+
+/**
+ * Represents a built-in type
+ */
+class builtin_type_symbol final : public symbol
+{
+private:
+	ast::var_type m_type;
+
+public:
+	explicit builtin_type_symbol(ast::var_type type);
+
+	[[nodiscard]] ast::var_type type() const;
+
+	static symbol_identifier var_type_to_string(ast::var_type type);
 };
 
 /**
