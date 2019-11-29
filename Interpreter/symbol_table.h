@@ -1,4 +1,5 @@
 #pragma once
+#include <utility>
 #include "pch.h"
 #include "symbol.h"
 
@@ -18,6 +19,40 @@ private:
 public:
 	explicit symbol_table(std::wstring scope_name, symbol_table* parent = nullptr);
 
+	class symbol_table_iterator
+	{
+		friend class symbol_table;
+
+		std::map<symbol_identifier, symbol_ptr, case_insensitive_string_comparer>::const_iterator iterator;
+		const std::map<symbol_identifier, symbol_ptr, case_insensitive_string_comparer>::const_iterator end;
+
+		explicit symbol_table_iterator(std::map<symbol_identifier, symbol_ptr, case_insensitive_string_comparer>::const_iterator iterator, const std::map<symbol_identifier, symbol_ptr, case_insensitive_string_comparer>::const_iterator end)
+			: iterator(std::move(iterator)), end(end)
+		{
+		}
+		
+	public:
+		symbol_ptr operator->() const
+		{
+			return this->iterator->second;
+		}
+
+		[[nodiscard]] symbol_ptr get() const
+		{
+			return this->iterator->second;
+		}
+		
+		[[nodiscard]] bool is_at_end() const
+		{
+			return this->iterator == this->end;
+		}
+
+		void next()
+		{
+			++this->iterator;
+		}
+	};
+	
 	/**
 	 * Gets a symbol from the current or parent scope. Throws if not found.
 	 */
@@ -27,4 +62,9 @@ public:
 	 * Declares a symbol. Throws if already declared.
 	 */
 	void declare(const symbol_ptr& symbol);
+
+	/**
+	 * Gets an iterator at allows iterating over all the symbols
+	 */
+	[[nodiscard]] symbol_table_iterator iterator() const;
 };

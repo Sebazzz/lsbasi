@@ -10,6 +10,13 @@
  */
 class interpreter
 {
+public:
+	struct interpretation_info
+	{
+		std::shared_ptr<scope_context> global_scope;
+		ast_ptr ast;
+	};
+	
 private:
 	parser parser;
 	
@@ -31,8 +38,9 @@ private:
 
 	/**
 	 * After interpretation, contains the global scope
+	 * Primarily purpose is for interrogation in unit tests
 	 */
-	std::shared_ptr<scope_context> m_global_scope;
+	interpretation_info m_interpretation_info;
 	
 public:
 	explicit interpreter(std::wstring input, bool repl_mode = false)
@@ -58,6 +66,6 @@ public:
 	/**
 	 * Gets the global scope after interpretation
 	 */
-	[[nodiscard]] std::shared_ptr<scope_context> global_scope() const;
+	[[nodiscard]] interpretation_info get_interpretation_info() const;
 };
 

@@ -4,9 +4,15 @@
 #include "memory_table.h"
 #include "symbol_reference_visitor.h"
 
-scope_context::scope_context(symbol_table& symbol_table,
-                             const std::unique_ptr<memory_table>& memory_table): memory(memory_table.get()), symbols(symbol_table)
+
+scope_context::scope_context(symbol_table& symbol_table): memory(new memory_table()), symbols(symbol_table)
 {
+	this->memory->init_from_symbol_table(symbol_table);
+}
+
+scope_context::scope_context(symbol_table& symbol_table, memory_table* memory_table): memory(memory_table), symbols(symbol_table)
+{
+	this->memory->init_from_symbol_table(symbol_table);
 }
 
 scope_context::scope_context(const scope_context& other): memory(new memory_table(*other.memory)), symbols(other.symbols)
@@ -80,7 +86,7 @@ void scope_manager::create_global_scope(ast::program& program)
 	symbol_reference_visitor symbol_visitor;
 	symbol_visitor.visit(program);
 	
-	this->m_global_scope = std::make_shared<scope_context>(program.symbol_table(), std::make_unique<memory_table>());
+	this->m_global_scope = std::make_shared<scope_context>(program.symbol_table());
 }
 
 std::shared_ptr<scope_context> scope_manager::global_scope() const

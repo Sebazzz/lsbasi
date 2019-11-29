@@ -62,7 +62,10 @@ std::wstring interpreter::interpret_program()
 	eval.visit(*this->parsed_ast);
 
 	// Load global scope
-	this->m_global_scope = eval.global_scope();
+	this->m_interpretation_info = {
+		eval.global_scope(),
+		this->parsed_ast
+	};
 	
 	return std::wstring(L"done");
 }
@@ -79,7 +82,7 @@ std::wstring interpreter::interpret()
 	return interpret_program();
 }
 
-std::shared_ptr<scope_context> interpreter::global_scope() const
+interpreter::interpretation_info interpreter::get_interpretation_info() const
 {
-	return this->m_global_scope;
+	return this->m_interpretation_info;
 }

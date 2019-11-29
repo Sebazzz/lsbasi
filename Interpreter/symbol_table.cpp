@@ -25,7 +25,7 @@ symbol_ptr symbol_table::get(const ast::var_identifier& identifier)
 			throw interpret_except(L"Attempt to reference symbol with name '" + identifier + L"' which does not exist in this scope: " + this->m_scope_name);
 		}
 	}
-
+	
 	return symbol_it->second;
 }
 
@@ -37,4 +37,9 @@ void symbol_table::declare(const symbol_ptr& symbol)
 	}
 
 	this->m_variables.insert_or_assign(symbol->identifier(), symbol);
+}
+
+symbol_table::symbol_table_iterator symbol_table::iterator() const
+{
+	return symbol_table_iterator(this->m_variables.begin(), this->m_variables.end());
 }

@@ -17,8 +17,8 @@ struct scope_context
 	scope_context() = delete;
 	~scope_context() = default;
 
-	explicit scope_context(symbol_table& symbol_table,
-	                       const std::unique_ptr<memory_table>& memory_table);
+	explicit scope_context(symbol_table& symbol_table);
+	explicit scope_context(symbol_table& symbol_table, memory_table* memory_table);
 
 	scope_context(const scope_context& other);
 

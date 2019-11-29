@@ -6,6 +6,7 @@
 struct interpret_result
 {
     std::shared_ptr<scope_context> global_scope;
+    ast_ptr ast;
     std::wstring output;
 };
 
@@ -29,7 +30,7 @@ double verify_real_symbol(const interpret_result& result, const symbol_identifie
     const auto& contents = result.global_scope->memory->get(symbol);
     const auto var_symbol = dynamic_cast<const variable_symbol&>(*symbol.get());
 
-    if (var_symbol.variable().type() != ast::var_type::integer)
+    if (var_symbol.variable().type() != ast::var_type::real)
     {
         throw std::logic_error("Symbol was not an real");
     }
@@ -43,8 +44,11 @@ interpret_result do_interpret_program(std::wstring input)
 
     const auto result = sut.interpret();
 
+    const auto inter_info = sut.get_interpretation_info();
+
     return {
-        sut.global_scope(),
+        inter_info.global_scope,
+        inter_info.ast,
         result
     };
 }

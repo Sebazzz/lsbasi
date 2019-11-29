@@ -4,6 +4,7 @@
 
 using ast::expression_value;
 
+class symbol_table;
 class memory_table
 {
 private:
@@ -20,7 +21,8 @@ private:
 	 */
 	memory_table* m_parent = nullptr;
 
-	explicit memory_table(memory_table* parent);
+	explicit memory_table(memory_table* parent);\
+	
 
 public:
 	memory_table() = default;
@@ -29,5 +31,10 @@ public:
 
 	void set(const symbol_ptr& symbol, expression_value value);
 
-	static std::unique_ptr<memory_table> create_from_parent_scope(memory_table* parent);
+	static memory_table* create_from_parent_scope(memory_table* parent);
+
+	/**
+	 * Ensures all the known symbols are present
+	 */
+	void init_from_symbol_table(symbol_table& symbol_table);
 };

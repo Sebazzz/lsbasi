@@ -23,6 +23,7 @@ parse_result do_parse_program(std::wstring input)
     };
 }
 
+
 TEST_CASE( "Symbol lookup succeeds - program 1", "[symbol_reference_visitor]" ) {
     const auto result = do_parse_program(L"\
 PROGRAM Simple;\
@@ -32,8 +33,8 @@ BEGIN       \
 END.        \
 ");
 
-    REQUIRE( typeid(result.symbol_table->get(L"a")) == typeid(variable_symbol) );
-    REQUIRE( typeid(result.symbol_table->get(L"b")) == typeid(variable_symbol) );
+    REQUIRE( typeid(*result.symbol_table->get(L"a")) == typeid(variable_symbol) );
+    REQUIRE( typeid(*result.symbol_table->get(L"b")) == typeid(variable_symbol) );
 }
 
 
@@ -53,11 +54,11 @@ BEGIN                                   \
 END.                                    \
 ");
 
-    REQUIRE( typeid(result.symbol_table->get(L"a")) == typeid(variable_symbol) );
-    REQUIRE( typeid(result.symbol_table->get(L"b")) == typeid(variable_symbol) );
-    REQUIRE( typeid(result.symbol_table->get(L"c")) == typeid(variable_symbol) );
-    REQUIRE( typeid(result.symbol_table->get(L"x")) == typeid(variable_symbol) );
-    REQUIRE( typeid(result.symbol_table->get(L"number")) == typeid(variable_symbol) );
+    REQUIRE( typeid(*result.symbol_table->get(L"a")) == typeid(variable_symbol) );
+    REQUIRE( typeid(*result.symbol_table->get(L"b")) == typeid(variable_symbol) );
+    REQUIRE( typeid(*result.symbol_table->get(L"c")) == typeid(variable_symbol) );
+    REQUIRE( typeid(*result.symbol_table->get(L"x")) == typeid(variable_symbol) );
+    REQUIRE( typeid(*result.symbol_table->get(L"number")) == typeid(variable_symbol) );
 }
 
 TEST_CASE( "Symbol lookup succeeds - program (case insensitive)", "[symbol_reference_visitor]" ) {
@@ -76,11 +77,11 @@ begIN                                   \
 ENd.                                    \
 ");
 
-	REQUIRE( typeid(result.symbol_table->get(L"a")) == typeid(variable_symbol) );
-    REQUIRE( typeid(result.symbol_table->get(L"b")) == typeid(variable_symbol) );
-    REQUIRE( typeid(result.symbol_table->get(L"c")) == typeid(variable_symbol) );
-    REQUIRE( typeid(result.symbol_table->get(L"x")) == typeid(variable_symbol) );
-    REQUIRE( typeid(result.symbol_table->get(L"number")) == typeid(variable_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"a")) == typeid(variable_symbol) );
+    REQUIRE( typeid(*result.symbol_table->get(L"b")) == typeid(variable_symbol) );
+    REQUIRE( typeid(*result.symbol_table->get(L"c")) == typeid(variable_symbol) );
+    REQUIRE( typeid(*result.symbol_table->get(L"x")) == typeid(variable_symbol) );
+    REQUIRE( typeid(*result.symbol_table->get(L"number")) == typeid(variable_symbol) );
 }
 
 TEST_CASE( "Symbol lookup succeeds - program (vars with underscore) 1", "[symbol_reference_visitor]" ) {
@@ -92,7 +93,7 @@ BEGIN       \
 END.        \
 ");
 
-	REQUIRE( typeid(result.symbol_table->get(L"_a")) == typeid(variable_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"_a")) == typeid(variable_symbol) );
 }
 
 TEST_CASE( "Symbol lookup succeeds - program (vars with underscore) 2", "[symbol_reference_visitor]" ) {
@@ -104,7 +105,7 @@ BEGIN       \
 END.        \
 ");
 
-	REQUIRE( typeid(result.symbol_table->get(L"_a_b")) == typeid(variable_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"_a_b")) == typeid(variable_symbol) );
 }
 
 TEST_CASE( "Symbol lookup succeeds - procedures", "[symbol_reference_visitor]" ) {
@@ -122,8 +123,8 @@ BEGIN       \
 END.        \
 ");
 
-	REQUIRE( typeid(result.symbol_table->get(L"_a")) == typeid(variable_symbol) );
-	REQUIRE( typeid(result.symbol_table->get(L"P1")) == typeid(procedure_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"_a")) == typeid(variable_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(procedure_symbol) );
 }
     
 TEST_CASE( "Symbol lookup fails - program 1", "[symbol_reference_visitor]" ) {
