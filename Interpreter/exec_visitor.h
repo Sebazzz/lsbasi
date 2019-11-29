@@ -31,6 +31,6 @@ public:
 	 * Gets the global scope. This is primarily for unit testing purposes where we want to check if
 	 * the interpreter did its job.
 	 */
-	[[nodiscard]] const scope_context& global_scope() const;
+	[[nodiscard]] std::shared_ptr<scope_context> global_scope() const;
 };
 

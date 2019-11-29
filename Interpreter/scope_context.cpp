@@ -80,10 +80,10 @@ void scope_manager::create_global_scope(ast::program& program)
 	symbol_reference_visitor symbol_visitor;
 	symbol_visitor.visit(program);
 	
-	this->m_global_scope = std::make_unique<scope_context>(program.symbol_table(), std::make_unique<memory_table>());
+	this->m_global_scope = std::make_shared<scope_context>(program.symbol_table(), std::make_unique<memory_table>());
 }
 
-const scope_context& scope_manager::global_scope() const
+std::shared_ptr<scope_context> scope_manager::global_scope() const
 {
 	if (!this->m_scope.empty())
 	{
@@ -95,5 +95,5 @@ const scope_context& scope_manager::global_scope() const
 		throw std::logic_error("This method is for unit testing purposes - the global scope has not been created yet");
 	}
 
-	return *this->m_global_scope;
+	return this->m_global_scope;
 }

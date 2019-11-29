@@ -5,14 +5,14 @@
 
 struct interpret_result
 {
-    scope_context global_scope;
+    std::shared_ptr<scope_context> global_scope;
     std::wstring output;
 };
 
 int verify_int_symbol(const interpret_result& result, const symbol_identifier& identifier)
 {
-    const auto& symbol = result.global_scope.symbols.get(identifier);
-    const auto& contents = result.global_scope.memory->get(symbol);
+    const auto& symbol = result.global_scope->symbols.get(identifier);
+    const auto& contents = result.global_scope->memory->get(symbol);
     const auto var_symbol = dynamic_cast<const variable_symbol&>(*symbol.get());
 
     if (var_symbol.variable().type() != ast::var_type::integer)
@@ -25,8 +25,8 @@ int verify_int_symbol(const interpret_result& result, const symbol_identifier& i
 
 double verify_real_symbol(const interpret_result& result, const symbol_identifier& identifier)
 {
-    const auto& symbol = result.global_scope.symbols.get(identifier);
-    const auto& contents = result.global_scope.memory->get(symbol);
+    const auto& symbol = result.global_scope->symbols.get(identifier);
+    const auto& contents = result.global_scope->memory->get(symbol);
     const auto var_symbol = dynamic_cast<const variable_symbol&>(*symbol.get());
 
     if (var_symbol.variable().type() != ast::var_type::integer)

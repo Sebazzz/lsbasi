@@ -3,8 +3,6 @@
 #include "memory_table.h"
 #include "scope_context.h"
 
-static symbol_table unknown(L"?");
-
 /**
  *
  * Interpret simple math expressions
@@ -34,11 +32,11 @@ private:
 	/**
 	 * After interpretation, contains the global scope
 	 */
-	scope_context m_global_scope;
+	std::shared_ptr<scope_context> m_global_scope;
 	
 public:
 	explicit interpreter(std::wstring input, bool repl_mode = false)
-		: parser(std::move(input)), m_repl_mode(repl_mode), m_global_scope(unknown, std::make_unique<memory_table>())
+		: parser(std::move(input)), m_repl_mode(repl_mode)
 	{
 	}
 
@@ -60,6 +58,6 @@ public:
 	/**
 	 * Gets the global scope after interpretation
 	 */
-	[[nodiscard]] scope_context global_scope() const;
+	[[nodiscard]] std::shared_ptr<scope_context> global_scope() const;
 };
 

@@ -79,7 +79,7 @@ std::wstring interpreter::interpret()
 	return interpret_program();
 }
 
-scope_context interpreter::global_scope() const
+std::shared_ptr<scope_context> interpreter::global_scope() const
 {
 	return this->m_global_scope;
 }

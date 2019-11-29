@@ -35,7 +35,7 @@ private:
 	/**
 	 * Represents the global scope. Not available until create_global_scope is called.
 	 */
-	std::unique_ptr<scope_context> m_global_scope;
+	std::shared_ptr<scope_context> m_global_scope;
 
 public:
 	/**
@@ -66,5 +66,5 @@ public:
 	/**
 	 * Gets the global scope. This is normally not necessary, but useful for unit testing purposes.
 	 */
-	[[nodiscard]] const scope_context& global_scope() const;
+	[[nodiscard]] std::shared_ptr<scope_context> global_scope() const;
 };

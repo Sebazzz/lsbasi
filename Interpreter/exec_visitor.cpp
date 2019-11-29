@@ -85,7 +85,7 @@ void exec_visitor::visit(ast::program& program)
 	ast_node_visitor::visit(program);
 }
 
-const scope_context& exec_visitor::global_scope() const
+std::shared_ptr<scope_context> exec_visitor::global_scope() const
 {
 	return this->m_stack.global_scope();
 }
