@@ -3,6 +3,7 @@
 
 symbol_table::symbol_table(std::wstring scope_name, symbol_table* parent): m_parent(parent), m_scope_name(std::move(scope_name))
 {
+	// Build up our default, builtin, symbols
 	static symbol_ptr integer_type = make_symbol_ptr<builtin_type_symbol>(ast::builtin_type::integer);
 	static symbol_ptr real_type = make_symbol_ptr<builtin_type_symbol>(ast::builtin_type::real);
 	
