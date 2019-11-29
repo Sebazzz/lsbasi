@@ -3,7 +3,7 @@
 
 struct memory_contents
 {
-	ast::symbol_value value;
+	ast::expression_value value;
 	ast::var_type type;
 
 	[[nodiscard]] std::wstring to_string() const;
@@ -35,7 +35,7 @@ public:
 
 	void ensure_type(const ast::var_identifier& identifier, ast::var_type type);
 	
-	void set(const ast::var_identifier& identifier, ast::symbol_value value);
+	void set(const ast::var_identifier& identifier, ast::expression_value value);
 
 	static std::unique_ptr<memory_table> create_from_parent_scope(const memory_table* parent);
 	

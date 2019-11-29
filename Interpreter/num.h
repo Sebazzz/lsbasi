@@ -13,7 +13,7 @@ class ast::num :
 	public ast_node
 {
 private:
-	symbol_value m_value;
+	expression_value m_value;
 	var_type m_type;
 
 public:

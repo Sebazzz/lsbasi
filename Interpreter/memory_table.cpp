@@ -69,7 +69,7 @@ void memory_table::ensure_type(const ast::var_identifier& identifier, ast::var_t
 	}
 }
 
-void memory_table::set(const ast::var_identifier& identifier, ast::symbol_value value)
+void memory_table::set(const ast::var_identifier& identifier, ast::expression_value value)
 {
 	try
 	{

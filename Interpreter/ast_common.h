@@ -12,13 +12,13 @@ namespace ast
 		real
 	};
 
-	union symbol_value
+	union expression_value
 	{
 		int int_val;
 		double real_val;
 
-		symbol_value(int value) : int_val(value){}
-		symbol_value(double value) : real_val(value){}
+		expression_value(int value) : int_val(value){}
+		expression_value(double value) : real_val(value){}
 	};
 
 	// Fwd declarations
