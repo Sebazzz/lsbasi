@@ -1,6 +1,6 @@
 #pragma once
+#include "pch.h"
 #include "ast_node_visitor.h"
-#include <stack>
 #include "memory_table.h"
 
 class eval_visitor : public ast_node_visitor

@@ -132,6 +132,12 @@
     <ClCompile Include="symbol.cpp">
       <Filter>Source Files\ast_visitor\execution</Filter>
     </ClCompile>
+    <ClCompile Include="symbol_table.cpp">
+      <Filter>Source Files\ast_visitor\execution</Filter>
+    </ClCompile>
+    <ClCompile Include="symbol_reference_visitor.cpp">
+      <Filter>Source Files\ast_visitor\execution</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -234,6 +240,12 @@
       <Filter>Header Files\ast_visitor\execution</Filter>
     </ClInclude>
     <ClInclude Include="symbol.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="symbol_table.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="symbol_reference_visitor.h">
       <Filter>Header Files\ast_visitor\execution</Filter>
     </ClInclude>
   </ItemGroup>

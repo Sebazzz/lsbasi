@@ -44,7 +44,7 @@ public:
 	virtual void visit(ast::compound& compound);
 
 	/**
-	 * Visit a variable - default implementation is no-op
+	 * Visit a variable - default implementation iterates left/right
 	 */
 	virtual void visit(ast::assign& assign);
 

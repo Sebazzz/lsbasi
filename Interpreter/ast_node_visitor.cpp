@@ -33,9 +33,10 @@ void ast_node_visitor::visit(ast::compound& compound)
 	}
 }
 
-void ast_node_visitor::visit(ast::assign&)
+void ast_node_visitor::visit(ast::assign& assign)
 {
-	// For derived classes to implement
+	assign.left()->accept(*this);
+	assign.right()->accept(*this);
 }
 
 void ast_node_visitor::visit(ast::var&)
@@ -68,6 +69,11 @@ void ast_node_visitor::visit(ast::block& block)
 	for (auto& var_decl : block.var_declarations())
 	{
 		var_decl->accept(*this);
+	}
+
+	for (auto& proc_decl : block.procedure_declarations())
+	{
+		proc_decl->accept(*this);
 	}
 
 	block.compound()->accept(*this);

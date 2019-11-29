@@ -1,7 +1,16 @@
 #pragma once
 #include "ast_common.h"
 
+class symbol;
 using symbol_identifier = std::wstring;
+using symbol_ptr = std::shared_ptr<symbol>;
+
+/* Helper function for making a pointer to AST node */
+template <class T, class... TArgs>
+symbol_ptr make_symbol_ptr(TArgs&&... args)
+{
+	return std::make_shared<T>(std::forward<TArgs>(args)...);
+}
 
 enum class symbol_type
 {
@@ -25,29 +34,37 @@ public:
 	virtual ~symbol() = default;
 	virtual std::wstring to_string() = 0;
 
+	const std::wstring& identifier() const;
+
 	bool operator<(const symbol& rhs) const;
 };
 
 /**
  * Represents a procedure
  */
-class procedure_symbol : public symbol
+class procedure_symbol final : public symbol
 {
 private:
-	ast::procedure_decl_ptr m_procedure;
+	ast::procedure& m_procedure;
 
 public:
-	explicit procedure_symbol(ast::procedure_decl_ptr procedure);
+	explicit procedure_symbol(ast::procedure& procedure);
+
+	[[nodiscard]] const ast::procedure& procedure() const;
+	std::wstring to_string() override;
 };
 
 /**
  * Represents a variable
  */
-class variable_symbol : public symbol
+class variable_symbol final : public symbol
 {
 private:
-	ast::var_decl_ptr m_var;
+	ast::var_decl& m_var;
 
 public:
-	explicit variable_symbol(ast::var_decl_ptr variable);
+	explicit variable_symbol(ast::var_decl& variable);
+
+	[[nodiscard]] const ast::var_decl& variable() const;
+	std::wstring to_string() override;
 };

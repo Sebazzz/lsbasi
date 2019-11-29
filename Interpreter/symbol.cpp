@@ -7,6 +7,11 @@ symbol::symbol(symbol_type symbol, const symbol_identifier& cs): m_type(symbol),
 {
 }
 
+const std::wstring& symbol::identifier() const
+{
+	return this->m_identifier;
+}
+
 bool symbol::operator<(const symbol& rhs) const
 {
 	if (this->m_type < rhs.m_type)
@@ -18,10 +23,30 @@ bool symbol::operator<(const symbol& rhs) const
 	return comparer(this->m_identifier, rhs.m_identifier);
 }
 
-procedure_symbol::procedure_symbol(ast::procedure_decl_ptr procedure): symbol(symbol_type::procedure, procedure->identifier()), m_procedure(std::move(procedure))
+procedure_symbol::procedure_symbol(ast::procedure& procedure): symbol(symbol_type::procedure, procedure.identifier()), m_procedure(procedure)
 {
 }
 
-variable_symbol::variable_symbol(ast::var_decl_ptr variable): symbol(symbol_type::procedure, variable->identifier()), m_var(std::move(variable))
+const ast::procedure& procedure_symbol::procedure() const
 {
+	return this->m_procedure;
+}
+
+std::wstring procedure_symbol::to_string()
+{
+	return L"procedure " + this->m_procedure.identifier();
+}
+
+variable_symbol::variable_symbol(ast::var_decl& variable): symbol(symbol_type::procedure, variable.identifier()), m_var(variable)
+{
+}
+
+const ast::var_decl& variable_symbol::variable() const
+{
+	return this->m_var;
+}
+
+std::wstring variable_symbol::to_string()
+{
+	return L"variable " + this->m_var.identifier();
 }
