@@ -11,7 +11,7 @@ namespace ast
 	using block_ptr = ast_node_ptr<block>;
 }
 
-class symbol_reference_visitor;
+class symbol_table_builder;
 class symbol_table;
 
 class ast::program :
@@ -43,6 +43,6 @@ public:
 
 	[[nodiscard]] symbol_table& symbol_table() const;
 
-	friend class ::symbol_reference_visitor;
+	friend class ::symbol_table_builder;
 };
 

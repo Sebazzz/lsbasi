@@ -1,7 +1,7 @@
  #include "catch.hpp"
 #include "../Interpreter/parser.h"
 #include "../Interpreter/symbol.h"
-#include "../Interpreter/symbol_reference_visitor.h"
+#include "../Interpreter/symbol_table_builder.h"
 
 struct parse_result
 {
@@ -15,7 +15,7 @@ parse_result do_parse_program(std::wstring input)
 
     const auto result = sut.parse();
 
-    symbol_reference_visitor symbol_visitor;
+    symbol_table_builder symbol_visitor;
     symbol_visitor.visit(*result);
 
     return {
@@ -25,7 +25,7 @@ parse_result do_parse_program(std::wstring input)
 }
 
 
-TEST_CASE( "Symbol lookup succeeds - program 1", "[symbol_reference_visitor]" ) {
+TEST_CASE( "Symbol lookup succeeds - program 1", "[symbol_table_builder]" ) {
     const auto result = do_parse_program(L"\
 PROGRAM Simple;\
 VAR a: INTEGER; b: REAL;\
@@ -39,7 +39,7 @@ END.        \
 }
 
 
-TEST_CASE( "Symbol lookup succeeds - program 2", "[symbol_reference_visitor]" ) {
+TEST_CASE( "Symbol lookup succeeds - program 2", "[symbol_table_builder]" ) {
     const auto result = do_parse_program(L"\
 PROGRAM Semi;                           \
 VAR a, b, c: REAL;\
@@ -62,7 +62,7 @@ END.                                    \
     REQUIRE( typeid(*result.symbol_table->get(L"number")) == typeid(variable_symbol) );
 }
 
-TEST_CASE( "Symbol lookup succeeds - program (case insensitive)", "[symbol_reference_visitor]" ) {
+TEST_CASE( "Symbol lookup succeeds - program (case insensitive)", "[symbol_table_builder]" ) {
     const auto result = do_parse_program(L"\
 PROGRAM Semi;                           \
 VAR a, b, c: REAL;\
@@ -85,7 +85,7 @@ ENd.                                    \
     REQUIRE( typeid(*result.symbol_table->get(L"number")) == typeid(variable_symbol) );
 }
 
-TEST_CASE( "Symbol lookup succeeds - program (vars with underscore) 1", "[symbol_reference_visitor]" ) {
+TEST_CASE( "Symbol lookup succeeds - program (vars with underscore) 1", "[symbol_table_builder]" ) {
     const auto result = do_parse_program(L"\
 PROGRAM Semi;                           \
 VAR _a: INTEGER;\
@@ -97,7 +97,7 @@ END.        \
 	REQUIRE( typeid(*result.symbol_table->get(L"_a")) == typeid(variable_symbol) );
 }
 
-TEST_CASE( "Symbol lookup succeeds - program (vars with underscore) 2", "[symbol_reference_visitor]" ) {
+TEST_CASE( "Symbol lookup succeeds - program (vars with underscore) 2", "[symbol_table_builder]" ) {
      const auto result = do_parse_program(L"\
 PROGRAM Semi;                           \
 VAR _a_b: INTEGER;\
@@ -109,7 +109,7 @@ END.        \
 	REQUIRE( typeid(*result.symbol_table->get(L"_a_b")) == typeid(variable_symbol) );
 }
 
-TEST_CASE( "Symbol lookup succeeds - procedures", "[symbol_reference_visitor]" ) {
+TEST_CASE( "Symbol lookup succeeds - procedures", "[symbol_table_builder]" ) {
     const auto result = do_parse_program(L"\
 PROGRAM Semi;                           \
 VAR _a: INTEGER;\
@@ -128,7 +128,7 @@ END.        \
 	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(procedure_symbol) );
 }
 
-TEST_CASE( "Symbol lookup succeeds - nested procedures", "[symbol_reference_visitor]" ) {
+TEST_CASE( "Symbol lookup succeeds - nested procedures", "[symbol_table_builder]" ) {
     const auto result = do_parse_program(L"\
 PROGRAM Part12;\
 VAR\
@@ -163,7 +163,7 @@ END.  {Part12}\
 	REQUIRE( typeid(*proc_symbol.procedure().symbol_table().get(L"k")) == typeid(variable_symbol) );
 }
     
-TEST_CASE( "Symbol lookup fails - program 1", "[symbol_reference_visitor]" ) {
+TEST_CASE( "Symbol lookup fails - program 1", "[symbol_table_builder]" ) {
     const auto program = L"\
 PROGRAM Simple;\
 VAR b: REAL;\

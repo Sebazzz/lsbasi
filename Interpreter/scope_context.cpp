@@ -2,7 +2,7 @@
 #include "scope_context.h"
 #include "program.h"
 #include "memory_table.h"
-#include "symbol_reference_visitor.h"
+#include "symbol_table_builder.h"
 
 
 scope_context::scope_context(symbol_table& symbol_table): memory(new memory_table()), symbols(symbol_table)
@@ -83,7 +83,7 @@ void scope_manager::pop()
 
 void scope_manager::create_global_scope(ast::program& program)
 {
-	symbol_reference_visitor symbol_visitor;
+	symbol_table_builder symbol_visitor;
 	symbol_visitor.visit(program);
 	
 	this->m_global_scope = std::make_shared<scope_context>(program.symbol_table());

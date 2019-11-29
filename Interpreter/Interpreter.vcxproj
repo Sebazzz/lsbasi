@@ -237,7 +237,7 @@
     <ClCompile Include="stringify_visitor.cpp" />
     <ClCompile Include="symbol.cpp" />
     <ClCompile Include="memory_table.cpp" />
-    <ClCompile Include="symbol_reference_visitor.cpp" />
+    <ClCompile Include="symbol_table_builder.cpp" />
     <ClCompile Include="symbol_table.cpp" />
     <ClCompile Include="token.cpp" />
     <ClCompile Include="unary_op.cpp" />
@@ -273,7 +273,7 @@
     <ClInclude Include="stringify_visitor.h" />
     <ClInclude Include="symbol.h" />
     <ClInclude Include="memory_table.h" />
-    <ClInclude Include="symbol_reference_visitor.h" />
+    <ClInclude Include="symbol_table_builder.h" />
     <ClInclude Include="symbol_table.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="token_type.h" />

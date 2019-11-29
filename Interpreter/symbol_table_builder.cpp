@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "symbol.h"
-#include "symbol_reference_visitor.h"
+#include "symbol_table_builder.h"
 
-symbol_reference_visitor::symbol_reference_visitor(const std::wstring& scope_name, ::symbol_table* parent_table)
+symbol_table_builder::symbol_table_builder(const std::wstring& scope_name, ::symbol_table* parent_table)
 {
 	this->m_symbol_table = std::make_shared<::symbol_table>(scope_name, parent_table);
 }
 
-void symbol_reference_visitor::ensure_symbol_table() const
+void symbol_table_builder::ensure_symbol_table() const
 {
 	if (!this->m_symbol_table)
 	{
@@ -15,18 +15,18 @@ void symbol_reference_visitor::ensure_symbol_table() const
 	}
 }
 
-void symbol_reference_visitor::visit(ast::ast_node& node)
+void symbol_table_builder::visit(ast::ast_node& node)
 {
 	ast_node_visitor::visit(node);
 }
 
-void symbol_reference_visitor::visit(ast::var& variable)
+void symbol_table_builder::visit(ast::var& variable)
 {
 	// Throws on failure
 	this->m_symbol_table->get(variable.identifier());
 }
 
-void symbol_reference_visitor::visit(ast::var_decl& var_decl)
+void symbol_table_builder::visit(ast::var_decl& var_decl)
 {
 	this->ensure_symbol_table();
 
@@ -34,7 +34,7 @@ void symbol_reference_visitor::visit(ast::var_decl& var_decl)
 	this->m_symbol_table->declare(symbol);
 }
 
-void symbol_reference_visitor::visit(ast::program& program)
+void symbol_table_builder::visit(ast::program& program)
 {
 	if (this->m_symbol_table)
 	{
@@ -48,14 +48,14 @@ void symbol_reference_visitor::visit(ast::program& program)
 	program.block()->accept(*this);
 }
 
-void symbol_reference_visitor::visit(ast::procedure& procedure)
+void symbol_table_builder::visit(ast::procedure& procedure)
 {
 	const auto symbol = make_symbol_ptr<procedure_symbol>(procedure);
 	
 	if (this->m_symbol_table)
 	{
 		// We found a (nested) procedure. New scope.
-		symbol_reference_visitor nested_scope_visitor(procedure.identifier(), this->m_symbol_table.get());
+		symbol_table_builder nested_scope_visitor(procedure.identifier(), this->m_symbol_table.get());
 		nested_scope_visitor.symbol_table()->declare(symbol);
 		
 		procedure.block()->accept(nested_scope_visitor);
@@ -75,7 +75,7 @@ void symbol_reference_visitor::visit(ast::procedure& procedure)
 	}
 }
 
-std::shared_ptr<symbol_table> symbol_reference_visitor::symbol_table() const
+std::shared_ptr<symbol_table> symbol_table_builder::symbol_table() const
 {
 	return this->m_symbol_table;
 }

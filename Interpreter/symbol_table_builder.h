@@ -6,7 +6,7 @@
 /**
  * This class visits the AST and assigns symbol tables to the appropriate AST nodes
  */
-class symbol_reference_visitor :
+class symbol_table_builder :
 	public ast_node_visitor
 {
 private:
@@ -15,17 +15,17 @@ private:
 	/**
 	 * Private constructor to visit child symbol tables
 	 */
-	symbol_reference_visitor(const std::wstring& scope_name, symbol_table* parent_table);
+	symbol_table_builder(const std::wstring& scope_name, symbol_table* parent_table);
 
 	void ensure_symbol_table() const;
 	
 public:
-	~symbol_reference_visitor() override = default;
-	symbol_reference_visitor() = default;
-	symbol_reference_visitor(const symbol_reference_visitor& other) = delete;
-	symbol_reference_visitor(symbol_reference_visitor&& other) noexcept = delete;
-	symbol_reference_visitor& operator=(const symbol_reference_visitor& other) = delete;
-	symbol_reference_visitor& operator=(symbol_reference_visitor&& other) noexcept = delete;
+	~symbol_table_builder() override = default;
+	symbol_table_builder() = default;
+	symbol_table_builder(const symbol_table_builder& other) = delete;
+	symbol_table_builder(symbol_table_builder&& other) noexcept = delete;
+	symbol_table_builder& operator=(const symbol_table_builder& other) = delete;
+	symbol_table_builder& operator=(symbol_table_builder&& other) noexcept = delete;
 
 	void visit(ast::ast_node& node) override;
 	void visit(ast::var& variable) override;
