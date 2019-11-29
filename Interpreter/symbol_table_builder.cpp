@@ -23,7 +23,7 @@ void symbol_table_builder::visit(ast::ast_node& node)
 void symbol_table_builder::visit(ast::var& variable)
 {
 	// Throws on failure
-	this->m_symbol_table->get(variable.identifier());
+	auto unused = this->m_symbol_table->get(variable.identifier());
 }
 
 void symbol_table_builder::visit(ast::var_decl& var_decl)
