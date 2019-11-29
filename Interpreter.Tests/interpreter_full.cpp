@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "../Interpreter/interpreter.h"
 #include "../Interpreter/symbol.h"
+#include "../Interpreter/var_decl.h"
 
 struct interpret_result
 {
@@ -10,26 +11,30 @@ struct interpret_result
 
 int verify_int_symbol(const interpret_result& result, const symbol_identifier& identifier)
 {
-    const auto& contents = result.global_scope.memory->get(identifier);
+    const auto& symbol = result.global_scope.symbols.get(identifier);
+    const auto& contents = result.global_scope.memory->get(symbol);
+    const auto var_symbol = dynamic_cast<const variable_symbol&>(*symbol.get());
 
-    if (contents.type != ast::var_type::integer)
+    if (var_symbol.variable().type() != ast::var_type::integer)
     {
         throw std::logic_error("Symbol was not an integer");
     }
 
-    return contents.value.int_val;
+    return contents.int_val;
 }
 
 double verify_real_symbol(const interpret_result& result, const symbol_identifier& identifier)
 {
-    const auto& contents = result.global_scope.memory->get(identifier);
+    const auto& symbol = result.global_scope.symbols.get(identifier);
+    const auto& contents = result.global_scope.memory->get(symbol);
+    const auto var_symbol = dynamic_cast<const variable_symbol&>(*symbol.get());
 
-    if (contents.type != ast::var_type::real)
+    if (var_symbol.variable().type() != ast::var_type::integer)
     {
         throw std::logic_error("Symbol was not an real");
     }
 
-    return contents.value.real_val;
+    return contents.real_val;
 }
 
 interpret_result do_interpret_program(std::wstring input)

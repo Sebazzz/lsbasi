@@ -2,19 +2,19 @@
 #include "eval_visitor.h"
 #include "interpret_math.h"
 
-void eval_visitor::register_visit_result(memory_contents result)
+void eval_visitor::register_visit_result(eval_value result)
 {
 	this->m_stack.push(result);
 }
 
-eval_visitor::eval_visitor() : m_result { 0, ast::var_type::integer }
+eval_visitor::eval_visitor() : m_result { ast::var_type::integer, 0 }
 {
 }
 
 void eval_visitor::visit(ast::bin_op& binaryOperator)
 {
-	memory_contents result = this->accept(*binaryOperator.left());
-	memory_contents right_val = this->accept(*binaryOperator.right());
+	eval_value result = this->accept(*binaryOperator.left());
+	eval_value right_val = this->accept(*binaryOperator.right());
 
 	// Implicit conversion to real
 	const bool operator_has_real_conversion = binaryOperator.op() == token_type::divide_real;
@@ -71,7 +71,7 @@ void eval_visitor::visit(ast::num& number)
 	{
 	case ast::var_type::integer:
 	case ast::var_type::real:
-		this->register_visit_result(number.to_symbol_contents());
+		this->register_visit_result({number.type(), number.value()});
 		break;
 	default:
 		throw interpret_except("Unsupported number type", std::to_string(static_cast<int>(number.type())))
@@ -118,7 +118,7 @@ void eval_visitor::visit(ast::unary_op& unaryOperator)
 	// ReSharper restore CppSomeObjectMembersMightNotBeInitialized
 }
 
-memory_contents eval_visitor::result() const
+eval_visitor::eval_value eval_visitor::result() const
 {
 	return this->m_result;
 }

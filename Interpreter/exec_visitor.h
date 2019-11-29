@@ -9,7 +9,8 @@ class exec_visitor :
 {
 private:
 	scope_manager m_stack;
-	std::wstring m_last_value;
+
+	static void ensure_type(const variable_symbol& var_symbol, ast::var_type type);
 	
 public:
 	~exec_visitor() override = default;
@@ -23,16 +24,13 @@ public:
 	void visit(ast::compound& compound) override;
 	void visit(ast::assign& assign) override;
 	void visit(ast::var& var) override;
-	void visit(ast::var_decl& var_decl) override;
 	void visit(ast::block& block) override;
 	void visit(ast::program& program) override;
 	
-	[[nodiscard]] std::wstring last_value() const;
-
 	/**
 	 * Gets the global scope. This is primarily for unit testing purposes where we want to check if
 	 * the interpreter did its job.
 	 */
-	const scope_context& global_scope() const;
+	[[nodiscard]] const scope_context& global_scope() const;
 };
 

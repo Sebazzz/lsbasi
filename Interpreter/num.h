@@ -31,7 +31,7 @@ public:
 	~num() = default;
 
 	[[nodiscard]] std::wstring val_to_string() const;
-	[[nodiscard]] memory_contents to_symbol_contents() const;
+	[[nodiscard]] expression_value value() const;
 	[[nodiscard]] var_type type() const;
 	
 	void accept(ast_node_visitor& visitor) override;

@@ -1,19 +1,25 @@
 #pragma once
+#include <utility>
 #include "pch.h"
+#include "symbol_table.h"
+
+namespace ast {
+	class program;
+}
 
 class memory_table;
 
 struct scope_context
 {
 	std::unique_ptr<memory_table> memory;
+	symbol_table& symbols;
 
-	scope_context() = default;
+	scope_context() = delete;
 	~scope_context() = default;
 
-	explicit scope_context(const std::unique_ptr<memory_table>& memory_table): memory(memory_table.get())
-	{
-	}
-	
+	explicit scope_context(symbol_table& symbol_table,
+	                       const std::unique_ptr<memory_table>& memory_table);
+
 	scope_context(const scope_context& other);
 
 	scope_context(scope_context&& other) noexcept;
@@ -38,9 +44,14 @@ public:
 	scope_context& current_context();
 
 	/**
-	 * Enters a new scope
+	 * Enters a new scope with the current scope as parent
 	 */
-	scope_context& push();
+	scope_context& push(symbol_table& symbol_table);
+
+	/**
+	 * Enters a new scope (procedure)
+	 */
+	scope_context& new_scope(symbol_table& symbol_table);
 
 	/**
 	 * Reverts to the previous scope.
@@ -50,10 +61,10 @@ public:
 	/**
 	 * Internal method to create the initial global scope
 	 */
-	void create_global_scope();
+	void create_global_scope(ast::program& program);
 
 	/**
 	 * Gets the global scope. This is normally not necessary, but useful for unit testing purposes.
 	 */
-	const scope_context& global_scope() const;
+	[[nodiscard]] const scope_context& global_scope() const;
 };

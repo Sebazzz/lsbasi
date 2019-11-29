@@ -5,7 +5,7 @@ symbol_table::symbol_table(std::wstring scope_name, symbol_table* parent): m_par
 {
 }
 
-const symbol& symbol_table::get(const ast::var_identifier& identifier)
+symbol_ptr symbol_table::get(const ast::var_identifier& identifier)
 {
 	const auto& symbol_it = this->m_variables.find(identifier);
 
@@ -26,7 +26,7 @@ const symbol& symbol_table::get(const ast::var_identifier& identifier)
 		}
 	}
 
-	return *symbol_it->second;
+	return symbol_it->second;
 }
 
 void symbol_table::declare(const symbol_ptr& symbol)

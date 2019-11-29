@@ -32,7 +32,7 @@ const ast::procedure& procedure_symbol::procedure() const
 	return this->m_procedure;
 }
 
-std::wstring procedure_symbol::to_string()
+std::wstring procedure_symbol::to_string() const
 {
 	return L"procedure " + this->m_procedure.identifier();
 }
@@ -46,7 +46,7 @@ const ast::var_decl& variable_symbol::variable() const
 	return this->m_var;
 }
 
-std::wstring variable_symbol::to_string()
+std::wstring variable_symbol::to_string() const
 {
 	return L"variable " + this->m_var.identifier();
 }

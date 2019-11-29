@@ -52,12 +52,9 @@ std::wstring num::val_to_string() const
 	}
 }
 
-memory_contents num::to_symbol_contents() const
+expression_value num::value() const
 {
-	return {
-		this->m_value,
-		this->m_type
-	};
+	return this->m_value;
 }
 
 var_type num::type() const

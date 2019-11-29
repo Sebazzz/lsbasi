@@ -1,29 +1,36 @@
 #pragma once
 #include "pch.h"
 #include "ast_node_visitor.h"
-#include "memory_table.h"
+#include "ast_common.h"
 
 class eval_visitor : public ast_node_visitor
 {
+public:
+	struct eval_value
+	{
+		ast::var_type type;
+		ast::expression_value value;
+	};
+	
 private:
-	memory_contents m_result;
+	eval_value m_result;
 
 	/*
 	 * Hold the last evaluated items. This to work around that we don't have visitor with return type.
 	 */
-	std::stack<memory_contents> m_stack;
+	std::stack<eval_value> m_stack;
 
 protected:
 	/**
 	 * Helper function to visit the specified node and get the result back
 	 */
 	template <class T>
-	memory_contents accept(T& node);
+	eval_value accept(T& node);
 
 	/**
 	 * Helper method to register the result for further up the call stack
 	 */
-	void register_visit_result(memory_contents result);
+	void register_visit_result(eval_value result);
 
 public:
 	~eval_visitor() override = default;
@@ -38,11 +45,11 @@ public:
 	void visit(ast::ast_node& node) override;
 	void visit(ast::unary_op& unaryOperator) override;
 	
-	[[nodiscard]] memory_contents result() const;
+	[[nodiscard]] eval_value result() const;
 };
 
 template <class T>
-memory_contents eval_visitor::accept(T& node)
+eval_visitor::eval_value eval_visitor::accept(T& node)
 {
 	node.accept(*this);
 
@@ -51,7 +58,7 @@ memory_contents eval_visitor::accept(T& node)
 		throw interpret_except("Previous node accept did not yield a value", typeid(node).name());
 	}
 
-	const memory_contents val = this->m_stack.top();
+	const eval_value val = this->m_stack.top();
 	this->m_stack.pop();
 	return val;
 }

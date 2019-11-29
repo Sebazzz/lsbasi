@@ -21,7 +21,7 @@ public:
 	/**
 	 * Gets a symbol from the current or parent scope. Throws if not found.
 	 */
-	const symbol& get(const ast::var_identifier& identifier);
+	symbol_ptr get(const ast::var_identifier& identifier);
 
 	/**
 	 * Declares a symbol. Throws if already declared.

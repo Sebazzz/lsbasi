@@ -3,6 +3,7 @@
 
 class symbol;
 using symbol_identifier = std::wstring;
+
 using symbol_ptr = std::shared_ptr<symbol>;
 
 /* Helper function for making a pointer to AST node */
@@ -32,7 +33,7 @@ protected:
 
 public:
 	virtual ~symbol() = default;
-	virtual std::wstring to_string() = 0;
+	virtual std::wstring to_string() const = 0;
 
 	const std::wstring& identifier() const;
 
@@ -51,7 +52,7 @@ public:
 	explicit procedure_symbol(ast::procedure& procedure);
 
 	[[nodiscard]] const ast::procedure& procedure() const;
-	std::wstring to_string() override;
+	[[nodiscard]] std::wstring to_string() const override;
 };
 
 /**
@@ -66,5 +67,5 @@ public:
 	explicit variable_symbol(ast::var_decl& variable);
 
 	[[nodiscard]] const ast::var_decl& variable() const;
-	std::wstring to_string() override;
+	[[nodiscard]] std::wstring to_string() const override;
 };

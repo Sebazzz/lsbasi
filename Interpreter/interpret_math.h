@@ -37,7 +37,7 @@ inline void add_interpret(double& result, double operand)
 }
 
 template <>
-inline void add_interpret(memory_contents& result, const memory_contents operand)
+inline void add_interpret(eval_visitor::eval_value& result, const eval_visitor::eval_value operand)
 {
 	const auto symbol_type = result.type;
 
@@ -60,7 +60,7 @@ void subtract_interpret(T& result, T operand)
 }
 
 template <>
-inline void subtract_interpret(memory_contents& result, const memory_contents operand)
+inline void subtract_interpret(eval_visitor::eval_value& result, const eval_visitor::eval_value operand)
 {
 	const auto symbol_type = result.type;
 
@@ -88,7 +88,7 @@ void divide_interpret(T& result, T operand)
 }
 
 template <>
-inline void divide_interpret(memory_contents& result, const memory_contents operand)
+inline void divide_interpret(eval_visitor::eval_value& result, const eval_visitor::eval_value operand)
 {
 	const auto symbol_type = result.type;
 
@@ -112,7 +112,7 @@ void multiply_interpret(T& result, T operand)
 }
 
 template <>
-inline void multiply_interpret(memory_contents& result, const memory_contents operand)
+inline void multiply_interpret(eval_visitor::eval_value& result, const eval_visitor::eval_value operand)
 {
 	const auto symbol_type = result.type;
 
