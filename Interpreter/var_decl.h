@@ -1,9 +1,11 @@
 #pragma once
 #include "ast_common.h"
-#include "var.h"
+#include "type.h"
 
 namespace ast
 {
+	using type_ptr = ast_node_ptr<type>;
+	
 	class var_decl;
 }
 
@@ -12,10 +14,10 @@ class ast::var_decl :
 {
 private:
 	var_identifier m_identifier;
-	var_type m_type;
+	type_ptr m_type;
 
 public:
-	var_decl(var_identifier identifier, var_type type);
+	var_decl(var_identifier identifier, type_ptr type);
 
 	~var_decl() = default;
 
@@ -28,7 +30,7 @@ public:
 	var_decl& operator=(var_decl&& other) noexcept;
 
 	[[nodiscard]] const var_identifier& identifier() const;
-	[[nodiscard]] var_type type() const;
+	[[nodiscard]] type_ptr type() const;
 	
 	void accept(ast_node_visitor& visitor) override;
 };

@@ -14,7 +14,7 @@ class ast::num :
 {
 private:
 	expression_value m_value;
-	var_type m_type;
+	builtin_type m_type;
 
 public:
 	num(double value);
@@ -32,7 +32,7 @@ public:
 
 	[[nodiscard]] std::wstring val_to_string() const;
 	[[nodiscard]] expression_value value() const;
-	[[nodiscard]] var_type type() const;
+	[[nodiscard]] builtin_type type() const;
 	
 	void accept(ast_node_visitor& visitor) override;
 };

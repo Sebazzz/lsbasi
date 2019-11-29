@@ -240,6 +240,7 @@
     <ClCompile Include="symbol_table_builder.cpp" />
     <ClCompile Include="symbol_table.cpp" />
     <ClCompile Include="token.cpp" />
+    <ClCompile Include="type.cpp" />
     <ClCompile Include="unary_op.cpp" />
     <ClCompile Include="var.cpp" />
     <ClCompile Include="var_decl.cpp" />
@@ -277,6 +278,7 @@
     <ClInclude Include="symbol_table.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="token_type.h" />
+    <ClInclude Include="type.h" />
     <ClInclude Include="unary_op.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="var.h" />

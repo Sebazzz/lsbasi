@@ -74,13 +74,7 @@ const wchar_t* token::token_type_to_string(token_type type)
 		
 	case token_type::identifier:
 		return L"idf";
-
-	case token_type::integer_type:
-		return L"int_t";
 		
-	case token_type::real_type:
-		return L"real_t";
-
 	case token_type::var_decl:
 		return L"var_decl";
 		

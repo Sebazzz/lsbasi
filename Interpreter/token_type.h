@@ -7,8 +7,7 @@ enum class token_type
 	real_const,
 
 	// data types
-	integer_type,
-	real_type,
+	type,
 	var_decl,
 
 	// operators

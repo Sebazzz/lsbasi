@@ -43,10 +43,10 @@ inline void add_interpret(eval_visitor::eval_value& result, const eval_visitor::
 
 	switch (symbol_type)
 	{
-	case ast::var_type::integer:
+	case ast::builtin_type::integer:
 		add_interpret(result.value.int_val, operand.value.int_val);
 		break;
-	case ast::var_type::real:
+	case ast::builtin_type::real:
 		add_interpret(result.value.real_val, operand.value.real_val);
 		break;
 	default: ;
@@ -66,10 +66,10 @@ inline void subtract_interpret(eval_visitor::eval_value& result, const eval_visi
 
 	switch (symbol_type)
 	{
-	case ast::var_type::integer:
+	case ast::builtin_type::integer:
 		subtract_interpret(result.value.int_val, operand.value.int_val);
 		break;
-	case ast::var_type::real:
+	case ast::builtin_type::real:
 		subtract_interpret(result.value.real_val, operand.value.real_val);
 		break;
 	default: ;
@@ -94,10 +94,10 @@ inline void divide_interpret(eval_visitor::eval_value& result, const eval_visito
 
 	switch (symbol_type)
 	{
-	case ast::var_type::integer:
+	case ast::builtin_type::integer:
 		divide_interpret(result.value.int_val, operand.value.int_val);
 		break;
-	case ast::var_type::real:
+	case ast::builtin_type::real:
 		divide_interpret(result.value.real_val, operand.value.real_val);
 		break;
 	default: ;
@@ -118,10 +118,10 @@ inline void multiply_interpret(eval_visitor::eval_value& result, const eval_visi
 
 	switch (symbol_type)
 	{
-	case ast::var_type::integer:
+	case ast::builtin_type::integer:
 		multiply_interpret(result.value.int_val, operand.value.int_val);
 		break;
-	case ast::var_type::real:
+	case ast::builtin_type::real:
 		multiply_interpret(result.value.real_val, operand.value.real_val);
 		break;
 	default: ;

@@ -32,7 +32,8 @@ public:
 	void visit(ast::var_decl& var_decl) override;
 	void visit(ast::program& program) override;
 	void visit(ast::procedure& procedure) override;
-
+	void visit(ast::type& type_ref) override;
+	
 	[[nodiscard]] std::shared_ptr<symbol_table> symbol_table() const;
 };
 

@@ -280,14 +280,11 @@ void parser::handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_de
 		it.skip_required(token_type::colon);
 
 		// Get the type
-		var_type v_type;
+		type_identifier v_type;
 		switch (it->type())
 		{
-			case token_type::integer_type:
-				v_type = var_type::integer;
-			break;
-			case token_type::real_type:
-				v_type = var_type::real;
+			case token_type::identifier:
+				v_type = it->value();
 			break;
 			default: throw interpret_except("Expected type specification", it->to_string());
 		}
@@ -295,7 +292,7 @@ void parser::handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_de
 		for (auto && identifier : identifiers)
 		{
 			var_declaration_list.push_back(
-				make_ast_node_ptr<var_decl>(identifier, v_type)
+				make_ast_node_ptr<var_decl>(identifier, make_ast_node_ptr<type>(v_type))
 			);
 		}
 

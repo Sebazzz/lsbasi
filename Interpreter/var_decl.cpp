@@ -2,7 +2,7 @@
 #include "var_decl.h"
 #include "ast_node_visitor.h"
 
-ast::var_decl::var_decl(var_identifier identifier, var_type type): ast_node(token_type::var_decl),
+ast::var_decl::var_decl(var_identifier identifier, ast::type_ptr type): ast_node(token_type::var_decl),
                                                                    m_identifier(std::move(identifier)),
                                                                    m_type(type)
 {
@@ -39,7 +39,7 @@ const ast::var_identifier& ast::var_decl::identifier() const
 	return this->m_identifier;
 }
 
-ast::var_type ast::var_decl::type() const
+ast::type_ptr ast::var_decl::type() const
 {
 	return this->m_type;
 }

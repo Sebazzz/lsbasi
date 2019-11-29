@@ -47,14 +47,16 @@ public:
 class builtin_type_symbol final : public symbol
 {
 private:
-	ast::var_type m_type;
+	ast::builtin_type m_type;
 
 public:
-	explicit builtin_type_symbol(ast::var_type type);
+	explicit builtin_type_symbol(ast::builtin_type type);
 
-	[[nodiscard]] ast::var_type type() const;
+	[[nodiscard]] ast::builtin_type type() const;
 
-	static symbol_identifier var_type_to_string(ast::var_type type);
+	static symbol_identifier var_type_to_string(ast::builtin_type type);
+	
+	[[nodiscard]] std::wstring to_string() const override;
 };
 
 /**

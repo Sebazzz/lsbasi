@@ -7,7 +7,7 @@ void eval_visitor::register_visit_result(eval_value result)
 	this->m_stack.push(result);
 }
 
-eval_visitor::eval_visitor() : m_result { ast::var_type::integer, 0 }
+eval_visitor::eval_visitor() : m_result { ast::builtin_type::integer, 0 }
 {
 }
 
@@ -18,20 +18,20 @@ void eval_visitor::visit(ast::bin_op& binaryOperator)
 
 	// Implicit conversion to real
 	const bool operator_has_real_conversion = binaryOperator.op() == token_type::divide_real;
-	if (result.type == ast::var_type::real && right_val.type != result.type || operator_has_real_conversion)
+	if (result.type == ast::builtin_type::real && right_val.type != result.type || operator_has_real_conversion)
 	{
-		if (right_val.type == ast::var_type::integer)
+		if (right_val.type == ast::builtin_type::integer)
 		{
 			right_val.value.real_val = right_val.value.int_val;
-			right_val.type = ast::var_type::real;
+			right_val.type = ast::builtin_type::real;
 		}
 	}
 
-	if (result.type != right_val.type && result.type == ast::var_type::integer || operator_has_real_conversion)
+	if (result.type != right_val.type && result.type == ast::builtin_type::integer || operator_has_real_conversion)
 	{
-		if (result.type == ast::var_type::integer){
+		if (result.type == ast::builtin_type::integer){
 			result.value.real_val = result.value.int_val;
-			result.type = ast::var_type::real;
+			result.type = ast::builtin_type::real;
 		}
 	}
 
@@ -69,8 +69,8 @@ void eval_visitor::visit(ast::num& number)
 {
 	switch (number.type())
 	{
-	case ast::var_type::integer:
-	case ast::var_type::real:
+	case ast::builtin_type::integer:
+	case ast::builtin_type::real:
 		this->register_visit_result({number.type(), number.value()});
 		break;
 	default:
@@ -100,10 +100,10 @@ void eval_visitor::visit(ast::unary_op& unaryOperator)
 	case token_type::minus:
 		switch (result.type)
 		{
-		case ast::var_type::integer:
+		case ast::builtin_type::integer:
 			result.value.int_val *= -1;
 			break;
-		case ast::var_type::real:
+		case ast::builtin_type::real:
 			result.value.real_val *= -1;
 			break;
 		default: ;

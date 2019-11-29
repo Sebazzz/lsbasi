@@ -174,3 +174,15 @@ END.        \
 
     REQUIRE_THROWS_MATCHES( do_parse_program(program), interpret_except, Catch::Message("Attempt to reference symbol with name 'a' which does not exist in this scope: Simple"));
 }
+
+TEST_CASE( "Symbol lookup fails - program 2", "[symbol_table_builder]" ) {
+    const auto program = L"\
+PROGRAM Simple;\
+VAR a: NOTEXISTS;\
+BEGIN       \
+   a := 2;  \
+END.        \
+";
+
+    REQUIRE_THROWS_MATCHES( do_parse_program(program), interpret_except, Catch::Message("Attempt to reference symbol with name 'NOTEXISTS' which does not exist in this scope: Simple"));
+}

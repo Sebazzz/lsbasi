@@ -134,8 +134,8 @@ token lexer::read_identifier_or_keyword()
 	static std::map<std::wstring, token, case_insensitive_string_comparer> reserved_keywords {
 		{ L"PROGRAM", token(token_type::program, L"PROGRAM" )},
 		{ L"PROCEDURE", token(token_type::procedure, L"PROCEDURE" )},
-		{ L"INTEGER", token(token_type::integer_type, L"INTEGER" )},
-		{ L"REAL", token(token_type::real_type, L"REAL" )},
+		{ L"INTEGER", token(token_type::identifier, L"INTEGER" )},
+		{ L"REAL", token(token_type::identifier, L"REAL" )},
 		{ L"VAR", token(token_type::var_decl, L"VAR" )},
 		{ L"BEGIN", token(token_type::begin, L"BEGIN" )},
 		{ L"DIV", token(token_type::divide_integer, L"DIV" )},

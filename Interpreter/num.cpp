@@ -5,11 +5,11 @@
 
 using namespace ast;
 
-num::num(const int value): ast_node(token_type::integer_const), m_value(value), m_type(var_type::integer)
+num::num(const int value): ast_node(token_type::integer_const), m_value(value), m_type(builtin_type::integer)
 {
 }
 
-num::num(const double value): ast_node(token_type::integer_const), m_value(value), m_type(var_type::real)
+num::num(const double value): ast_node(token_type::integer_const), m_value(value), m_type(builtin_type::real)
 {
 }
 
@@ -42,9 +42,9 @@ std::wstring num::val_to_string() const
 {
 	switch (this->type())
 	{
-	case ast::var_type::integer:
+	case ast::builtin_type::integer:
 		return std::to_wstring(this->m_value.int_val);
-	case ast::var_type::real:
+	case ast::builtin_type::real:
 		return std::to_wstring(this->m_value.real_val);
 	default:
 		throw interpret_except("Unsupported number type", std::to_string(static_cast<int>(this->type())))
@@ -57,7 +57,7 @@ expression_value num::value() const
 	return this->m_value;
 }
 
-var_type num::type() const
+builtin_type num::type() const
 {
 	return this->m_type;
 }

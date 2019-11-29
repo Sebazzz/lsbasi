@@ -138,6 +138,9 @@
     <ClCompile Include="symbol_table_builder.cpp">
       <Filter>Source Files\ast_visitor\execution</Filter>
     </ClCompile>
+    <ClCompile Include="type.cpp">
+      <Filter>Source Files\ast</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -247,6 +250,9 @@
     </ClInclude>
     <ClInclude Include="symbol_table_builder.h">
       <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="type.h">
+      <Filter>Header Files\ast</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

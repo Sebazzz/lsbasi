@@ -3,11 +3,13 @@
 #include "ast_node.h"
 // ReSharper restore CppUnusedIncludeDirective
 
-namespace ast
-{
-	using var_identifier = std::wstring;
+namespace ast {
+	// Common typedefs
+	using identifier_type = std::wstring;
+	using var_identifier = identifier_type;
+	using type_identifier = identifier_type;
 
-	enum class var_type {
+	enum class builtin_type {
 		integer,
 		real
 	};

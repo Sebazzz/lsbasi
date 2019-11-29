@@ -2,17 +2,19 @@
 #include "memory_table.h"
 #include "exec_visitor.h"
 
-void exec_visitor::ensure_type(const variable_symbol& var_symbol, ast::var_type type)
+void exec_visitor::ensure_type(const variable_symbol& var_symbol, ast::builtin_type type, symbol_table& symbols)
 {
-	if (var_symbol.variable().type() != type)
+	const auto& builtin_type = dynamic_cast<builtin_type_symbol&>(*symbols.get(var_symbol.variable().type()->identifier()));
+
+	if (builtin_type.type() != type)
 	{
 		std::wstring var_type = L"unknown";
 		switch (type)
 		{
-		case ast::var_type::integer:
+		case ast::builtin_type::integer:
 			var_type = L"integer";
 			break;
-		case ast::var_type::real:
+		case ast::builtin_type::real:
 			var_type = L"real";
 			break;
 		}
@@ -32,7 +34,7 @@ void exec_visitor::visit(ast::compound& compound)
 {
 	ast_node_visitor::visit(compound);
 
-	this->register_visit_result({ast::var_type::integer, 0 });
+	this->register_visit_result({ast::builtin_type::integer, 0 });
 }
 
 void exec_visitor::visit(ast::assign& assign)
@@ -47,15 +49,16 @@ void exec_visitor::visit(ast::assign& assign)
 	const auto identifier = assign.left()->identifier();
 	const auto symbol = ctx.symbols.get(identifier);
 	const auto& var_symbol = dynamic_cast<const variable_symbol&>(*symbol);
+	const auto& builtin_type = dynamic_cast<builtin_type_symbol&>(*ctx.symbols.get(var_symbol.variable().type()->identifier()));
 
 	// Implicit conversion if destination is of type real
-	if (var_symbol.variable().type() == ast::var_type::real && result.type == ast::var_type::integer)
+	if (builtin_type.type() == ast::builtin_type::real && result.type == ast::builtin_type::integer)
 	{
 		result.value.real_val = result.value.int_val;
-		result.type = ast::var_type::real;
+		result.type = ast::builtin_type::real;
 	}
 	
-	this->ensure_type(var_symbol, result.type);
+	this->ensure_type(var_symbol, result.type, ctx.symbols);
 	ctx.memory->set(symbol, result.value);
 }
 
@@ -68,7 +71,9 @@ void exec_visitor::visit(ast::var& var)
 	const auto& var_symbol = dynamic_cast<const variable_symbol&>(*symbol);
 	
 	const auto var_val = ctx.memory->get(symbol);
-	this->register_visit_result({var_symbol.variable().type(), var_val});
+	const auto& builtin_type = dynamic_cast<builtin_type_symbol&>(*ctx.symbols.get(var_symbol.variable().type()->identifier()));
+	
+	this->register_visit_result({builtin_type.type(), var_val});
 }
 
 void exec_visitor::visit(ast::block& block)

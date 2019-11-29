@@ -23,7 +23,19 @@ void symbol_table_builder::visit(ast::ast_node& node)
 void symbol_table_builder::visit(ast::var& variable)
 {
 	// Throws on failure
-	auto unused = this->m_symbol_table->get(variable.identifier());
+	if (!this->m_symbol_table->get(variable.identifier()))
+	{
+		throw interpret_except("symbol_type::get will throw");
+	}
+}
+
+void symbol_table_builder::visit(ast::type& type_ref)
+{
+	// Throws on failure
+	if (!this->m_symbol_table->get(type_ref.identifier()))
+	{
+		throw interpret_except("symbol_type::get will throw");
+	}
 }
 
 void symbol_table_builder::visit(ast::var_decl& var_decl)
@@ -32,6 +44,8 @@ void symbol_table_builder::visit(ast::var_decl& var_decl)
 
 	const auto symbol = make_symbol_ptr<variable_symbol>(var_decl);
 	this->m_symbol_table->declare(symbol);
+
+	ast_node_visitor::visit(var_decl);
 }
 
 void symbol_table_builder::visit(ast::program& program)

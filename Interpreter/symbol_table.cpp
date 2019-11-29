@@ -3,11 +3,11 @@
 
 symbol_table::symbol_table(std::wstring scope_name, symbol_table* parent): m_parent(parent), m_scope_name(std::move(scope_name))
 {
-	static symbol_ptr integer_type = make_symbol_ptr<builtin_type_symbol>(ast::var_type::integer);
-	static symbol_ptr real_type = make_symbol_ptr<builtin_type_symbol>(ast::var_type::real);
+	static symbol_ptr integer_type = make_symbol_ptr<builtin_type_symbol>(ast::builtin_type::integer);
+	static symbol_ptr real_type = make_symbol_ptr<builtin_type_symbol>(ast::builtin_type::real);
 	
-	this->m_variables.try_emplace(builtin_type_symbol::var_type_to_string(ast::var_type::integer), integer_type);
-	this->m_variables.try_emplace(builtin_type_symbol::var_type_to_string(ast::var_type::real), real_type);
+	this->m_variables.try_emplace(builtin_type_symbol::var_type_to_string(ast::builtin_type::integer), integer_type);
+	this->m_variables.try_emplace(builtin_type_symbol::var_type_to_string(ast::builtin_type::real), real_type);
 }
 
 symbol_ptr symbol_table::get(const ast::var_identifier& identifier)

@@ -48,7 +48,7 @@ std::wstring interpreter::interpret_repl() const
 	
 	const auto result = eval.result();
 
-	if (result.type == ast::var_type::integer)
+	if (result.type == ast::builtin_type::integer)
 	{
 		return std::to_wstring(result.value.int_val);
 	}

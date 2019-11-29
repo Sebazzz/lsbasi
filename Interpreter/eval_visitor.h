@@ -8,7 +8,7 @@ class eval_visitor : public ast_node_visitor
 public:
 	struct eval_value
 	{
-		ast::var_type type;
+		ast::builtin_type type;
 		ast::expression_value value;
 	};
 	
