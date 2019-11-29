@@ -162,6 +162,19 @@ END.  {Part12}\
 	REQUIRE( typeid(*proc_symbol.procedure().symbol_table().get(L"P2")) == typeid(procedure_symbol) );
 	REQUIRE( typeid(*proc_symbol.procedure().symbol_table().get(L"k")) == typeid(variable_symbol) );
 }
+
+TEST_CASE( "Symbol duplicate declaration fails - program 1", "[symbol_table_builder]" ) {
+    const auto program = L"\
+PROGRAM Simple;\
+VAR b: INTEGER;\
+    b: REAL;\
+BEGIN       \
+   b := 2;  \
+END.        \
+";
+
+    REQUIRE_THROWS_MATCHES( do_parse_program(program), interpret_except, Catch::Message("Attempt to declare duplicate symbol 'variable b' which already exists in this scope: Simple"));
+}
     
 TEST_CASE( "Symbol lookup fails - program 1", "[symbol_table_builder]" ) {
     const auto program = L"\
