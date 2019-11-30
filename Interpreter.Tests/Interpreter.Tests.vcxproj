@@ -166,6 +166,10 @@
     <ClCompile Include="rpn_visitor.cpp" />
     <ClCompile Include="symbol_table_builder.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common_test.h" />
+    <ClInclude Include="string_conv_util.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

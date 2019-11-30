@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include "common_test.h"
 #include "../Interpreter/interpreter.h"
 #include "../Interpreter/interpret_except.h"
 

@@ -1,2 +1,5 @@
 #define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+
+// ReSharper disable CppUnusedIncludeDirective - needed for CATCH
+#include "common_test.h"
+// ReSharper restore CppUnusedIncludeDirective

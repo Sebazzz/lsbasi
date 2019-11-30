@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include "common_test.h"
 #include "../Interpreter/lexer.h"
 
 std::wstring do_lex(lexer& lex)
@@ -75,11 +75,12 @@ END.");
 }
 
 TEST_CASE( "Lexer tokenize test - procedure", "[lexer]" ) {
-    lexer lex(L"\
-PROCEDURE P1;\
-  BEGIN\
-     a := 2;\
-  END;");
+    lexer lex(raw_to_wstring(R"(
+PROCEDURE P1;
+  BEGIN
+     a := 2;
+  END;
+)"));
 
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(procedure,PROCEDURE)") );
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(idf,P1)") );
@@ -94,11 +95,12 @@ PROCEDURE P1;\
 }
 
 TEST_CASE( "Lexer tokenize test - procedure with params", "[lexer]" ) {
-    lexer lex(L"\
-PROCEDURE P1(a : INTEGER);\
-  BEGIN\
-     a := 2;\
-  END;");
+    lexer lex(raw_to_wstring(R"(
+PROCEDURE P1(a : INTEGER);
+  BEGIN
+     a := 2;
+  END;
+)"));
 
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(procedure,PROCEDURE)") );
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(idf,P1)") );
@@ -118,11 +120,12 @@ PROCEDURE P1(a : INTEGER);\
 }
 
 TEST_CASE( "Lexer tokenize test - multiline with comment", "[lexer]" ) {
-    lexer lex(L"\
-BEGIN\
-   a := 2;\
-   { should ignore this! }\
-END.");
+    lexer lex(raw_to_wstring(R"(
+BEGIN
+   a := 2;
+   { should ignore this! }
+END.
+)"));
 
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(begin,BEGIN)") );
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(idf,a)") );

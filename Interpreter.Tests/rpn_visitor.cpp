@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include "common_test.h"
 #include "../Interpreter/parser.h"
 #include "../Interpreter/rpn_visitor.h"
 
