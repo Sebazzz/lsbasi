@@ -19,7 +19,7 @@ void exec_visitor::ensure_type(const variable_symbol& var_symbol, ast::builtin_t
 			break;
 		}
 		
-		throw interpret_except(L"Attempting to assign expression of type " + var_type + L" to variable " + var_symbol.to_string());
+		throw interpret_except(L"Attempting to assign expression of type " + var_type + L" to " + var_symbol.to_string());
 	}
 }
 

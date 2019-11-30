@@ -56,6 +56,20 @@ interpret_result do_interpret_program(std::wstring input)
     };
 }
 
+
+TEST_CASE( "Implicit assignment from real to integer disallowed", "[interpreter_program]" ) {
+    const auto program = L"\
+PROGRAM Simple;\
+VAR a: INTEGER;\
+    b: REAL;\
+BEGIN       \
+   a := b;  \
+END.        \
+";
+
+    REQUIRE_THROWS_MATCHES( do_interpret_program(program), interpret_except, Catch::Message("Attempting to assign expression of type real to variable a"));
+}
+
 TEST_CASE( "Interpretation succeeds - program 1", "[interpreter_program]" ) {
     const auto result = do_interpret_program(L"\
 PROGRAM Simple;\
