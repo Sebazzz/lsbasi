@@ -72,6 +72,12 @@ void exec_visitor::visit(ast::program& program)
 	ast_node_visitor::visit(program);
 }
 
+void exec_visitor::visit(ast::procedure&)
+{
+	// We do nothing. Procedures are called so we don't interpret them until the moment
+	// they are called with their own parameters.
+}
+
 std::shared_ptr<scope_context> exec_visitor::global_scope() const
 {
 	return this->m_stack.global_scope();

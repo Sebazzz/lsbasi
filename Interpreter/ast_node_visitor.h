@@ -65,7 +65,7 @@ public:
 	virtual void visit(ast::program& program);
 
 	/**
-	 * Visit a program statement - default implementation is visit of var and block
+	 * Visit a program statement - default implementation is visit of params and block
 	 */
 	virtual void visit(ast::procedure& procedure);
 

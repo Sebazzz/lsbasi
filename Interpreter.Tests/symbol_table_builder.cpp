@@ -128,6 +128,49 @@ END.        \
 	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(procedure_symbol) );
 }
 
+TEST_CASE( "Symbol lookup succeeds - procedure with parameters", "[symbol_table_builder]" ) {
+    const auto result = do_parse_program(L"\
+PROGRAM Semi;                           \
+VAR _a: INTEGER;\
+PROCEDURE P1(a : INTEGER);\
+BEGIN {P1}\
+    _a:=a \
+END;\
+\
+BEGIN       \
+END.        \
+");
+
+	REQUIRE( typeid(*result.symbol_table->get(L"_a")) == typeid(variable_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(procedure_symbol) );
+
+    auto proc_symbol = result.symbol_table->get<procedure_symbol>(L"P1");
+	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"a")) == typeid(variable_symbol) );
+}
+
+
+TEST_CASE( "Symbol lookup succeeds - procedure with multiple parameters", "[symbol_table_builder]" ) {
+    const auto result = do_parse_program(L"\
+PROGRAM Semi;                           \
+VAR _a: INTEGER;\
+PROCEDURE P1(a, b : INTEGER; c: REAL);\
+BEGIN {P1}\
+    _a:=a + b + c \
+END;\
+\
+BEGIN       \
+END.        \
+");
+
+	REQUIRE( typeid(*result.symbol_table->get(L"_a")) == typeid(variable_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(procedure_symbol) );
+
+    auto proc_symbol = result.symbol_table->get<procedure_symbol>(L"P1");
+	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"a")) == typeid(variable_symbol) );
+	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"b")) == typeid(variable_symbol) );
+	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"c")) == typeid(variable_symbol) );
+}
+
 TEST_CASE( "Symbol lookup succeeds - nested procedures", "[symbol_table_builder]" ) {
     const auto result = do_parse_program(L"\
 PROGRAM Part12;\

@@ -9,6 +9,7 @@
 #include "program.h"
 #include "procedure.h"
 #include "var_decl.h"
+#include <functional>
 
 using namespace ast;
 
@@ -232,6 +233,27 @@ ast_node_ptr<procedure> parser::handle_procedure(lexer_iterator& it) const
 	const auto procedure_id = it.expect(token_type::identifier).value();
 	it.advance();
 
+	// Possible parameter list
+	it.ensure_token("Expect semicolon or procedure parameter list");
+
+	procedure_param_list param_list;
+	if (it->type() == token_type::group_start)
+	{
+		it.advance();
+
+		std::function<void(lexer_iterator&)> skip_logic = [](lexer_iterator& it)
+		{
+			// Skip semicolons, but formal parameters don't end with one so we cannot require it
+			if (it.current_token().type() == token_type::semicolon)
+			{
+				it.advance();
+			}
+		};
+		this->handle_var_decl_or_parameter_list(it, param_list, skip_logic);
+
+		it.skip_required(token_type::group_end);
+	}
+	
 	it.skip_required(token_type::semicolon);
 
 	// Expect block
@@ -239,7 +261,7 @@ ast_node_ptr<procedure> parser::handle_procedure(lexer_iterator& it) const
 
 	it.skip_required(token_type::semicolon);
 
-	return make_ast_node_ptr<procedure>(procedure_id, block);
+	return make_ast_node_ptr<procedure>(procedure_id, param_list, block);
 }
 
 ast::ast_node_ptr<ast::block> parser::handle_block(lexer_iterator& it) const
@@ -265,6 +287,12 @@ void parser::handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_de
 
 	it.advance();
 
+	std::function<void(lexer_iterator&)> skip_logic = [](lexer_iterator& _it) { _it.skip_required(token_type::semicolon); };
+	this->handle_var_decl_or_parameter_list(it, var_declaration_list, skip_logic);
+}
+
+void parser::handle_var_decl_or_parameter_list(lexer_iterator& it, ast::var_decl_list& var_declaration_list, std::function<void(lexer_iterator&)>& end_of_decl_logic) const
+{
 	std::vector<var_identifier> identifiers;
 	do
 	{
@@ -305,7 +333,7 @@ void parser::handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_de
 		}
 
 		it.advance();
-		it.skip_required(token_type::semicolon);
+		end_of_decl_logic(it);	
 	} while (!it.is_at_end() && it->type() == token_type::identifier);
 }
 

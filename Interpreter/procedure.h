@@ -4,6 +4,8 @@
 namespace ast
 {
 	using procedure_identifier = std::wstring;
+	using procedure_param = var_decl_ptr;
+	using procedure_param_list = std::vector<procedure_param>;
 
 	class block;
 	class procedure;
@@ -19,12 +21,13 @@ class ast::procedure :
 {
 private:
 	procedure_identifier m_identifier;
+	procedure_param_list m_params;
 	block_ptr m_block;
 	
 	std::shared_ptr<symbol_table> m_symbol_table;
 
 public:
-	procedure(procedure_identifier id, block_ptr block);
+	procedure(procedure_identifier id, procedure_param_list params, block_ptr block);
 
 	procedure(const procedure& other) = default;
 
@@ -38,6 +41,7 @@ public:
 
 	[[nodiscard]] const procedure_identifier& identifier() const;
 	[[nodiscard]] const block_ptr& block() const;
+	[[nodiscard]] const procedure_param_list& params() const;
 	
 	void accept(ast_node_visitor& visitor) override;
 

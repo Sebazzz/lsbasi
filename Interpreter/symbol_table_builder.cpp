@@ -64,29 +64,30 @@ void symbol_table_builder::visit(ast::program& program)
 
 void symbol_table_builder::visit(ast::procedure& procedure)
 {
-	const auto symbol = make_symbol_ptr<procedure_symbol>(procedure);
-	
-	if (this->m_symbol_table)
+	if (!this->m_symbol_table)
 	{
-		// We found a (nested) procedure. New scope.
-		symbol_table_builder nested_scope_visitor(procedure.identifier(), this->m_symbol_table.get());
-		nested_scope_visitor.symbol_table()->declare(symbol);
-		
-		procedure.block()->accept(nested_scope_visitor);
-		procedure.m_symbol_table = nested_scope_visitor.symbol_table();
-		
-		// Still add the procedure to the current scope
-		this->m_symbol_table->declare(symbol);
-	} else
-	{
-		// This is the first visit we have
-		this->m_symbol_table = std::make_shared<::symbol_table>(procedure.identifier(), nullptr);
-
-		// We can reference the current function from the current scope
-		this->m_symbol_table->declare(symbol);
-
-		procedure.block()->accept(*this);
+		// We should have a symbol table from the global scope or parent procedure. This is an invalid state.
+		throw interpret_except("Attempting to visit procedure without a global scope or parent procedure scope");
 	}
+
+	// In a nested visitor, we are visiting ourself. This is the first visit
+	if (this->m_symbol_table.get() == procedure.m_symbol_table.get())
+	{
+		ast_node_visitor::visit(procedure);
+		return;
+	}
+
+	const auto symbol = make_symbol_ptr<procedure_symbol>(procedure);
+
+	// We found a (nested) procedure. New scope.
+	symbol_table_builder nested_scope_visitor(procedure.identifier(), this->m_symbol_table.get());
+	nested_scope_visitor.symbol_table()->declare(symbol);
+	procedure.m_symbol_table = nested_scope_visitor.symbol_table();
+	
+	procedure.accept(nested_scope_visitor);
+
+	// ... add the procedure to the current scope so it can be referenced
+	this->m_symbol_table->declare(symbol);
 }
 
 std::shared_ptr<symbol_table> symbol_table_builder::symbol_table() const

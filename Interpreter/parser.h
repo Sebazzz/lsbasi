@@ -5,6 +5,7 @@
 #include <vector>
 #include "compound.h"
 #include "block.h"
+#include <functional>
 
 // Grammar:
 //
@@ -13,10 +14,12 @@
 // block:           declarations compound
 //
 // declarations:    VAR (var_decl SEMI)+ |
-//                  PROCEDURE ID SEMI block SEMI* |
+//                  PROCEDURE ID (procedure params)? SEMI block SEMI* |
 //                  empty
 //
-// var:             ID (COMMA ID) COLON type_spec
+// procedure params: "(" var_decl (SEMI var_decl)+ ")"
+//
+// var_decl:        ID (COMMA ID) COLON type_spec
 //
 // type_spec:       "INTEGER" | "REAL"
 //
@@ -62,6 +65,13 @@ private:
 	std::shared_ptr<ast::procedure> handle_procedure(lexer_iterator& it) const;
 	void handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_declaration_list) const;
 	void handle_procedure_decl_list(lexer_iterator& it, ast::procedure_decl_list& procedure_declaration_list) const;
+
+	/**
+	 * Common routine for handling procedure params or variable declarations.
+	 * Because the types are the same and the syntax is *almost* the same, the
+	 * difference can be captured using custom logic via the end_of_decl_logic lambda.
+	 */
+	void handle_var_decl_or_parameter_list(lexer_iterator& it, ast::var_decl_list& var_declaration_list, std::function<void(lexer_iterator&)>& end_of_decl_logic) const;
 	
 	ast::ast_node_ptr<ast::block> handle_block(lexer_iterator& it) const;
 	ast::compound_ptr handle_compound(lexer_iterator& it) const;

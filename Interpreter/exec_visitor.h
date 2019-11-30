@@ -24,6 +24,7 @@ public:
 	void visit(ast::var& var) override;
 	void visit(ast::block& block) override;
 	void visit(ast::program& program) override;
+	void visit(ast::procedure& procedure) override;
 	
 	/**
 	 * Gets the global scope. This is primarily for unit testing purposes where we want to check if

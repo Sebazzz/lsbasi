@@ -214,3 +214,20 @@ END.        \
 
     REQUIRE( verify_int_symbol(result, L"_a") == 2 );
 }
+
+TEST_CASE( "Interpretation succeeds - procedures with parameters", "[interpreter_program]" ) {
+    const auto result = do_interpret_program(L"\
+PROGRAM Semi;                           \
+PROCEDURE P1(a : INTEGER);\
+BEGIN {P1}\
+    a:=2\
+END;\
+\
+BEGIN       \
+END.        \
+");
+
+    REQUIRE( result.output  == std::wstring(L"done") );
+
+    REQUIRE( (!!result.global_scope->symbols.get<procedure_symbol>(L"P1")) == true );
+}
