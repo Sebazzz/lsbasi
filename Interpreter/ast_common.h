@@ -1,6 +1,8 @@
 #pragma once
 // ReSharper disable CppUnusedIncludeDirective - utility header
 #include "ast_node.h"
+#include "builtin_type_defs.h"
+
 // ReSharper restore CppUnusedIncludeDirective
 
 namespace ast {
@@ -16,11 +18,11 @@ namespace ast {
 
 	union expression_value
 	{
-		int int_val;
-		double real_val;
+		builtin_integer int_val;
+		builtin_real real_val;
 
-		expression_value(int value) : int_val(value){}
-		expression_value(double value) : real_val(value){}
+		expression_value(builtin_integer value) : int_val(value){}
+		expression_value(builtin_real value) : real_val(value){}
 	};
 
 	// Fwd declarations

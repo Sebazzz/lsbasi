@@ -252,6 +252,7 @@
     <ClInclude Include="ast_node_visitor.h" />
     <ClInclude Include="bin_op.h" />
     <ClInclude Include="block.h" />
+    <ClInclude Include="builtin_type_defs.h" />
     <ClInclude Include="compound.h" />
     <ClInclude Include="console_color.h" />
     <ClInclude Include="empty.h" />

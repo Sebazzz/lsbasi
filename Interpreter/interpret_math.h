@@ -20,7 +20,7 @@ void add_interpret(T& result, T operand)
 }
 
 template<>
-inline void add_interpret(double& result, double operand)
+inline void add_interpret(builtin_real& result, builtin_real operand)
 {
 	std::feclearexcept(FE_OVERFLOW);
     std::feclearexcept(FE_UNDERFLOW);

@@ -16,5 +16,6 @@
 // Private
 #include "ast_common.h"
 #include "ast_node.h"
+#include "builtin_type_defs.h"
 #include "interpret_except.h"
 #include "util.h"

@@ -72,14 +72,22 @@ ast_ptr parser::handle_integer(lexer_iterator& it) const
 		{
 		case token_type::integer_const:
 			{
-				const auto val_i = std::stoi(it->value());
+				// Disable auto: let's be explicit
+				// ReSharper disable CppUseAuto
+				const builtin_integer val_i = std::stoi(it->value());
+				// ReSharper restore CppUseAuto
+				
 				it.advance();
 				return make_ast_ptr<num>(val_i);
 			}
 
 		case token_type::real_const:
 			{
-				const auto val_r = std::stod(it->value());
+				// Disable auto: let's be explicit
+				// ReSharper disable CppUseAuto
+				const builtin_real val_r = std::stod(it->value());
+				// ReSharper restore CppUseAuto
+				
 				it.advance();
 				return make_ast_ptr<num>(val_r);
 			}

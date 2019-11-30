@@ -254,5 +254,8 @@
     <ClInclude Include="type.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
+    <ClInclude Include="builtin_type_defs.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
