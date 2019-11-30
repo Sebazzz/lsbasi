@@ -93,6 +93,30 @@ PROCEDURE P1;\
     REQUIRE( do_lex(lex) == std::wstring(L"TOK(semi)") );
 }
 
+TEST_CASE( "Lexer tokenize test - procedure with params", "[lexer]" ) {
+    lexer lex(L"\
+PROCEDURE P1(a : INTEGER);\
+  BEGIN\
+     a := 2;\
+  END;");
+
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(procedure,PROCEDURE)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(idf,P1)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(group_start)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(idf,a)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(colon)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(idf,INTEGER)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(group_end)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(semi)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(begin,BEGIN)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(idf,a)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(:=)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(int,2)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(semi)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(end,END)") );
+    REQUIRE( do_lex(lex) == std::wstring(L"TOK(semi)") );
+}
+
 TEST_CASE( "Lexer tokenize test - multiline with comment", "[lexer]" ) {
     lexer lex(L"\
 BEGIN\
