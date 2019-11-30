@@ -12,6 +12,8 @@ void memory_table::init_from_symbol_table(symbol_table& symbol_table)
 
 	while (!iterator.is_at_end())
 	{
+		// When copying contents, we only store contents of variables of course.
+		// dynamic_cast is used to filter on that
 		auto symbol_ptr = iterator.get();
 		symbol* symbol = symbol_ptr.get();
 		variable_symbol* var_symbol = dynamic_cast<variable_symbol*>(symbol);

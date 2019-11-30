@@ -158,9 +158,9 @@ END.  {Part12}\
 	REQUIRE( typeid(*result.symbol_table->get(L"a")) == typeid(variable_symbol) );
 	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(procedure_symbol) );
 
-    auto proc_symbol = dynamic_cast<procedure_symbol&>(*result.symbol_table->get(L"P1"));
-	REQUIRE( typeid(*proc_symbol.procedure().symbol_table().get(L"P2")) == typeid(procedure_symbol) );
-	REQUIRE( typeid(*proc_symbol.procedure().symbol_table().get(L"k")) == typeid(variable_symbol) );
+    auto proc_symbol = result.symbol_table->get<procedure_symbol>(L"P1");
+	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"P2")) == typeid(procedure_symbol) );
+	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"k")) == typeid(variable_symbol) );
 }
 
 TEST_CASE( "Symbol duplicate declaration fails - program 1", "[symbol_table_builder]" ) {

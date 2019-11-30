@@ -6,6 +6,9 @@ using symbol_identifier = std::wstring;
 
 using symbol_ptr = std::shared_ptr<symbol>;
 
+template<typename T>
+using symbol_type_ptr = std::shared_ptr<T>;
+
 /* Helper function for making a pointer to AST node */
 template <class T, class... TArgs>
 symbol_ptr make_symbol_ptr(TArgs&&... args)

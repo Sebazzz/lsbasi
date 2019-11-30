@@ -10,7 +10,7 @@ class exec_visitor :
 private:
 	scope_manager m_stack;
 
-	static void ensure_type(const variable_symbol& var_symbol, ast::builtin_type type, symbol_table& symbols);
+	static void ensure_type(const symbol_type_ptr<variable_symbol>& var_symbol, ast::builtin_type type, symbol_table& symbols);
 	
 public:
 	~exec_visitor() override = default;
