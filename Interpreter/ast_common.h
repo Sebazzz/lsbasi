@@ -10,6 +10,7 @@ namespace ast {
 	using identifier_type = std::wstring;
 	using var_identifier = identifier_type;
 	using type_identifier = identifier_type;
+	using procedure_identifier = std::wstring;
 
 	enum class builtin_type {
 		integer,

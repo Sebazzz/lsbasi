@@ -3,7 +3,6 @@
 
 namespace ast
 {
-	using procedure_identifier = std::wstring;
 	using procedure_param = var_decl_ptr;
 	using procedure_param_list = std::vector<procedure_param>;
 

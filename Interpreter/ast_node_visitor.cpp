@@ -64,6 +64,11 @@ void ast_node_visitor::visit(ast::procedure& procedure)
 	procedure.block()->accept(*this);
 }
 
+void ast_node_visitor::visit(ast::procedure_call&)
+{
+	// For derived classes to implement
+}
+
 void ast_node_visitor::visit(ast::var_decl& var_decl)
 {
 	var_decl.type()->accept(*this);

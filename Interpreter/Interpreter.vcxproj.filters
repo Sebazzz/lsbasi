@@ -150,6 +150,9 @@
     <ClCompile Include="builtin_type_impl.cpp">
       <Filter>Source Files\ast_visitor\execution</Filter>
     </ClCompile>
+    <ClCompile Include="procedure_call.cpp">
+      <Filter>Source Files\ast</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -280,6 +283,9 @@
     </ClInclude>
     <ClInclude Include="eval_value.h">
       <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="procedure_call.h">
+      <Filter>Header Files\ast</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

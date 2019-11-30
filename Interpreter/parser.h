@@ -27,9 +27,11 @@
 //
 // statement_list:  statement |  statement SEMI statement
 //
-// statement:       compound | assign | empty
+// statement:       compound | assign | procedure_call | empty
 //
-// assign:          var ASSIGN expr
+// procedure_call:  ID "(" (expression (COMMA expression)*)? ")"
+//
+// assign:          ID ASSIGN expr
 //
 // empty:
 // 
@@ -52,8 +54,6 @@ class parser
 private:
 	lexer lexer;
 	
-	void do_tokenize();
-
 	ast_ptr handle_integer(lexer_iterator& it) const;
 	ast_ptr handle_unary(lexer_iterator& it) const;
 	ast_ptr handle_factor(lexer_iterator& it) const;
@@ -78,7 +78,10 @@ private:
 	void handle_statement_list(lexer_iterator& it, ast::statement_list& statement_list) const;
 	
 	ast_ptr handle_statement(lexer_iterator& it) const;
-	ast_ptr handle_assign(lexer_iterator& it) const;
+
+	ast_ptr handle_assign_or_procedure_call(lexer_iterator& it) const;
+	ast_ptr handle_procedure_call(const std::wstring& identifier, lexer_iterator& it) const;
+	ast_ptr handle_assign(const std::wstring& identifier, lexer_iterator& it) const;
 
 public:
 	explicit parser(std::wstring input)

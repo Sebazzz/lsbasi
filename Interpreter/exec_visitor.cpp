@@ -78,6 +78,73 @@ void exec_visitor::visit(ast::procedure&)
 	// they are called with their own parameters.
 }
 
+void exec_visitor::visit(ast::procedure_call& procedure_call)
+{
+	auto& ctx = this->m_stack.current_context();
+
+	// Find the referenced procedure
+	const auto procedure_symbol = ctx.symbols.get<::procedure_symbol>(procedure_call.procedure_identifier());
+	const auto& procedure_params = procedure_symbol->procedure().params();
+	const auto& procedure_args = procedure_call.args();
+
+	// Verify that even the correct number of arguments have been given. Let's do this while iterating the args and params.
+	// Note on parameters vs arguments: Parameters are defined, arguments are given.
+	
+	// We now have to process each of the parameters before the invocation. We get their value,
+	// then put their values in the memory table for the procedure. After this the invocation is fairly simple.
+	auto& proc_ctx = this->m_stack.new_scope(procedure_symbol->procedure().symbol_table());
+	
+	auto param_iterator = procedure_params.begin();
+	const auto params_end = procedure_params.end();
+	auto arg_iterator = procedure_args.begin();
+	const auto args_end = procedure_args.end();
+
+	while (param_iterator != procedure_params.end() || arg_iterator != args_end)
+	{
+		// We only get in this loop if there are parameters or arguments left to iterate.
+		// This means that we can have parameters that have no corresponding argument,
+		// or arguments for which no parameter has been declared.
+		if (param_iterator == procedure_params.end())
+		{
+			throw interpret_except(L"In a call to " + procedure_symbol->to_string() + L" too many arguments have been provided");
+		}
+
+		if (arg_iterator == args_end)
+		{
+			throw interpret_except(L"In a call to " + procedure_symbol->to_string() + L" no argument has been provided for this parameter: " + (*param_iterator)->identifier());
+		}
+
+		const ast::ast_ptr arg = *arg_iterator;
+		const ast::ast_node_ptr<ast::var_decl> param = *param_iterator;
+
+		// Resolve the value
+		eval_value arg_value = this->accept(*arg);
+
+		// Assign it with conversion
+		auto param_type = proc_ctx.symbols.get<type_symbol>(param->type()->identifier());
+
+		try
+		{
+			param_type->type_impl().convert_value(arg_value);
+		} catch (interpret_except& e)
+		{
+			throw interpret_except(L"Attempting to assign parameter " + param->identifier() + L" of " + procedure_symbol->to_string() + L" with invalid type", e.what());
+		}
+
+		auto param_var = proc_ctx.symbols.get<variable_symbol>(param->identifier());
+		proc_ctx.memory->set(param_var, arg_value.value);
+
+		++param_iterator;
+		++arg_iterator;
+	}
+
+	// We have now bound all arguments in for the procedure. We can now evaluate the body.
+	procedure_symbol->procedure().block()->accept(*this);
+
+	// Go back to previous context
+	this->m_stack.pop();
+}
+
 std::shared_ptr<scope_context> exec_visitor::global_scope() const
 {
 	return this->m_stack.global_scope();

@@ -33,6 +33,7 @@ public:
 	void visit(ast::program& program) override;
 	void visit(ast::procedure& procedure) override;
 	void visit(ast::type& type_ref) override;
+	void visit(ast::procedure_call& procedure_call) override;
 	
 	[[nodiscard]] std::shared_ptr<symbol_table> symbol_table() const;
 };

@@ -231,3 +231,83 @@ END.
 
     REQUIRE( (!!result.global_scope->symbols.get<procedure_symbol>(L"P1")) == true );
 }
+
+TEST_CASE( "Interpretation succeeds - procedures with parameters called", "[interpreter_program]" ) {
+    const auto result = do_interpret_program(R"(
+PROGRAM Semi;                           
+VAR a_global: INTEGER;
+PROCEDURE P1(a : INTEGER);
+BEGIN {P1}
+    a_global:=a
+END;
+
+BEGIN       
+    P1(5)
+END.        
+)");
+
+    REQUIRE( result.output  == std::wstring(L"done") );
+
+    REQUIRE( (!!result.global_scope->symbols.get<procedure_symbol>(L"P1")) == true );
+    REQUIRE( verify_int_symbol(result, L"a_global") == 5 );
+}
+
+TEST_CASE( "Interpretation succeeds - procedures with parameters called with expression", "[interpreter_program]" ) {
+    const auto result = do_interpret_program(R"(
+PROGRAM Semi;                           
+VAR a_global: INTEGER;
+PROCEDURE P1(a : INTEGER);
+BEGIN {P1}
+    a_global:=a
+END;
+
+BEGIN       
+    P1(4*5)
+END.        
+)");
+
+    REQUIRE( result.output  == std::wstring(L"done") );
+
+    REQUIRE( (!!result.global_scope->symbols.get<procedure_symbol>(L"P1")) == true );
+    REQUIRE( verify_int_symbol(result, L"a_global") == 20 );
+}
+
+TEST_CASE( "Interpretation fails - procedures with parameters called with too many parameters", "[interpreter_program]" ) {
+    const auto program = R"(
+PROGRAM Semi;                           
+VAR a_global: INTEGER;
+PROCEDURE P1(a : INTEGER);
+BEGIN {P1}
+    a_global:=a
+END;
+
+BEGIN       
+    P1(5, 4)
+END.        
+)";
+
+    REQUIRE_THROWS_MATCHES( 
+		do_interpret_program(program), 
+		interpret_except, 
+		Catch::Message("In a call to procedure P1 too many arguments have been provided"));
+}
+
+TEST_CASE( "Interpretation fails - procedures with parameters called with not enough parameters", "[interpreter_program]" ) {
+    const auto program = R"(
+PROGRAM Semi;                           
+VAR a_global: INTEGER;
+PROCEDURE P1(a : INTEGER);
+BEGIN {P1}
+    a_global:=a
+END;
+
+BEGIN       
+    P1()
+END.        
+)";
+
+    REQUIRE_THROWS_MATCHES( 
+		do_interpret_program(program), 
+		interpret_except, 
+		Catch::Message("In a call to procedure P1 no argument has been provided for this parameter: a"));
+}

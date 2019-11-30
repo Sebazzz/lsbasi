@@ -10,6 +10,7 @@
 #include "procedure.h"
 #include "var_decl.h"
 #include <functional>
+#include "procedure_call.h"
 
 using namespace ast;
 
@@ -407,19 +408,64 @@ ast_ptr parser::handle_statement(lexer_iterator& it) const
 	if (it->type() == token_type::identifier)
 	{
 		// Assignment
-		return this->handle_assign(it);
+		return this->handle_assign_or_procedure_call(it);
 	}
 
 	throw interpret_except("Unexpected token in statement", it->to_string());
 }
 
-ast_ptr parser::handle_assign(lexer_iterator& it) const
+ast_ptr parser::handle_assign_or_procedure_call(lexer_iterator& it) const
 {
-	it.ensure_token("Found end while handling assignment");
-
-	const auto identifier = make_ast_node_ptr<var>(it->value());
+	// Take identifier
+	std::wstring identifier = it.expect(token_type::identifier).value();
 	it.advance();
 
+	// It could go two ways here: We have an assignment or we call a procedure.
+	// This depends on whether we have a assignment operator or opening group.
+
+	it.ensure_token("Found end while handling assignment or procedure call");
+	if (it->type() == token_type::assign)
+	{
+		// Assignment
+		return this->handle_assign(identifier, it);
+	}
+
+	if (it->type() == token_type::group_start)
+	{
+		// Parameter list of procedure call
+		return this->handle_procedure_call(identifier, it);
+	}
+	
+	throw interpret_except("Unexpected token in statement attempting to parse assignment or procedure call", it->to_string());
+}
+
+ast_ptr parser::handle_procedure_call(const std::wstring& identifier, lexer_iterator& it) const
+{
+	it.skip_required(token_type::group_start);
+	it.ensure_token("Expected parameter list for procedure call");
+
+	// The parameters for a procedure is a comma delimited list of expressions
+	procedure_arg_list arg_list;
+	while (!it.is_at_end() && it->type() != token_type::group_end)
+	{
+		arg_list.push_back(this->handle_expr(it));
+
+		if (it->type() != token_type::group_end)
+		{
+			it.skip_required(token_type::comma);
+		}
+	}
+
+	it.skip_required(token_type::group_end);
+	it.ensure_token("Found end of file while parsing procedure argument list");
+
+	return make_ast_ptr<procedure_call>(identifier, arg_list);
+}
+
+ast_ptr parser::handle_assign(const std::wstring& identifier, lexer_iterator& it) const
+{
+	const auto var_identifier = make_ast_node_ptr<var>(identifier);
+	
 	it.skip_required(token_type::assign);
 
 	// We could just do this check further down the stack, however,
@@ -428,5 +474,5 @@ ast_ptr parser::handle_assign(lexer_iterator& it) const
 	
 	const auto expression = this->handle_expr(it);
 
-	return make_ast_ptr<assign>(identifier, expression);
+	return make_ast_ptr<assign>(var_identifier, expression);
 }
