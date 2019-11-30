@@ -26,31 +26,18 @@ public:
 		std::map<symbol_identifier, symbol_ptr, case_insensitive_string_comparer>::const_iterator iterator;
 		const std::map<symbol_identifier, symbol_ptr, case_insensitive_string_comparer>::const_iterator end;
 
-		explicit symbol_table_iterator(std::map<symbol_identifier, symbol_ptr, case_insensitive_string_comparer>::const_iterator iterator, const std::map<symbol_identifier, symbol_ptr, case_insensitive_string_comparer>::const_iterator end)
-			: iterator(std::move(iterator)), end(end)
-		{
-		}
-		
+		explicit symbol_table_iterator(
+			std::map<symbol_identifier, symbol_ptr, case_insensitive_string_comparer>::const_iterator iterator,
+			const std::map<symbol_identifier, symbol_ptr, case_insensitive_string_comparer>::const_iterator end);
+
 	public:
-		symbol_ptr operator->() const
-		{
-			return this->iterator->second;
-		}
+		symbol_ptr operator->() const;
 
-		[[nodiscard]] symbol_ptr get() const
-		{
-			return this->iterator->second;
-		}
-		
-		[[nodiscard]] bool is_at_end() const
-		{
-			return this->iterator == this->end;
-		}
+		[[nodiscard]] symbol_ptr get() const;
 
-		void next()
-		{
-			++this->iterator;
-		}
+		[[nodiscard]] bool is_at_end() const;
+
+		void next();
 	};
 	
 	/**

@@ -11,6 +11,33 @@ symbol_table::symbol_table(std::wstring scope_name, symbol_table* parent): m_par
 	this->m_variables.try_emplace(builtin_type_symbol::var_type_to_string(ast::builtin_type::real), real_type);
 }
 
+symbol_table::symbol_table_iterator::symbol_table_iterator(
+	std::map<symbol_identifier, symbol_ptr, case_insensitive_string_comparer>::const_iterator iterator,
+	const std::map<symbol_identifier, symbol_ptr, case_insensitive_string_comparer>::const_iterator end):
+	iterator(std::move(iterator)), end(end)
+{
+}
+
+symbol_ptr symbol_table::symbol_table_iterator::operator->() const
+{
+	return this->iterator->second;
+}
+
+symbol_ptr symbol_table::symbol_table_iterator::get() const
+{
+	return this->iterator->second;
+}
+
+bool symbol_table::symbol_table_iterator::is_at_end() const
+{
+	return this->iterator == this->end;
+}
+
+void symbol_table::symbol_table_iterator::next()
+{
+	++this->iterator;
+}
+
 symbol_ptr symbol_table::get(const ast::var_identifier& identifier)
 {
 	const auto& symbol_it = this->m_variables.find(identifier);
