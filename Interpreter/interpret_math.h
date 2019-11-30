@@ -4,9 +4,10 @@
 
 #include "interpret_except.h"
 #include "memory_table.h"
+#include "builtin_type_symbol.h"
 
 template <typename T>
-void add_interpret(T& result, T operand)
+void add_interpret(T& result, const T& operand)
 {
 	if (result > 0 && operand > std::numeric_limits<T>::max() - result) {
         throw interpret_except("Integer overflow", std::to_string(result));
@@ -20,7 +21,7 @@ void add_interpret(T& result, T operand)
 }
 
 template<>
-inline void add_interpret(builtin_real& result, builtin_real operand)
+inline void add_interpret(builtin_real& result, const builtin_real& operand)
 {
 	std::feclearexcept(FE_OVERFLOW);
     std::feclearexcept(FE_UNDERFLOW);
@@ -37,9 +38,9 @@ inline void add_interpret(builtin_real& result, builtin_real operand)
 }
 
 template <>
-inline void add_interpret(eval_visitor::eval_value& result, const eval_visitor::eval_value operand)
+inline void add_interpret(eval_value& result, const eval_value& operand)
 {
-	const auto symbol_type = result.type;
+	const auto symbol_type = dynamic_cast<builtin_type_symbol&>(*result.type.get()).type();
 
 	switch (symbol_type)
 	{
@@ -54,15 +55,15 @@ inline void add_interpret(eval_visitor::eval_value& result, const eval_visitor::
 }
 
 template <typename T>
-void subtract_interpret(T& result, T operand)
+void subtract_interpret(T& result, const T& operand)
 {
 	add_interpret(result, -1 * operand);
 }
 
 template <>
-inline void subtract_interpret(eval_visitor::eval_value& result, const eval_visitor::eval_value operand)
+inline void subtract_interpret(eval_value& result, const eval_value& operand)
 {
-	const auto symbol_type = result.type;
+	const auto symbol_type = dynamic_cast<builtin_type_symbol&>(*result.type.get()).type();
 
 	switch (symbol_type)
 	{
@@ -77,7 +78,7 @@ inline void subtract_interpret(eval_visitor::eval_value& result, const eval_visi
 }
 
 template <typename T>
-void divide_interpret(T& result, T operand)
+void divide_interpret(T& result, const T& operand)
 {
 	if (operand == 0)
 	{
@@ -88,9 +89,9 @@ void divide_interpret(T& result, T operand)
 }
 
 template <>
-inline void divide_interpret(eval_visitor::eval_value& result, const eval_visitor::eval_value operand)
+inline void divide_interpret(eval_value& result, const eval_value& operand)
 {
-	const auto symbol_type = result.type;
+	const auto symbol_type = dynamic_cast<builtin_type_symbol&>(*result.type.get()).type();
 
 	switch (symbol_type)
 	{
@@ -105,16 +106,16 @@ inline void divide_interpret(eval_visitor::eval_value& result, const eval_visito
 }
 
 template <typename T>
-void multiply_interpret(T& result, T operand)
+void multiply_interpret(T& result, const T& operand)
 {
 	// TODO: implement overflow detection
 	result *= operand;
 }
 
 template <>
-inline void multiply_interpret(eval_visitor::eval_value& result, const eval_visitor::eval_value operand)
+inline void multiply_interpret(eval_value& result, const eval_value& operand)
 {
-	const auto symbol_type = result.type;
+	const auto symbol_type = dynamic_cast<builtin_type_symbol&>(*result.type.get()).type();
 
 	switch (symbol_type)
 	{
@@ -123,6 +124,22 @@ inline void multiply_interpret(eval_visitor::eval_value& result, const eval_visi
 		break;
 	case ast::builtin_type::real:
 		multiply_interpret(result.value.real_val, operand.value.real_val);
+		break;
+	default: ;
+	}
+}
+
+inline void negate_interpret(eval_value& result)
+{
+	const auto symbol_type = dynamic_cast<builtin_type_symbol&>(*result.type.get()).type();
+
+	switch (symbol_type)
+	{
+	case ast::builtin_type::integer:
+		result.value.int_val *= -1;
+		break;
+	case ast::builtin_type::real:
+		result.value.real_val *= -1;
 		break;
 	default: ;
 	}

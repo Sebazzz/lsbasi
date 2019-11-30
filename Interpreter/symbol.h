@@ -23,6 +23,8 @@ enum class symbol_type
 	type
 };
 
+class type_impl;
+
 /**
  * Base abstract class that represents a symbol
  */
@@ -33,7 +35,7 @@ private:
 	symbol_identifier m_identifier;
 
 protected:
-	symbol(symbol_type symbol, const symbol_identifier& cs);
+	symbol(symbol_type symbol, const symbol_identifier& identifier);
 
 public:
 	virtual ~symbol() = default;
@@ -42,24 +44,6 @@ public:
 	const std::wstring& identifier() const;
 
 	bool operator<(const symbol& rhs) const;
-};
-
-/**
- * Represents a built-in type
- */
-class builtin_type_symbol final : public symbol
-{
-private:
-	ast::builtin_type m_type;
-
-public:
-	explicit builtin_type_symbol(ast::builtin_type type);
-
-	[[nodiscard]] ast::builtin_type type() const;
-
-	static symbol_identifier var_type_to_string(ast::builtin_type type);
-	
-	[[nodiscard]] std::wstring to_string() const override;
 };
 
 /**

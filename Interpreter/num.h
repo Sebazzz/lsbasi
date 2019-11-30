@@ -1,5 +1,4 @@
 #pragma once
-#include "var_decl.h"
 #include "ast_common.h"
 
 namespace ast

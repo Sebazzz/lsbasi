@@ -1,13 +1,15 @@
 #include "pch.h"
 #include "eval_visitor.h"
 #include "interpret_math.h"
+#include "builtin_type_symbol.h"
+#include "type_impl.h"
 
-void eval_visitor::register_visit_result(eval_value result)
+void eval_visitor::register_visit_result(const eval_value& result)
 {
 	this->m_stack.push(result);
 }
 
-eval_visitor::eval_visitor() : m_result { ast::builtin_type::integer, 0 }
+eval_visitor::eval_visitor() : m_result { builtin_type_symbol::get_for_builtin_type(ast::builtin_type::integer), 0 }
 {
 }
 
@@ -18,22 +20,20 @@ void eval_visitor::visit(ast::bin_op& binaryOperator)
 
 	// Implicit conversion to real
 	const bool operator_has_real_conversion = binaryOperator.op() == token_type::divide_real;
-	if (result.type == ast::builtin_type::real && right_val.type != result.type || operator_has_real_conversion)
+
+	// ... Call to convert result to real if necessary
+	if (operator_has_real_conversion)
 	{
-		if (right_val.type == ast::builtin_type::integer)
-		{
-			right_val.value.real_val = right_val.value.int_val;
-			right_val.type = ast::builtin_type::real;
-		}
+		const auto real_type_symbol = builtin_type_symbol::get_for_builtin_type(ast::builtin_type::real);
+		const auto& real_type_impl = real_type_symbol->type_impl();
+		
+		real_type_impl.convert_value(right_val);
+		real_type_impl.convert_value(result);
 	}
 
-	if (result.type != right_val.type && result.type == ast::builtin_type::integer || operator_has_real_conversion)
-	{
-		if (result.type == ast::builtin_type::integer){
-			result.value.real_val = result.value.int_val;
-			result.type = ast::builtin_type::real;
-		}
-	}
+	// ... Call to convert value to result type if necessary
+	right_val.type->type_impl().change_type(result);
+	result.type->type_impl().convert_value(right_val);
 
 	switch (binaryOperator.op())
 	{
@@ -67,16 +67,8 @@ void eval_visitor::visit(ast::bin_op& binaryOperator)
 
 void eval_visitor::visit(ast::num& number)
 {
-	switch (number.type())
-	{
-	case ast::builtin_type::integer:
-	case ast::builtin_type::real:
-		this->register_visit_result({number.type(), number.value()});
-		break;
-	default:
-		throw interpret_except("Unsupported number type", std::to_string(static_cast<int>(number.type())))
-		;
-	}
+	const auto builtin_symbol = builtin_type_symbol::get_for_builtin_type(number.type());
+			this->register_visit_result({builtin_symbol, number.value()});
 }
 
 void eval_visitor::visit(ast::ast_node& node)
@@ -98,16 +90,7 @@ void eval_visitor::visit(ast::unary_op& unaryOperator)
 		// No-op
 		break;
 	case token_type::minus:
-		switch (result.type)
-		{
-		case ast::builtin_type::integer:
-			result.value.int_val *= -1;
-			break;
-		case ast::builtin_type::real:
-			result.value.real_val *= -1;
-			break;
-		default: ;
-		}
+		negate_interpret(result);
 		break;
 	default:
 		throw interpret_except("Unsupported unary operation", std::to_string(static_cast<int>(unaryOperator.op())));
@@ -118,7 +101,7 @@ void eval_visitor::visit(ast::unary_op& unaryOperator)
 	// ReSharper restore CppSomeObjectMembersMightNotBeInitialized
 }
 
-eval_visitor::eval_value eval_visitor::result() const
+eval_value eval_visitor::result() const
 {
 	return this->m_result;
 }

@@ -1,14 +1,17 @@
 #include "pch.h"
+#include "builtin_type_symbol.h"
 #include "symbol_table.h"
 
 symbol_table::symbol_table(std::wstring scope_name, symbol_table* parent): m_parent(parent), m_scope_name(std::move(scope_name))
 {
 	// Build up our default, builtin, symbols
-	static symbol_ptr integer_type = make_symbol_ptr<builtin_type_symbol>(ast::builtin_type::integer);
-	static symbol_ptr real_type = make_symbol_ptr<builtin_type_symbol>(ast::builtin_type::real);
+	this->m_variables.try_emplace(
+		builtin_type_symbol::var_type_to_string(ast::builtin_type::integer), 
+		builtin_type_symbol::get_for_builtin_type(ast::builtin_type::integer));
 	
-	this->m_variables.try_emplace(builtin_type_symbol::var_type_to_string(ast::builtin_type::integer), integer_type);
-	this->m_variables.try_emplace(builtin_type_symbol::var_type_to_string(ast::builtin_type::real), real_type);
+	this->m_variables.try_emplace(
+		builtin_type_symbol::var_type_to_string(ast::builtin_type::real), 
+		builtin_type_symbol::get_for_builtin_type(ast::builtin_type::real));
 }
 
 symbol_table::symbol_table_iterator::symbol_table_iterator(

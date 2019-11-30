@@ -2,16 +2,10 @@
 #include "pch.h"
 #include "ast_node_visitor.h"
 #include "ast_common.h"
+#include "eval_value.h"
 
 class eval_visitor : public ast_node_visitor
 {
-public:
-	struct eval_value
-	{
-		ast::builtin_type type;
-		ast::expression_value value;
-	};
-	
 private:
 	eval_value m_result;
 
@@ -30,7 +24,7 @@ protected:
 	/**
 	 * Helper method to register the result for further up the call stack
 	 */
-	void register_visit_result(eval_value result);
+	void register_visit_result(const eval_value& result);
 
 public:
 	~eval_visitor() override = default;
@@ -49,7 +43,7 @@ public:
 };
 
 template <class T>
-eval_visitor::eval_value eval_visitor::accept(T& node)
+eval_value eval_visitor::accept(T& node)
 {
 	node.accept(*this);
 

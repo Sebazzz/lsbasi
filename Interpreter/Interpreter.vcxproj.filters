@@ -141,6 +141,15 @@
     <ClCompile Include="type.cpp">
       <Filter>Source Files\ast</Filter>
     </ClCompile>
+    <ClCompile Include="type_symbol.cpp">
+      <Filter>Source Files\ast_visitor\execution</Filter>
+    </ClCompile>
+    <ClCompile Include="builtin_type_symbol.cpp">
+      <Filter>Source Files\ast_visitor\execution</Filter>
+    </ClCompile>
+    <ClCompile Include="builtin_type_impl.cpp">
+      <Filter>Source Files\ast_visitor\execution</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -256,6 +265,21 @@
     </ClInclude>
     <ClInclude Include="builtin_type_defs.h">
       <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="type_impl.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="builtin_type_impl.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="builtin_type_symbol.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="type_symbol.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="eval_value.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

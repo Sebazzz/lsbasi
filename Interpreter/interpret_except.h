@@ -5,6 +5,8 @@ class interpret_except: public std::exception
 private:
 	std::string m_message;
 
+	void wstring_message_to_string_message(const std::wstring& msg);
+
 public:
 	explicit interpret_except(const std::string& message);
 

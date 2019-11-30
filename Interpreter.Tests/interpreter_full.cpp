@@ -3,6 +3,7 @@
 #include "../Interpreter/symbol.h"
 #include "../Interpreter/type.h"
 #include "../Interpreter/var_decl.h"
+#include "../Interpreter/builtin_type_symbol.h"
 
 struct interpret_result
 {
@@ -65,8 +66,25 @@ BEGIN       \
 END.        \
 ";
 
-    REQUIRE_THROWS_MATCHES( do_interpret_program(program), interpret_except, Catch::Message("Attempting to assign expression of type real to variable a"));
+    REQUIRE_THROWS_MATCHES( do_interpret_program(program), interpret_except, Catch::Message("Attempting to assign variable variable a with invalid type - Attempting to convert expression of type built-in REAL to built-in INTEGER"));
 }
+
+TEST_CASE( "Interpretation from integer to real allowed", "[interpreter_program]" ) {
+    const auto result = do_interpret_program(L"\
+PROGRAM Simple;\
+VAR a: INTEGER; b: REAL;\
+BEGIN       \
+   a := 2;  \
+   b := a;  \
+END.        \
+");
+
+    REQUIRE( result.output == std::wstring(L"done") );
+
+    REQUIRE( verify_int_symbol(result, L"a") == 2 );
+    REQUIRE( verify_real_symbol(result, L"b") == 2 );
+}
+
 
 TEST_CASE( "Interpretation succeeds - program 1", "[interpreter_program]" ) {
     const auto result = do_interpret_program(L"\

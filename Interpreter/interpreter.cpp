@@ -4,6 +4,7 @@
 #include "eval_visitor.h"
 #include "exec_visitor.h"
 #include "memory_table.h"
+#include "builtin_type_symbol.h"
 
 void interpreter::ensure_parsed()
 {
@@ -48,7 +49,7 @@ std::wstring interpreter::interpret_repl() const
 	
 	const auto result = eval.result();
 
-	if (result.type == ast::builtin_type::integer)
+	if (dynamic_cast<builtin_type_symbol&>(*result.type.get()).type() == ast::builtin_type::integer)
 	{
 		return std::to_wstring(result.value.int_val);
 	}
