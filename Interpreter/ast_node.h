@@ -25,6 +25,7 @@ namespace ast
 	template <class T, class... TArgs>
 	ast_node_ptr<T> make_ast_node_ptr(TArgs&&... args)
 	{
+		static_assert(std::is_convertible<T*, ast_node*>::value, "This template is only suitable for ast::ast_node");
 		return std::make_shared<T>(std::forward<TArgs>(args)...);
 	}
 }
