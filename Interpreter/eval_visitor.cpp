@@ -35,31 +35,38 @@ void eval_visitor::visit(ast::bin_op& binaryOperator)
 	right_val.type->type_impl().change_type(result, binaryOperator.get_line_info());
 	result.type->type_impl().convert_value(right_val, binaryOperator.get_line_info());
 
-	switch (binaryOperator.op())
+	try
 	{
-	case token_type::plus:
-		add_interpret(result, right_val);
-		break;
-		
-	case token_type::minus:
-		subtract_interpret(result, right_val);
-		break;
-		
-	case token_type::multiply:
-		multiply_interpret(result, right_val);
-		break;
+		switch (binaryOperator.op())
+		{
+		case token_type::plus:
+			add_interpret(result, right_val);
+			break;
+			
+		case token_type::minus:
+			subtract_interpret(result, right_val);
+			break;
+			
+		case token_type::multiply:
+			multiply_interpret(result, right_val);
+			break;
 
-	// FIXME: we should probably error out if wrong operator is used
-	case token_type::divide_integer:
-		divide_interpret(result, right_val);
-		break;
+		// FIXME: we should probably error out if wrong operator is used
+		case token_type::divide_integer:
+			divide_interpret(result, right_val);
+			break;
 
-	case token_type::divide_real:
-		divide_interpret(result, right_val);
-		break;
-		
-	default:
-		throw exec_error(L"Invalid operator for bin_op: " + binaryOperator.get_token().to_string(), binaryOperator.get_line_info());
+		case token_type::divide_real:
+			divide_interpret(result, right_val);
+			break;
+			
+		default:
+			throw exec_error(L"Invalid operator for bin_op: " + binaryOperator.get_token().to_string(), binaryOperator.get_line_info());
+		}
+	} catch (exec_error& e)
+	{
+		const std::string error_message = "Unable to execute binary operation: " + wstring_to_string(binaryOperator.get_token().to_string()) + std::string(" - ") + std::string(e.what());
+		throw exec_error(error_message, binaryOperator.get_line_info());
 	}
 
 	this->register_visit_result(result);
@@ -75,8 +82,14 @@ void eval_visitor::visit(ast::ast_node& node)
 {
 	ast_node_visitor::visit(node);
 
-	this->m_result = this->m_stack.top();
-	this->m_stack.pop();
+	if (this->m_stack.empty() == false)
+	{
+		this->m_result = this->m_stack.top();
+		this->m_stack.pop();
+	} else
+	{
+		throw exec_error(L"Expected the expression to return a value", node.get_line_info());
+	}
 }
 
 void eval_visitor::visit(ast::unary_op& unaryOperator)

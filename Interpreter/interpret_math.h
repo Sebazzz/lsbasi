@@ -10,11 +10,11 @@ template <typename T>
 void add_interpret(T& result, const T& operand)
 {
 	if (result > 0 && operand > std::numeric_limits<T>::max() - result) {
-        throw interpret_except("Integer overflow - " + std::to_string(result));
+        throw exec_error("Integer overflow - " + std::to_string(result), {-1,-1});
     }
 
 	if (result < 0 && operand < std::numeric_limits<T>::min() - result) {
-		throw interpret_except("Integer underflow -" +  std::to_string(result));
+		throw exec_error("Integer underflow -" +  std::to_string(result), {-1,-1});
 	}
 
 	result = result + operand;
@@ -29,11 +29,11 @@ inline void add_interpret(builtin_real& result, const builtin_real& operand)
 	result = result + operand;
 
 	if (std::fetestexcept(FE_OVERFLOW)) {
-        throw interpret_except("Floating point overflow - " + std::to_string(result));
+        throw exec_error("Floating point overflow - " + std::to_string(result), {-1,-1});
 	}
 
 	if (std::fetestexcept(FE_UNDERFLOW)) {
-        throw interpret_except("Floating point underflow - " + std::to_string(result));
+        throw exec_error("Floating point underflow - " + std::to_string(result), {-1,-1});
 	}
 }
 
@@ -82,7 +82,7 @@ void divide_interpret(T& result, const T& operand)
 {
 	if (operand == 0)
 	{
-		throw interpret_except("Divide by zero - " + std::to_string(result));
+		throw exec_error("Divide by zero - " + std::to_string(result), {-1,-1});
 	}
 
 	result /= operand;
