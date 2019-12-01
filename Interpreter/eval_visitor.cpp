@@ -59,7 +59,7 @@ void eval_visitor::visit(ast::bin_op& binaryOperator)
 		break;
 		
 	default:
-		throw interpret_except("Invalid operator for bin_op", std::to_string(static_cast<int>(binaryOperator.op())));
+		throw interpret_except("Invalid operator for bin_op: " + std::to_string(static_cast<int>(binaryOperator.op())));
 	}
 
 	this->register_visit_result(result);
@@ -93,7 +93,7 @@ void eval_visitor::visit(ast::unary_op& unaryOperator)
 		negate_interpret(result);
 		break;
 	default:
-		throw interpret_except("Unsupported unary operation", std::to_string(static_cast<int>(unaryOperator.op())));
+		throw interpret_except("Unsupported unary operation: " + std::to_string(static_cast<int>(unaryOperator.op())));
 	}
 
 	// ReSharper disable CppSomeObjectMembersMightNotBeInitialized - false positive

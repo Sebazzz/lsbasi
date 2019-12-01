@@ -61,7 +61,7 @@ TEST_CASE( "Interpretation succeeds - groups", "[interpreter]" ) {
 }
 
 TEST_CASE( "Interpretation fails on bad syntax", "[interpreter]" ) {
-    REQUIRE_THROWS_MATCHES( do_interpret(L"50 50"), interpret_except, Catch::Message("Unexpected token found - TOK(int,50)"));
+    REQUIRE_THROWS_MATCHES( do_interpret(L"50 50"), interpret_except, Catch::Message("Unexpected token found: TOK(int,50)"));
     //REQUIRE_THROWS_MATCHES( do_interpret(L"50 ++ 50"), interpret_except, Catch::Message("Expected integer"));
     REQUIRE_THROWS_MATCHES( do_interpret(L"+"), interpret_except, Catch::Message("Found end while searching for factor"));
     REQUIRE_THROWS_MATCHES( do_interpret(L"-"), interpret_except, Catch::Message("Found end while searching for factor"));
@@ -70,8 +70,8 @@ TEST_CASE( "Interpretation fails on bad syntax", "[interpreter]" ) {
 }
 
 TEST_CASE( "Interpretation fails on bad syntax - groups", "[interpreter]" ) {
-    REQUIRE_THROWS_MATCHES( do_interpret(L"1+(1+2)-1)") == std::wstring(L"3"), interpret_except, Catch::Message("Unexpected token found - TOK(group_end)"));
-    REQUIRE_THROWS_MATCHES( do_interpret(L"50 + 50 )"), interpret_except, Catch::Message("Unexpected token found - TOK(group_end)"));
-    REQUIRE_THROWS_MATCHES( do_interpret(L"(50 + 50))"), interpret_except, Catch::Message("Unexpected token found - TOK(group_end)"));
-    REQUIRE_THROWS_MATCHES( do_interpret(L"((50+50)"), interpret_except, Catch::Message("At the end of the file while expecting token - group_end"));
+    REQUIRE_THROWS_MATCHES( do_interpret(L"1+(1+2)-1)") == std::wstring(L"3"), interpret_except, Catch::Message("Unexpected token found: TOK(group_end)"));
+    REQUIRE_THROWS_MATCHES( do_interpret(L"50 + 50 )"), interpret_except, Catch::Message("Unexpected token found: TOK(group_end)"));
+    REQUIRE_THROWS_MATCHES( do_interpret(L"(50 + 50))"), interpret_except, Catch::Message("Unexpected token found: TOK(group_end)"));
+    REQUIRE_THROWS_MATCHES( do_interpret(L"((50+50)"), interpret_except, Catch::Message("At the end of the file while expecting token: group_end"));
 }

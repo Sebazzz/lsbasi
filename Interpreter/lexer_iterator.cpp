@@ -21,7 +21,7 @@ void lexer_iterator::expect_internal(token_type type) const
 {
 	if (this->is_at_end())
 	{
-		throw interpret_except("At the end of the file while expecting token", token::token_type_to_string(type));
+		throw interpret_except(std::wstring(L"At the end of the file while expecting token: ") + token::token_type_to_string(type));
 	}
 
 	if (this->m_current_token.type() != type)
@@ -32,7 +32,7 @@ void lexer_iterator::expect_internal(token_type type) const
 		info_str += L"; Got token: ";
 		info_str += this->m_current_token.to_string();
 		
-		throw interpret_except("Invalid token found", info_str);
+		throw interpret_except(L"Invalid token found: " + info_str);
 	}
 }
 

@@ -62,7 +62,7 @@ symbol_table& ast::procedure::symbol_table() const
 {
 	if (!this->m_symbol_table)
 	{
-		throw interpret_except("The symbol table has not been initialized", this->identifier());
+		throw interpret_except(L"The symbol table has not been initialized: " + this->identifier());
 	}
 	
 	return *this->m_symbol_table.get();

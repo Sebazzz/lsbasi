@@ -39,7 +39,7 @@ void exec_visitor::visit(ast::assign& assign)
 		type->type_impl().convert_value(result);
 	} catch (interpret_except& e)
 	{
-		throw interpret_except(L"Attempting to assign variable " + var_symbol->to_string() + L" with invalid type", e.what());
+		throw interpret_except(L"Attempting to assign variable " + var_symbol->to_string() + L" with invalid type: " + string_to_wstring(e.what()));
 	}
 	
 	ctx.memory->set(var_symbol, result.value);
@@ -128,7 +128,7 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 			param_type->type_impl().convert_value(arg_value);
 		} catch (interpret_except& e)
 		{
-			throw interpret_except(L"Attempting to assign parameter " + param->identifier() + L" of " + procedure_symbol->to_string() + L" with invalid type", e.what());
+			throw interpret_except(L"Attempting to assign parameter " + param->identifier() + L" of " + procedure_symbol->to_string() + L" with invalid type: " + string_to_wstring(e.what()));
 		}
 
 		auto param_var = proc_ctx.symbols.get<variable_symbol>(param->identifier());

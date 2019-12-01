@@ -42,7 +42,7 @@ ast_ptr parser::parse_repl()
 	if (!it.is_at_end())
 	{
 		// If we have still tokens left, we hit an unexpected token
-		throw interpret_except("Unexpected token found", it->to_string());
+		throw interpret_except(L"Unexpected token found: " + it->to_string());
 	}
 
 	return result;
@@ -58,7 +58,7 @@ ast_ptr parser::parse()
 	if (!it.is_at_end())
 	{
 		// If we have still tokens left, we hit an unexpected token
-		throw interpret_except("Unexpected token found at end of program", it->to_string());
+		throw interpret_except(L"Unexpected token found at end of program" + it->to_string());
 	}
 
 	return result;
@@ -95,7 +95,7 @@ ast_ptr parser::handle_integer(lexer_iterator& it) const
 			}
 			
 		default:
-			throw interpret_except("Expected integer or real", it->to_string());
+			throw interpret_except(L"Expected integer or real: " + it->to_string());
 		}
 	} catch (std::invalid_argument& e)
 	{
@@ -220,7 +220,7 @@ ast_ptr parser::handle_program(lexer_iterator& it) const
 	
 	if (!it.is_at_end())
 	{
-		throw interpret_except("Expected end of program", it->to_string());
+		throw interpret_except(L"Expected end of program" + it->to_string());
 	}
 
 	return make_ast_ptr<program>(identifier, block);
@@ -323,7 +323,7 @@ void parser::handle_var_decl_or_parameter_list(lexer_iterator& it, ast::var_decl
 			case token_type::identifier:
 				v_type = it->value();
 			break;
-			default: throw interpret_except("Expected type specification", it->to_string());
+			default: throw interpret_except(L"Expected type specification: " + it->to_string());
 		}
 
 		for (auto && identifier : identifiers)
@@ -411,7 +411,7 @@ ast_ptr parser::handle_statement(lexer_iterator& it) const
 		return this->handle_assign_or_procedure_call(it);
 	}
 
-	throw interpret_except("Unexpected token in statement", it->to_string());
+	throw interpret_except(L"Unexpected token in statement: " + it->to_string());
 }
 
 ast_ptr parser::handle_assign_or_procedure_call(lexer_iterator& it) const
@@ -436,7 +436,7 @@ ast_ptr parser::handle_assign_or_procedure_call(lexer_iterator& it) const
 		return this->handle_procedure_call(identifier, it);
 	}
 	
-	throw interpret_except("Unexpected token in statement attempting to parse assignment or procedure call", it->to_string());
+	throw interpret_except(L"Unexpected token in statement attempting to parse assignment or procedure call: " + it->to_string());
 }
 
 ast_ptr parser::handle_procedure_call(const std::wstring& identifier, lexer_iterator& it) const

@@ -15,7 +15,7 @@ void verify_exists(symbol_table& symbol_table_instance, const symbol_identifier&
 		}
 	} catch (interpret_except& e)
 	{
-		throw interpret_except(std::string("Unable to resolve symbol of type '") + typeid(T).name() + "'", e.what());
+		throw interpret_except(std::string("Unable to resolve symbol of type '") + typeid(T).name() + "': " + e.what());
 	}
 }
 
@@ -62,7 +62,7 @@ void symbol_table_builder::visit(ast::procedure_call& procedure_call)
 		}
 	} catch (interpret_except& e)
 	{
-		throw interpret_except(L"In call to procedure '" + procedure_call.procedure_identifier() + L"' unexpected error found", e.what());
+		throw interpret_except(L"In call to procedure '" + procedure_call.procedure_identifier() + L"' unexpected error found: " + string_to_wstring(e.what()));
 	}
 }
 

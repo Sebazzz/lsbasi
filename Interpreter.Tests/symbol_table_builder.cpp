@@ -258,7 +258,7 @@ END.
     REQUIRE_THROWS_MATCHES( 
 		do_parse_program(program), 
 		interpret_except, 
-		Catch::Message("Unable to resolve symbol of type 'class variable_symbol' - Attempt to reference symbol with name 'a' which does not exist in this scope: Simple"));
+		Catch::Message("Unable to resolve symbol of type 'class variable_symbol': Attempt to reference symbol with name 'a' which does not exist in this scope: Simple"));
 }
 
 TEST_CASE( "Symbol lookup fails - program 2", "[symbol_table_builder]" ) {
@@ -273,7 +273,7 @@ END.
     REQUIRE_THROWS_MATCHES( 
 		do_parse_program(program), 
 		interpret_except, 
-		Catch::Message("Unable to resolve symbol of type 'class type_symbol' - Attempt to reference symbol with name 'NOTEXISTS' which does not exist in this scope: Simple"));
+		Catch::Message("Unable to resolve symbol of type 'class type_symbol': Attempt to reference symbol with name 'NOTEXISTS' which does not exist in this scope: Simple"));
 }
 
 TEST_CASE( "Symbol lookup fails - program undefined procedure", "[symbol_table_builder]" ) {
@@ -287,7 +287,7 @@ END.
     REQUIRE_THROWS_MATCHES( 
 		do_parse_program(program), 
 		interpret_except, 
-		Catch::Message("Unable to resolve symbol of type 'class procedure_symbol' - Attempt to reference symbol with name 'calculate' which does not exist in this scope: Simple"));
+		Catch::Message("Unable to resolve symbol of type 'class procedure_symbol': Attempt to reference symbol with name 'calculate' which does not exist in this scope: Simple"));
 }
 
 TEST_CASE( "Symbol lookup fails - program undefined procedure args", "[symbol_table_builder]" ) {
@@ -305,5 +305,5 @@ END.
     REQUIRE_THROWS_MATCHES( 
 		do_parse_program(program), 
 		interpret_except, 
-		Catch::Message("In call to procedure 'calculate' unexpected error found - Unable to resolve symbol of type 'class variable_symbol' - Attempt to reference symbol with name 'x' which does not exist in this scope: Simple"));
+		Catch::Message("In call to procedure 'calculate' unexpected error found: Unable to resolve symbol of type 'class variable_symbol': Attempt to reference symbol with name 'x' which does not exist in this scope: Simple"));
 }

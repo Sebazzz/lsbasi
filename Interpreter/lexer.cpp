@@ -116,7 +116,7 @@ token lexer::read_operator()
 		return token(token_type::group_end, std::wstring());
 
 	default:
-		throw interpret_except("Unknown token in string", std::to_string(static_cast<char>(this->currentChar)));
+		throw interpret_except("Unknown token in string: " + std::to_string(static_cast<char>(this->currentChar)));
 	}
 }
 

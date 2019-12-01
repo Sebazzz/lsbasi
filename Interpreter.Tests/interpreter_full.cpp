@@ -66,7 +66,7 @@ BEGIN
 END.        
 )";
 
-    REQUIRE_THROWS_MATCHES( do_interpret_program(program), interpret_except, Catch::Message("Attempting to assign variable variable a with invalid type - Attempting to convert expression of type built-in REAL to built-in INTEGER"));
+    REQUIRE_THROWS_MATCHES( do_interpret_program(program), interpret_except, Catch::Message("Attempting to assign variable variable a with invalid type: Attempting to convert expression of type built-in REAL to built-in INTEGER"));
 }
 
 TEST_CASE( "Interpretation from integer to real allowed", "[interpreter_program]" ) {
@@ -336,7 +336,7 @@ END.
     REQUIRE_THROWS_MATCHES( 
 		do_interpret_program(program), 
 		interpret_except, 
-		Catch::Message("Invalid token found - Expected type end; Got token: TOK(group_start)"));
+		Catch::Message("Invalid token found: Expected type end; Got token: TOK(group_start)"));
 }
 
 TEST_CASE( "Interpretation fails - procedure used as argument", "[interpreter_program]" ) {
@@ -363,7 +363,7 @@ END.
     REQUIRE_THROWS_MATCHES( 
 		do_interpret_program(program), 
 		interpret_except, 
-		Catch::Message("Invalid token found - Expected type end; Got token: TOK(group_start)"));
+		Catch::Message("Invalid token found: Expected type end; Got token: TOK(group_start)"));
 }
 
 TEST_CASE( "Interpretation fails - procedures with parameters called with not enough parameters", "[interpreter_program]" ) {

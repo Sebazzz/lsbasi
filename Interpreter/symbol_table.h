@@ -78,7 +78,7 @@ symbol_type_ptr<T> symbol_table::get(const symbol_identifier& identifier)
 		// Note: GCC does not give very good type information. MSVC does, and that what I use.
 		// If this should give better error messages on GCC some more elaborate tricks are needed
 		// See also: 
-		throw interpret_except(L"Expected symbol '" + ptr->to_string() + L"' to be of a different type", typeid(T).name());
+		throw interpret_except(L"Expected symbol '" + ptr->to_string() + L"' to be of a different type: " + string_to_wstring(typeid(T).name()));
 	}
 
 	return result;
