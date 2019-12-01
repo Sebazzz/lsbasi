@@ -129,7 +129,7 @@ token lexer::read_operator()
 		return token(token_type::group_end, stream_pos);
 
 	default:
-		throw interpret_except("Unknown token in string: " + std::to_string(static_cast<char>(this->m_current_char)));
+		throw parse_except("Unknown token in string: " + std::to_string(static_cast<char>(this->m_current_char)), stream_pos);
 	}
 }
 

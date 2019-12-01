@@ -75,7 +75,7 @@ void scope_manager::pop()
 {
 	if (this->m_scope.empty())
 	{
-		throw interpret_except("Expected non-empty stack");
+		throw exec_error("Expected non-empty stack", {-1,-1});
 	}
 
 	this->m_scope.pop();

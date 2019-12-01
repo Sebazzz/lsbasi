@@ -20,6 +20,8 @@
 #include "interpret_except.h"
 #include "parse_except.h"
 #include "semantic_except.h"
+#include "exec_error.h"
+#include "runtime_type_error.h"
 #include "internal_interpret_except.h"
 #include "token.h"
 #include "line_info.h"

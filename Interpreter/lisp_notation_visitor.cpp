@@ -15,7 +15,7 @@ wchar_t lisp_notation_visitor::op_to_string(token_type token)
 	case token_type::multiply: return L'*';
 	case token_type::divide_integer: return L'/';
 	default:
-		throw std::logic_error("Unsupported operator");
+		throw internal_interpret_except("Unsupported operator");
 	}
 }
 

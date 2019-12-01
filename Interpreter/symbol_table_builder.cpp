@@ -71,7 +71,7 @@ void symbol_table_builder::visit(ast::var_decl& var_decl)
 	this->ensure_symbol_table();
 
 	const auto symbol = make_symbol_ptr<variable_symbol>(var_decl);
-	this->m_symbol_table->declare(symbol);
+	this->m_symbol_table->declare(symbol, var_decl.get_line_info());
 
 	ast_node_visitor::visit(var_decl);
 }
@@ -110,13 +110,13 @@ void symbol_table_builder::visit(ast::procedure& procedure)
 
 	// We found a (nested) procedure. New scope.
 	symbol_table_builder nested_scope_visitor(procedure.identifier(), this->m_symbol_table.get());
-	nested_scope_visitor.symbol_table()->declare(symbol);
+	nested_scope_visitor.symbol_table()->declare(symbol, procedure.get_line_info());
 	procedure.m_symbol_table = nested_scope_visitor.symbol_table();
 	
 	procedure.accept(nested_scope_visitor);
 
 	// ... add the procedure to the current scope so it can be referenced
-	this->m_symbol_table->declare(symbol);
+	this->m_symbol_table->declare(symbol, procedure.get_line_info());
 }
 
 std::shared_ptr<symbol_table> symbol_table_builder::symbol_table() const

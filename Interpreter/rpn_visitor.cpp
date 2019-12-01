@@ -16,7 +16,7 @@ wchar_t rpn_visitor::op_to_string(token_type token)
 	case token_type::divide_integer: return L'/';
 	case token_type::divide_real: return L'/';
 	default:
-		throw std::logic_error("Unsupported operator");
+		throw internal_interpret_except("Unsupported operator");
 	}
 }
 
@@ -75,5 +75,5 @@ void rpn_visitor::visit(ast::unary_op& unaryOperator)
 		this->string_buf += op_to_string(unaryOperator.op());
 	}
 
-	throw interpret_except("Unsupported unary operator: " + wstring_to_string( unaryOperator.get_token().to_string()), unaryOperator.get_line_info());
+	throw internal_interpret_except("Unsupported unary operator: " + wstring_to_string( unaryOperator.get_token().to_string()), unaryOperator.get_line_info());
 }

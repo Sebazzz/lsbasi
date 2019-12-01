@@ -65,24 +65,24 @@ symbol_ptr symbol_table::get(const ast::var_identifier& identifier)
 			{
 				if (this->m_parent->m_scope_name == L"RUNTIME")
 				{
-					throw interpret_except(L"Attempt to reference symbol with name '" + identifier + L"' which does not exist in this scope: " + this->m_scope_name);
+					throw semantic_except(L"Attempt to reference symbol with name '" + identifier + L"' which does not exist in this scope: " + this->m_scope_name, {-1,-1});
 				}
 				
-				throw interpret_except(L"Attempt to reference symbol with name '" + identifier + L"' which does not exist in this scope: " + this->m_scope_name + L" or any parent scope");
+				throw semantic_except(L"Attempt to reference symbol with name '" + identifier + L"' which does not exist in this scope: " + this->m_scope_name + L" or any parent scope", {-1,-1});
 			}
 		}
 		
-		throw interpret_except(L"Attempt to reference symbol with name '" + identifier + L"' which does not exist in this scope: " + this->m_scope_name);
+		throw semantic_except(L"Attempt to reference symbol with name '" + identifier + L"' which does not exist in this scope: " + this->m_scope_name, {-1,-1});
 	}
 	
 	return symbol_it->second;
 }
 
-void symbol_table::declare(const symbol_ptr& symbol)
+void symbol_table::declare(const symbol_ptr& symbol, line_info position)
 {
 	if (this->m_variables.find(symbol->identifier()) != this->m_variables.end())
 	{
-		throw interpret_except(L"Attempt to declare duplicate symbol '" + symbol->to_string() + L"' which already exists in this scope: " + this->m_scope_name);
+		throw semantic_except(L"Attempt to declare duplicate symbol '" + symbol->to_string() + L"' which already exists in this scope: " + this->m_scope_name, position);
 	}
 
 	this->m_variables.insert_or_assign(symbol->identifier(), symbol);

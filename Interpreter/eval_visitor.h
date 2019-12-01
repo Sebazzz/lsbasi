@@ -49,7 +49,7 @@ eval_value eval_visitor::accept(T& node)
 
 	if (this->m_stack.empty())
 	{
-		throw interpret_except(std::string("Previous node accept did not yield a value: ") + typeid(node).name());
+		throw exec_error(std::string("Previous node accept did not yield a value: ") + typeid(node).name(), node.get_line_info());
 	}
 
 	const eval_value val = this->m_stack.top();

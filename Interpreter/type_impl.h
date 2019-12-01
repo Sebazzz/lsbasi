@@ -21,12 +21,12 @@ public:
 	/**
 	 * Assign a evaluation value (eval_value) to the current type
 	 */
-    virtual void convert_value(eval_value& eval_value) const = 0;
+    virtual void convert_value(eval_value& eval_value, line_info line_info) const = 0;
 
 	/**
 	 * Widens the evaluation value (eval_value) to the current type
 	 */
-    virtual void change_type(eval_value& eval_value) const = 0;
+    virtual void change_type(eval_value& eval_value, line_info line_info) const = 0;
 };
 
 

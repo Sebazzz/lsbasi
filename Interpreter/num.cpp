@@ -47,7 +47,7 @@ std::wstring num::val_to_string() const
 	case ast::builtin_type::real:
 		return std::to_wstring(this->m_value.real_val);
 	default:
-		throw interpret_except("Unsupported number type: " + std::to_string(static_cast<int>(this->type())))
+		throw internal_interpret_except("Unsupported number type: " + std::to_string(static_cast<int>(this->type())), this->get_line_info())
 		;
 	}
 }

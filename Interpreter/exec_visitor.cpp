@@ -36,10 +36,10 @@ void exec_visitor::visit(ast::assign& assign)
 
 	try
 	{
-		type->type_impl().convert_value(result);
+		type->type_impl().convert_value(result, assign.get_line_info());
 	} catch (interpret_except& e)
 	{
-		throw interpret_except(L"Attempting to assign variable " + var_symbol->to_string() + L" with invalid type: " + string_to_wstring(e.what()));
+		throw exec_error(L"Attempting to assign variable " + var_symbol->to_string() + L" with invalid type: " + string_to_wstring(e.what()), assign.get_line_info());
 	}
 	
 	ctx.memory->set(var_symbol, result.value);
@@ -106,12 +106,12 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 		// or arguments for which no parameter has been declared.
 		if (param_iterator == procedure_params.end())
 		{
-			throw interpret_except(L"In a call to " + procedure_symbol->to_string() + L" too many arguments have been provided");
+			throw exec_error(L"In a call to " + procedure_symbol->to_string() + L" too many arguments have been provided", (*arg_iterator)->get_line_info());
 		}
 
 		if (arg_iterator == args_end)
 		{
-			throw interpret_except(L"In a call to " + procedure_symbol->to_string() + L" no argument has been provided for this parameter: " + (*param_iterator)->identifier());
+			throw exec_error(L"In a call to " + procedure_symbol->to_string() + L" no argument has been provided for this parameter: " + (*param_iterator)->identifier(), procedure_call.get_line_info());
 		}
 
 		const ast::ast_ptr arg = *arg_iterator;
@@ -125,10 +125,10 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 
 		try
 		{
-			param_type->type_impl().convert_value(arg_value);
+			param_type->type_impl().convert_value(arg_value, arg->get_line_info());
 		} catch (interpret_except& e)
 		{
-			throw interpret_except(L"Attempting to assign parameter " + param->identifier() + L" of " + procedure_symbol->to_string() + L" with invalid type: " + string_to_wstring(e.what()));
+			throw exec_error(L"Attempting to assign parameter " + param->identifier() + L" of " + procedure_symbol->to_string() + L" with invalid type: " + string_to_wstring(e.what()), arg->get_line_info());
 		}
 
 		auto param_var = proc_ctx.symbols.get<variable_symbol>(param->identifier());

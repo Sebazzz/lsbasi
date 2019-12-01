@@ -27,13 +27,13 @@ void eval_visitor::visit(ast::bin_op& binaryOperator)
 		const auto real_type_symbol = builtin_type_symbol::get_for_builtin_type(ast::builtin_type::real);
 		const auto& real_type_impl = real_type_symbol->type_impl();
 		
-		real_type_impl.convert_value(right_val);
-		real_type_impl.convert_value(result);
+		real_type_impl.convert_value(right_val, binaryOperator.get_line_info());
+		real_type_impl.convert_value(result, binaryOperator.get_line_info());
 	}
 
 	// ... Call to convert value to result type if necessary
-	right_val.type->type_impl().change_type(result);
-	result.type->type_impl().convert_value(right_val);
+	right_val.type->type_impl().change_type(result, binaryOperator.get_line_info());
+	result.type->type_impl().convert_value(right_val, binaryOperator.get_line_info());
 
 	switch (binaryOperator.op())
 	{
@@ -59,7 +59,7 @@ void eval_visitor::visit(ast::bin_op& binaryOperator)
 		break;
 		
 	default:
-		throw interpret_except("Invalid operator for bin_op: " + std::to_string(static_cast<int>(binaryOperator.op())));
+		throw exec_error(L"Invalid operator for bin_op: " + binaryOperator.get_token().to_string(), binaryOperator.get_line_info());
 	}
 
 	this->register_visit_result(result);
@@ -93,7 +93,7 @@ void eval_visitor::visit(ast::unary_op& unaryOperator)
 		negate_interpret(result);
 		break;
 	default:
-		throw interpret_except("Unsupported unary operation: " + std::to_string(static_cast<int>(unaryOperator.op())));
+		throw exec_error(L"Unsupported unary operation: " + unaryOperator.get_token().to_string(), unaryOperator.get_line_info());
 	}
 
 	// ReSharper disable CppSomeObjectMembersMightNotBeInitialized - false positive

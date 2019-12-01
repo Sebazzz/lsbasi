@@ -224,6 +224,7 @@
     <ClCompile Include="assign.cpp" />
     <ClCompile Include="builtin_type_impl.cpp" />
     <ClCompile Include="builtin_type_symbol.cpp" />
+    <ClCompile Include="exec_error.cpp" />
     <ClCompile Include="internal_interpret_except.cpp" />
     <ClCompile Include="parse_except.cpp" />
     <ClCompile Include="pch.cpp">
@@ -252,6 +253,7 @@
     <ClCompile Include="procedure_call.cpp" />
     <ClCompile Include="program.cpp" />
     <ClCompile Include="rpn_visitor.cpp" />
+    <ClCompile Include="runtime_type_error.cpp" />
     <ClCompile Include="scope_context.cpp" />
     <ClCompile Include="semantic_except.cpp" />
     <ClCompile Include="stringify_visitor.cpp" />
@@ -282,6 +284,7 @@
     <ClInclude Include="empty.h" />
     <ClInclude Include="eval_value.h" />
     <ClInclude Include="eval_visitor.h" />
+    <ClInclude Include="exec_error.h" />
     <ClInclude Include="exec_visitor.h" />
     <ClInclude Include="internal_interpret_except.h" />
     <ClInclude Include="interpreter.h" />
@@ -300,6 +303,7 @@
     <ClInclude Include="procedure_call.h" />
     <ClInclude Include="program.h" />
     <ClInclude Include="rpn_visitor.h" />
+    <ClInclude Include="runtime_type_error.h" />
     <ClInclude Include="scope_context.h" />
     <ClInclude Include="semantic_except.h" />
     <ClInclude Include="stringify_visitor.h" />
