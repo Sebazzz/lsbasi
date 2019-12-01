@@ -43,6 +43,12 @@
     <Filter Include="Source Files\ast_visitor\execution">
       <UniqueIdentifier>{fd02d13f-5297-431f-9c53-c1757eb42811}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\support">
+      <UniqueIdentifier>{49651e9b-e4d9-438c-85e5-8b58b879ad87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\support">
+      <UniqueIdentifier>{39d69461-f985-4a98-b0ae-6b058851e8b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -111,9 +117,6 @@
     <ClCompile Include="lexer_iterator.cpp">
       <Filter>Source Files\lexing</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="exec_visitor.cpp">
       <Filter>Source Files\ast_visitor\execution</Filter>
     </ClCompile>
@@ -152,6 +155,12 @@
     </ClCompile>
     <ClCompile Include="procedure_call.cpp">
       <Filter>Source Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="util.cpp">
+      <Filter>Source Files\support</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files\support</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -218,9 +227,6 @@
     <ClInclude Include="empty.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
-    <ClInclude Include="util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="program.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
@@ -235,9 +241,6 @@
     </ClInclude>
     <ClInclude Include="ast_common.h">
       <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="exec_visitor.h">
       <Filter>Header Files\ast_visitor\execution</Filter>
@@ -286,6 +289,12 @@
     </ClInclude>
     <ClInclude Include="procedure_call.h">
       <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Header Files\support</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files\support</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

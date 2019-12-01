@@ -260,6 +260,7 @@
     <ClCompile Include="type.cpp" />
     <ClCompile Include="type_symbol.cpp" />
     <ClCompile Include="unary_op.cpp" />
+    <ClCompile Include="util.cpp" />
     <ClCompile Include="var.cpp" />
     <ClCompile Include="var_decl.cpp" />
   </ItemGroup>

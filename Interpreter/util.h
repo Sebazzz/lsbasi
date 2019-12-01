@@ -1,5 +1,8 @@
 #pragma once
 
+std::wstring string_to_wstring(const std::string& input);
+std::string wstring_to_string(const std::wstring& input);
+
 /**
  * For use in std::map - provides a case-insensitive way to compare strings.
  * This is not entirely unicode-correct: it assumes the strings are normalized.

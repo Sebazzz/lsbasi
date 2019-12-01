@@ -1,8 +1,5 @@
 #pragma once
 
-std::wstring string_to_wstring(const std::string& input);
-std::string wstring_to_string(const std::wstring& input);
-
 class interpret_except: public std::exception
 {
 private:
