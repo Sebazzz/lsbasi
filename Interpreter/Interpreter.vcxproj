@@ -286,6 +286,7 @@
     <ClInclude Include="lexer.h" />
     <ClInclude Include="interpret_math.h" />
     <ClInclude Include="lexer_iterator.h" />
+    <ClInclude Include="line_info.h" />
     <ClInclude Include="lisp_notation_visitor.h" />
     <ClInclude Include="num.h" />
     <ClInclude Include="parser.h" />

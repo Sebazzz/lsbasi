@@ -3,12 +3,47 @@
 
 std::wstring token::value() const
 {
-	return _value;
+	return m_value;
 }
 
 token_type token::type() const
 {
-	return _type;
+	return m_type;
+}
+
+token::token(token_type token, std::wstring contents, ::line_info line_info): m_type(token),
+                                                                              m_value(std::move(contents)),
+                                                                              m_position(line_info)
+{
+}
+
+token::token(token_type token, ::line_info line_info): m_type(token), m_position(line_info)
+{
+}
+
+token::token(token&& other) noexcept: m_type(other.m_type), m_value(std::move(other.m_value)),
+                                      m_position(other.m_position)
+{
+}
+
+token& token::operator=(const token& other)
+{
+	if (this == &other)
+		return *this;
+	m_type = other.m_type;
+	m_position = other.m_position;
+	m_value = other.m_value;
+	return *this;
+}
+
+token& token::operator=(token&& other) noexcept
+{
+	if (this == &other)
+		return *this;
+	m_type = other.m_type;
+	m_position = other.m_position;
+	m_value = std::move(other.m_value);
+	return *this;
 }
 
 const wchar_t* token::token_type_to_string(token_type type)
@@ -92,16 +127,21 @@ std::wstring token::to_string() const
 	
 	const wchar_t* tokenType = token_type_to_string(this->type());
 
-	if (this->_value.empty())
+	if (this->m_value.empty())
 	{
 		return L"TOK(" + std::wstring(tokenType) + L")";
 	}
 	
-	return L"TOK(" + std::wstring(tokenType) + L"," + std::wstring(this->_value) + L")";
+	return L"TOK(" + std::wstring(tokenType) + L"," + std::wstring(this->m_value) + L")";
 }
 
-token token::eof()
+line_info token::position() const
 {
-	return token(token_type::eof, std::wstring());
+	return m_position;
+}
+
+token token::eof(line_info position)
+{
+	return token(token_type::eof, position);
 }
 

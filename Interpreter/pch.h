@@ -18,4 +18,6 @@
 #include "ast_node.h"
 #include "builtin_type_defs.h"
 #include "interpret_except.h"
+#include "token.h"
+#include "line_info.h"
 #include "util.h"
