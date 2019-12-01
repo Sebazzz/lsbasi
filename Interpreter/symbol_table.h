@@ -16,6 +16,8 @@ private:
 
 	std::wstring m_scope_name;
 
+	explicit symbol_table();
+
 public:
 	explicit symbol_table(std::wstring scope_name, symbol_table* parent = nullptr);
 

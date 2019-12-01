@@ -2,7 +2,7 @@
 #include "builtin_type_symbol.h"
 #include "symbol_table.h"
 
-symbol_table::symbol_table(std::wstring scope_name, symbol_table* parent): m_parent(parent), m_scope_name(std::move(scope_name))
+symbol_table::symbol_table(): m_scope_name(L"RUNTIME")
 {
 	// Build up our default, builtin, symbols
 	this->m_variables.try_emplace(
@@ -12,6 +12,15 @@ symbol_table::symbol_table(std::wstring scope_name, symbol_table* parent): m_par
 	this->m_variables.try_emplace(
 		builtin_type_symbol::var_type_to_string(ast::builtin_type::real), 
 		builtin_type_symbol::get_for_builtin_type(ast::builtin_type::real));
+}
+
+symbol_table::symbol_table(std::wstring scope_name, symbol_table* parent): m_parent(parent), m_scope_name(std::move(scope_name))
+{
+	if (this->m_parent == nullptr)
+	{
+		static symbol_table runtime_symbol_table;
+		this->m_parent = &runtime_symbol_table;
+	}
 }
 
 symbol_table::symbol_table_iterator::symbol_table_iterator(
@@ -54,6 +63,11 @@ symbol_ptr symbol_table::get(const ast::var_identifier& identifier)
 				return this->m_parent->get(identifier);
 			} catch (interpret_except&)
 			{
+				if (this->m_parent->m_scope_name == L"RUNTIME")
+				{
+					throw interpret_except(L"Attempt to reference symbol with name '" + identifier + L"' which does not exist in this scope: " + this->m_scope_name);
+				}
+				
 				throw interpret_except(L"Attempt to reference symbol with name '" + identifier + L"' which does not exist in this scope: " + this->m_scope_name + L" or any parent scope");
 			}
 		}
