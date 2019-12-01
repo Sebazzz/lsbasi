@@ -6,7 +6,7 @@ class type_symbol;
 /**
  * Contains the value of an evaluation with type information
  *
- * Note: this type has debugging support in lexer.natvis
+ * Note: this type has debugging support in execution.natvis
  */
 struct eval_value {
 	symbol_type_ptr<type_symbol> type;
@@ -22,5 +22,5 @@ The shared_ptr to the symbol contains two pointers, so either 8 or 16 bytes.
 Might want consider using a raw pointer for that which would shrink this struct
 size by one pointer size to 12 or 16 bytes. Or one alternative is to pass this 
 struct by reference of pointer. I need to benchmark that, and perhaps with the 
-big caches of my CPU (Ryzen) I might never see a difference.
+large caches of my CPU (Ryzen) I might never see a difference.
 )");

@@ -137,7 +137,6 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 		++param_iterator;
 		++arg_iterator;
 	}
-
 	// We have now bound all arguments in for the procedure. We can now evaluate the body.
 	procedure_symbol->procedure().block()->accept(*this);
 

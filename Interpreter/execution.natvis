@@ -7,18 +7,19 @@
   <Type Name="eval_value">
     <!-- Special support for built-in types. Note I compare by enum integer value, apparently 
          comparing by the fully qualified name of the enum does not work -->
-    <DisplayString Optional="true" Condition="((builtin_type_symbol&amp;)*type).m_type == 0">{{ value = {value.int_val}  (builtin_int)} }</DisplayString>
-    <DisplayString Optional="true" Condition="((builtin_type_symbol&amp;)*type).m_type == 1">{{ value = {value.real_val}  (builtin_real)} }</DisplayString>
+    <Intrinsic Name="builtin_type" Expression="((builtin_type_symbol&amp;)*type)" />
+    <DisplayString Optional="true" Condition="(builtin_type()).m_type == 0">{{ value = {value.int_val}  (builtin_int)} }</DisplayString>
+    <DisplayString Optional="true" Condition="(builtin_type()).m_type == 1">{{ value = {value.real_val}  (builtin_real)} }</DisplayString>
 
     <!-- Fallback for builtin type -->
-    <DisplayString Optional="true">{{ value = {value} - builtin-type = {((builtin_type_symbol&amp;)*type).m_type} }</DisplayString>
+    <DisplayString Optional="true">{{ value = {value} - builtin-type = {(builtin_type()).m_type} }</DisplayString>
 
     <!-- Default -->
     <DisplayString>{{ value = {value}  - type = {(*type)}</DisplayString>
     <Expand>
       <Item Name="[value]" ExcludeView="simple">value</Item>
       <Item Name="[type]" ExcludeView="simple">*type</Item>
-      <Item Name="[builtin-type]" Condition="dynamic_cast&lt;builtin_type_symbol*&gt;(*type) != nullptr" Optional="true">((builtin_type_symbol&amp;)*type).m_type</Item>
+      <Item Name="[builtin-type]" Condition="dynamic_cast&lt;builtin_type_symbol*&gt;(type._Ptr) != nullptr" Optional="true">(builtin_type()).m_type</Item>
     </Expand>
   </Type>
 
@@ -35,6 +36,7 @@
 
   <!-- Pointer to symbol -->
   <Type Name="std::shared_ptr&lt;symbol&gt;">
+    <Intrinsic Name="id" Expression="(*_Ptr).m_identifier" />
     <DisplayString Condition="_Rep == 0">invalid!</DisplayString>
     <DisplayString Condition="_Ptr == 0">nullptr (!invalid)</DisplayString>
 
@@ -43,13 +45,34 @@
          - _Ptr->to_string() displays lazily (??? before display)
          - Cannot display type argument for shared_ptr
     -->
-    <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;builtin_type_symbol*&gt;(_Ptr) != nullptr" Optional="true">builtin {((builtin_type_symbol&amp;)*_Ptr).m_type} {(*_Ptr).m_identifier,sub}</DisplayString>
-    <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;variable_symbol*&gt;(_Ptr) != nullptr" Optional="true">var '{(*_Ptr).m_identifier,sub}' {((variable_symbol&amp;)*_Ptr).m_var.m_type}</DisplayString>
-    <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;procedure_symbol*&gt;(_Ptr) != nullptr" Optional="true">proc '{(*_Ptr).m_identifier,sub}' (args: {((procedure_symbol&amp;)*_Ptr).m_procedure.m_params})</DisplayString>
-    <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;type_symbol*&gt;(_Ptr) != nullptr" Optional="true">type '{(*_Ptr).m_identifier,sub}'</DisplayString>
-    <DisplayString Condition="_Ptr != 0">(unknown) {(*_Ptr).m_type} {(*_Ptr).m_identifier,sub}</DisplayString>
+    <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;builtin_type_symbol*&gt;(_Ptr) != nullptr" Optional="true">builtin {((builtin_type_symbol&amp;)*_Ptr).m_type} {id(),sub}</DisplayString>
+    <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;variable_symbol*&gt;(_Ptr) != nullptr" Optional="true">var '{id(),sub}' {((variable_symbol&amp;)*_Ptr).m_var.m_type}</DisplayString>
+    <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;procedure_symbol*&gt;(_Ptr) != nullptr" Optional="true">proc '{id(),sub}' (args: {((procedure_symbol&amp;)*_Ptr).m_procedure.m_params})</DisplayString>
+    <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;type_symbol*&gt;(_Ptr) != nullptr" Optional="true">type '{id(),sub}'</DisplayString>
+    <DisplayString Condition="_Ptr != 0">(unknown) {(*_Ptr).m_type} {id(),sub}</DisplayString>
     <Expand>
-      <Item Name="[identifier]" ExcludeView="simple" Optional="true">(*_Ptr).m_identifier</Item>
+      <Item Name="[identifier]" ExcludeView="simple" Optional="true">id()</Item>
+      <Item Name="[type]" ExcludeView="simple" Optional="true">(*_Ptr).m_type</Item>
+      <Item Name="[full symbol]" ExcludeView="simple" Optional="true">(*_Ptr)</Item>
+    </Expand>
+  </Type>
+
+  <!-- Pointer to type symbol -->
+  <Type Name="std::shared_ptr&lt;type_symbol&gt;">
+    <Intrinsic Name="id" Expression="(*_Ptr).m_identifier" />
+    <DisplayString Condition="_Rep == 0">invalid!</DisplayString>
+    <DisplayString Condition="_Ptr == 0">nullptr (!invalid)</DisplayString>
+
+    <!-- Below is horrible, but unavoidable: 
+         - Attempted to use typeid(_Ptr) does not parse
+         - _Ptr->to_string() displays lazily (??? before display)
+         - Cannot display type argument for shared_ptr
+    -->
+    <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;builtin_type_symbol*&gt;(_Ptr) != nullptr" Optional="true">builtin {((builtin_type_symbol&amp;)*_Ptr).m_type} {id(),sub}</DisplayString>
+    <DisplayString Condition="_Ptr != 0" Optional="true">type '{id(),sub}'</DisplayString>
+    <DisplayString Condition="_Ptr != 0">(type) {(*_Ptr).m_type} {id(),sub}</DisplayString>
+    <Expand>
+      <Item Name="[identifier]" ExcludeView="simple" Optional="true">id()</Item>
       <Item Name="[type]" ExcludeView="simple" Optional="true">(*_Ptr).m_type</Item>
       <Item Name="[full symbol]" ExcludeView="simple" Optional="true">(*_Ptr)</Item>
     </Expand>
