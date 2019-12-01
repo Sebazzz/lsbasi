@@ -129,7 +129,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>..\interpreter\$(Configuration)\interpreter.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\interpreter\$(Configuration)\$(Platform)\interpreter.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
@@ -147,7 +147,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>..\interpreter\$(Configuration)\interpreter.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\interpreter\$(Configuration)\$(Platform)\interpreter.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
