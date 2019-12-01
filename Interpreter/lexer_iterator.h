@@ -13,6 +13,7 @@ class lexer_iterator
 private:
 	lexer& m_lexer;
 	token m_current_token;
+	line_info m_previous_position;
 
 	void expect_internal(token_type type) const;
 
