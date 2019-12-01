@@ -5,25 +5,25 @@
 
 bool lexer::is_at_end() const
 {
-	return this->pos >= this->input.size();
+	return this->m_position >= this->input.size();
 }
 
 void lexer::advance()
 {
-	this->pos++;
+	this->m_position++;
 
 	if (this->is_at_end())
 	{
-		this->currentChar = 0;
+		this->m_current_char = 0;
 	} else
 	{
-		this->currentChar = this->input[this->pos];
+		this->m_current_char = this->input[this->m_position];
 	}
 }
 
 wchar_t lexer::peek() const
 {
-	const auto next_pos = this->pos + 1;
+	const auto next_pos = this->m_position + 1;
 
 	if (next_pos >= this->input.size())
 	{
@@ -36,7 +36,7 @@ wchar_t lexer::peek() const
 bool lexer::skip_whitespace()
 {
 	bool hasSkippedWhitespace = false;
-	while (!this->is_at_end() && isspace(this->currentChar))
+	while (!this->is_at_end() && isspace(this->m_current_char))
 	{
 		hasSkippedWhitespace = true;
 		this->advance();
@@ -47,7 +47,7 @@ bool lexer::skip_whitespace()
 
 bool lexer::skip_comment()
 {
-	if (this->currentChar != '{')
+	if (this->m_current_char != '{')
 	{
 		return false;
 	}
@@ -55,7 +55,7 @@ bool lexer::skip_comment()
 	do
 	{
 		this->advance();
-	} while (!this->is_at_end() && this->currentChar != '}');
+	} while (!this->is_at_end() && this->m_current_char != '}');
 	
 	this->advance();
 
@@ -65,7 +65,7 @@ bool lexer::skip_comment()
 token lexer::read_digit()
 {
 	// This var holds our lexeme: what makes up our digit token
-	std::wstring allDigits(1, this->currentChar);
+	std::wstring allDigits(1, this->m_current_char);
 
 	token_type type = token_type::integer_const;
 
@@ -73,15 +73,15 @@ token lexer::read_digit()
 	{
 		this->advance();
 
-		if (this->currentChar == '.')
+		if (this->m_current_char == '.')
 		{
 			type = token_type::real_const;
-		} else if (!isdigit(this->currentChar))
+		} else if (!isdigit(this->m_current_char))
 		{
 			break;
 		}
 
-		allDigits += this->currentChar;
+		allDigits += this->m_current_char;
 	}
 	
 	return token(type, allDigits);
@@ -89,7 +89,7 @@ token lexer::read_digit()
 
 token lexer::read_operator()
 {
-	switch (this->currentChar)
+	switch (this->m_current_char)
 	{
 	case '+':
 		this->advance();
@@ -116,7 +116,7 @@ token lexer::read_operator()
 		return token(token_type::group_end, std::wstring());
 
 	default:
-		throw interpret_except("Unknown token in string: " + std::to_string(static_cast<char>(this->currentChar)));
+		throw interpret_except("Unknown token in string: " + std::to_string(static_cast<char>(this->m_current_char)));
 	}
 }
 
@@ -125,9 +125,9 @@ token lexer::read_identifier_or_keyword()
 	std::wstring identifier;
 
 	// [A-z][A-z0-9]+
-	while (!this->is_at_end() && (std::isalnum(this->currentChar) || this->currentChar == '_'))
+	while (!this->is_at_end() && (std::isalnum(this->m_current_char) || this->m_current_char == '_'))
 	{
-		identifier += this->currentChar;
+		identifier += this->m_current_char;
 		this->advance();
 	}
 
@@ -150,6 +150,12 @@ token lexer::read_identifier_or_keyword()
 	}
 
 	return token(token_type::identifier, identifier);
+}
+
+lexer::lexer(std::wstring input): input(std::move(input))
+{
+	this->m_position = 0;
+	this->m_current_char = !this->input.empty() ? this->input[this->m_position] : 0;
 }
 
 token make_simple_token(token_type type)
@@ -183,43 +189,43 @@ token lexer::get_next_token()
 			continue;
 		}
 
-		if (std::isalpha(this->currentChar) || this->currentChar == '_')
+		if (std::isalpha(this->m_current_char) || this->m_current_char == '_')
 		{
 			return this->read_identifier_or_keyword();
 		}
 
-		if (this->currentChar == L':' && this->peek() == L'=')
+		if (this->m_current_char == L':' && this->peek() == L'=')
 		{
 			this->advance();
 			this->advance();
 			return make_simple_token(token_type::assign);
 		}
 
-		if (this->currentChar == L':')
+		if (this->m_current_char == L':')
 		{
 			this->advance();
 			return make_simple_token(token_type::colon);
 		}
 
-		if (this->currentChar == L';')
+		if (this->m_current_char == L';')
 		{
 			this->advance();
 			return make_simple_token(token_type::semicolon);
 		}
 
-		if (this->currentChar == L',')
+		if (this->m_current_char == L',')
 		{
 			this->advance();
 			return make_simple_token(token_type::comma);
 		}
 
-		if (this->currentChar == L'.')
+		if (this->m_current_char == L'.')
 		{
 			this->advance();
 			return make_simple_token(token_type::dot);
 		}
 
-		if (isdigit(this->currentChar))
+		if (isdigit(this->m_current_char))
 		{
 			return this->read_digit();
 		}

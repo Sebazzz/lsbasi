@@ -6,14 +6,14 @@ class lexer
 	/**
 	 * Returned by peek method to indicate that we reached the end
 	 */
-	const static wchar_t NO_NEXT_CHAR = 0;
+	constexpr static wchar_t NO_NEXT_CHAR = 0;
 	
 	// Constant
 	const std::wstring input;
 
 	// State variables
-	wchar_t currentChar;
-	size_t pos;
+	wchar_t m_current_char;
+	size_t m_position;
 
 	[[nodiscard]] bool is_at_end() const;
 	void advance();
@@ -31,12 +31,7 @@ class lexer
 	token read_identifier_or_keyword();
 
 public:
-	explicit lexer(std::wstring input)
-		: input(std::move(input))
-	{
-		this->pos = 0;
-		this->currentChar = !this->input.empty() ? this->input[this->pos] : 0;
-	}
+	explicit lexer(std::wstring input);
 
 	/**
 	 * Reads the next token from the string
