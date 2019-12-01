@@ -288,4 +288,7 @@
       <Filter>Header Files\ast</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="lexer.natvis" />
+  </ItemGroup>
 </Project>

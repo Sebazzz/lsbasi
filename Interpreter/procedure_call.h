@@ -21,7 +21,6 @@ private:
 public:
 	procedure_call(procedure_identifier procedure_identifier, procedure_arg_list shared_ptrs);
 
-
 	procedure_call(const procedure_call& other);
 
 	procedure_call(procedure_call&& other) noexcept;

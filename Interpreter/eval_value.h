@@ -5,6 +5,8 @@ class type_symbol;
 
 /**
  * Contains the value of an evaluation with type information
+ *
+ * Note: this type has debugging support in lexer.natvis
  */
 struct eval_value {
 	symbol_type_ptr<type_symbol> type;
