@@ -66,7 +66,7 @@ BEGIN
 END.        
 )";
 
-    REQUIRE_THROWS_MATCHES( do_interpret_program(program), interpret_except, Catch::Message("Attempting to assign variable variable a with invalid type: Attempting to convert expression of type built-in REAL to built-in INTEGER"));
+    REQUIRE_THROWS_MATCHES( do_interpret_program(program), runtime_type_error, Catch::Message("Runtime type error: Attempting to assign variable variable a with invalid type: Runtime type error: Attempting to convert expression of type built-in REAL to built-in INTEGER"));
 }
 
 TEST_CASE( "Interpretation from integer to real allowed", "[interpreter_program]" ) {
