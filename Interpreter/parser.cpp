@@ -68,6 +68,8 @@ ast_ptr parser::handle_integer(lexer_iterator& it) const
 {
 	it.ensure_token("Found end while searching for integer");
 
+	const auto num_str = it->value();
+
 	try
 	{
 		switch (it->type())
@@ -76,7 +78,7 @@ ast_ptr parser::handle_integer(lexer_iterator& it) const
 			{
 				// Disable auto: let's be explicit
 				// ReSharper disable CppUseAuto
-				const builtin_integer val_i = std::stoi(it->value());
+				const builtin_integer val_i = std::stoi(num_str);
 				// ReSharper restore CppUseAuto
 				
 				it.advance();
@@ -87,7 +89,7 @@ ast_ptr parser::handle_integer(lexer_iterator& it) const
 			{
 				// Disable auto: let's be explicit
 				// ReSharper disable CppUseAuto
-				const builtin_real val_r = std::stod(it->value());
+				const builtin_real val_r = std::stod(num_str);
 				// ReSharper restore CppUseAuto
 				
 				it.advance();
@@ -99,10 +101,10 @@ ast_ptr parser::handle_integer(lexer_iterator& it) const
 		}
 	} catch (std::invalid_argument& e)
 	{
-		throw interpret_except(e);
+		throw interpret_except(L"Unable to parse integer or real from string '" + num_str + L"'" + string_to_wstring(e.what()));
 	} catch (std::out_of_range& e)
 	{
-		throw interpret_except(e);
+		throw interpret_except(L"Unable to parse integer or real from string '" + num_str + L"' - number is too large" + string_to_wstring(e.what()));
 	}
 }
 
