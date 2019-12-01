@@ -2,9 +2,9 @@
 #include "parser.h"
 
 template <class T>
-std::wstring invoke_repl_visitor(std::wstring& input)
+std::wstring invoke_repl_visitor(const std::wstring& input)
 {
-	parser parser(std::move(input));
+	parser parser(input);
     const auto result = parser.parse_repl();
 
     T visitor;
