@@ -10,7 +10,7 @@ std::wstring string_to_wstring(const std::string& input)
 	size_t conv_chars;
 	mbstowcs_s(&conv_chars, buffer, input.c_str(), BUFFER_SIZE);
 
-	return std::wstring(buffer, conv_chars);
+	return std::wstring(buffer, conv_chars - 1 /* Don't count the terminator or future string concats go wrong */);
 }
 
 std::string wstring_to_string(const std::wstring& input)
@@ -22,5 +22,5 @@ std::string wstring_to_string(const std::wstring& input)
 	size_t conv_chars;
 	wcstombs_s(&conv_chars, buffer, input.c_str(), BUFFER_SIZE);
 
-	return std::string(buffer, conv_chars);
+	return std::string(buffer, conv_chars - 1 /* Don't count the terminator or future string concats go wrong */);
 }
