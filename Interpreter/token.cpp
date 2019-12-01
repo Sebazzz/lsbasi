@@ -129,10 +129,10 @@ std::wstring token::to_string() const
 
 	if (this->m_value.empty())
 	{
-		return L"TOK(" + std::wstring(tokenType) + L")";
+		return L"token(" + std::wstring(tokenType) + L")";
 	}
 	
-	return L"TOK(" + std::wstring(tokenType) + L"," + std::wstring(this->m_value) + L")";
+	return L"token(" + std::wstring(tokenType) + L"," + std::wstring(this->m_value) + L")";
 }
 
 line_info token::position() const

@@ -10,7 +10,16 @@ bool lexer::is_at_end() const
 
 void lexer::advance()
 {
+	// Handle newlines
+	// ... Note we don't handle a carriage return (\r), but since in  Windows CRLF streams the \n will always be present, we can just use the LF
+	if (this->m_current_char == '\n')
+	{
+		this->m_stream_position.line_number++;
+		this->m_stream_position.column = 0;
+	}
+	
 	this->m_position++;
+	this->m_stream_position.column++;
 
 	if (this->is_at_end())
 	{
@@ -64,8 +73,10 @@ bool lexer::skip_comment()
 
 token lexer::read_digit()
 {
+	const auto stream_pos = this->m_stream_position;
+	
 	// This var holds our lexeme: what makes up our digit token
-	std::wstring allDigits(1, this->m_current_char);
+	std::wstring all_digits(1, this->m_current_char);
 
 	token_type type = token_type::integer_const;
 
@@ -81,39 +92,41 @@ token lexer::read_digit()
 			break;
 		}
 
-		allDigits += this->m_current_char;
+		all_digits += this->m_current_char;
 	}
 	
-	return token(type, allDigits);
+	return token(type, all_digits, stream_pos);
 }
 
 token lexer::read_operator()
 {
+	const auto stream_pos = this->m_stream_position;
+	
 	switch (this->m_current_char)
 	{
 	case '+':
 		this->advance();
-		return token(token_type::plus, std::wstring());
+		return token(token_type::plus, stream_pos);
 
 	case '-':
 		this->advance();
-		return token(token_type::minus, std::wstring());
+		return token(token_type::minus, stream_pos);
 
 	case '*':
 		this->advance();
-		return token(token_type::multiply, std::wstring());
+		return token(token_type::multiply, stream_pos);
 
 	case '/':
 		this->advance();
-		return token(token_type::divide_real, std::wstring());
+		return token(token_type::divide_real, stream_pos);
 
 	case '(':
 		this->advance();
-		return token(token_type::group_start, std::wstring());
+		return token(token_type::group_start, stream_pos);
 
 	case ')':
 		this->advance();
-		return token(token_type::group_end, std::wstring());
+		return token(token_type::group_end, stream_pos);
 
 	default:
 		throw interpret_except("Unknown token in string: " + std::to_string(static_cast<char>(this->m_current_char)));
@@ -122,6 +135,8 @@ token lexer::read_operator()
 
 token lexer::read_identifier_or_keyword()
 {
+	const auto stream_pos = this->m_stream_position;
+
 	std::wstring identifier;
 
 	// [A-z][A-z0-9]+
@@ -146,21 +161,21 @@ token lexer::read_identifier_or_keyword()
 	if (reserved_keyword != reserved_keywords.end())
 	{
 		// Found a reserved keyword, return it
-		return reserved_keyword->second;
+		return token_with_line_info(reserved_keyword->second, stream_pos);
 	}
 
-	return token(token_type::identifier, identifier);
+	return token(token_type::identifier, identifier, stream_pos);
 }
 
-lexer::lexer(std::wstring input): input(std::move(input))
+token lexer::token_with_line_info(const token& static_token, const line_info& position)
+{
+	return token(static_token.type(), static_token.value(), position);
+}
+
+lexer::lexer(std::wstring input): input(std::move(input)), m_stream_position({1, 1})
 {
 	this->m_position = 0;
 	this->m_current_char = !this->input.empty() ? this->input[this->m_position] : 0;
-}
-
-token make_simple_token(token_type type)
-{
-	return token(type, std::wstring());
 }
 
 /*
@@ -176,7 +191,7 @@ token lexer::get_next_token()
 		throw interpret_except("string is empty");
 	}
 	
-	auto token = token::eof();
+	auto result_token = token::eof();
 	while (!this->is_at_end())
 	{
 		if (this->skip_whitespace())
@@ -196,33 +211,38 @@ token lexer::get_next_token()
 
 		if (this->m_current_char == L':' && this->peek() == L'=')
 		{
+			const auto stream_pos = this->m_stream_position;
 			this->advance();
 			this->advance();
-			return make_simple_token(token_type::assign);
+			return token(token_type::assign, stream_pos);
 		}
 
 		if (this->m_current_char == L':')
 		{
+			const auto stream_pos = this->m_stream_position;
 			this->advance();
-			return make_simple_token(token_type::colon);
+			return token(token_type::colon, stream_pos);
 		}
 
 		if (this->m_current_char == L';')
 		{
+			const auto stream_pos = this->m_stream_position;
 			this->advance();
-			return make_simple_token(token_type::semicolon);
+			return token(token_type::semicolon, stream_pos);
 		}
 
 		if (this->m_current_char == L',')
 		{
+			const auto stream_pos = this->m_stream_position;
 			this->advance();
-			return make_simple_token(token_type::comma);
+			return token(token_type::comma, stream_pos);
 		}
 
 		if (this->m_current_char == L'.')
 		{
+			const auto stream_pos = this->m_stream_position;
 			this->advance();
-			return make_simple_token(token_type::dot);
+			return token(token_type::dot, stream_pos);
 		}
 
 		if (isdigit(this->m_current_char))
@@ -233,5 +253,5 @@ token lexer::get_next_token()
 		return read_operator();
 	}
 
-	return token;
+	return result_token;
 }
