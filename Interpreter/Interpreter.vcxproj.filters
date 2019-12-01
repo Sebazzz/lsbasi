@@ -171,6 +171,12 @@
     <ClCompile Include="parse_except.cpp">
       <Filter>Source Files\errors</Filter>
     </ClCompile>
+    <ClCompile Include="semantic_except.cpp">
+      <Filter>Source Files\errors</Filter>
+    </ClCompile>
+    <ClCompile Include="internal_interpret_except.cpp">
+      <Filter>Source Files\errors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -309,6 +315,12 @@
       <Filter>Header Files\errors</Filter>
     </ClInclude>
     <ClInclude Include="parse_except.h">
+      <Filter>Header Files\errors</Filter>
+    </ClInclude>
+    <ClInclude Include="semantic_except.h">
+      <Filter>Header Files\errors</Filter>
+    </ClInclude>
+    <ClInclude Include="internal_interpret_except.h">
       <Filter>Header Files\errors</Filter>
     </ClInclude>
   </ItemGroup>

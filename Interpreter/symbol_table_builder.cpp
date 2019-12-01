@@ -4,18 +4,18 @@
 #include "type_symbol.h"
 
 template<class T>
-void verify_exists(symbol_table& symbol_table_instance, const symbol_identifier& identifier)
+void verify_exists(symbol_table& symbol_table_instance, const symbol_identifier& identifier, const line_info line_info)
 {
 	// Throws on failure
 	try
 	{
 		if (!symbol_table_instance.get<T>(identifier))
 		{
-			throw interpret_except("symbol_type::get will throw");
+			throw semantic_except("symbol_type::get will throw", line_info);
 		}
 	} catch (interpret_except& e)
 	{
-		throw interpret_except(std::string("Unable to resolve symbol of type '") + typeid(T).name() + "': " + e.what());
+		throw semantic_except(std::string("Unable to resolve symbol of type '") + typeid(T).name() + "': " + e.what(), line_info);
 	}
 }
 
@@ -28,7 +28,7 @@ void symbol_table_builder::ensure_symbol_table() const
 {
 	if (!this->m_symbol_table)
 	{
-		throw interpret_except("Symbol table is not declared. This is a failure in the interpreter.");
+		throw internal_interpret_except("Symbol table is not declared. This is a failure in the interpreter.");
 	}
 }
 
@@ -39,19 +39,19 @@ void symbol_table_builder::visit(ast::ast_node& node)
 
 void symbol_table_builder::visit(ast::var& variable)
 {
-	verify_exists<variable_symbol>(*this->m_symbol_table, variable.identifier());
+	verify_exists<variable_symbol>(*this->m_symbol_table, variable.identifier(), variable.get_line_info());
 }
 
 void symbol_table_builder::visit(ast::type& type_ref)
 {
-	verify_exists<type_symbol>(*this->m_symbol_table, type_ref.identifier());
+	verify_exists<type_symbol>(*this->m_symbol_table, type_ref.identifier(), type_ref.get_line_info());
 }
 
 void symbol_table_builder::visit(ast::procedure_call& procedure_call)
 {
 	// Verify that we can actually resolve this procedure
 	// FIXME: this assumes that procedure has been declared earlier in the file at the moment
-	verify_exists<procedure_symbol>(*this->m_symbol_table, procedure_call.procedure_identifier());
+	verify_exists<procedure_symbol>(*this->m_symbol_table, procedure_call.procedure_identifier(), procedure_call.get_line_info());
 	
 	// Verify each of the parameters
 	try
@@ -62,7 +62,7 @@ void symbol_table_builder::visit(ast::procedure_call& procedure_call)
 		}
 	} catch (interpret_except& e)
 	{
-		throw interpret_except(L"In call to procedure '" + procedure_call.procedure_identifier() + L"' unexpected error found: " + string_to_wstring(e.what()));
+		throw semantic_except(L"In call to procedure '" + procedure_call.procedure_identifier() + L"' unexpected error found: " + string_to_wstring(e.what()), procedure_call.get_line_info());
 	}
 }
 
@@ -80,7 +80,7 @@ void symbol_table_builder::visit(ast::program& program)
 {
 	if (this->m_symbol_table)
 	{
-		throw interpret_except("Attempting to visit program while already having a symbol table");
+		throw internal_interpret_except("Attempting to visit program while already having a symbol table");
 	}
 
 	// This is the first visit we have
@@ -95,7 +95,7 @@ void symbol_table_builder::visit(ast::procedure& procedure)
 	if (!this->m_symbol_table)
 	{
 		// We should have a symbol table from the global scope or parent procedure. This is an invalid state.
-		throw interpret_except("Attempting to visit procedure without a global scope or parent procedure scope");
+		throw internal_interpret_except("Attempting to visit procedure without a global scope or parent procedure scope");
 	}
 
 	// In a nested visitor, we are visiting ourself. This is the first visit.

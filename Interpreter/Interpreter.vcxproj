@@ -224,6 +224,7 @@
     <ClCompile Include="assign.cpp" />
     <ClCompile Include="builtin_type_impl.cpp" />
     <ClCompile Include="builtin_type_symbol.cpp" />
+    <ClCompile Include="internal_interpret_except.cpp" />
     <ClCompile Include="parse_except.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -252,6 +253,7 @@
     <ClCompile Include="program.cpp" />
     <ClCompile Include="rpn_visitor.cpp" />
     <ClCompile Include="scope_context.cpp" />
+    <ClCompile Include="semantic_except.cpp" />
     <ClCompile Include="stringify_visitor.cpp" />
     <ClCompile Include="symbol.cpp" />
     <ClCompile Include="memory_table.cpp" />
@@ -281,6 +283,7 @@
     <ClInclude Include="eval_value.h" />
     <ClInclude Include="eval_visitor.h" />
     <ClInclude Include="exec_visitor.h" />
+    <ClInclude Include="internal_interpret_except.h" />
     <ClInclude Include="interpreter.h" />
     <ClInclude Include="interpret_except.h" />
     <ClInclude Include="invoke_repl_visitor.h" />
@@ -298,6 +301,7 @@
     <ClInclude Include="program.h" />
     <ClInclude Include="rpn_visitor.h" />
     <ClInclude Include="scope_context.h" />
+    <ClInclude Include="semantic_except.h" />
     <ClInclude Include="stringify_visitor.h" />
     <ClInclude Include="symbol.h" />
     <ClInclude Include="memory_table.h" />

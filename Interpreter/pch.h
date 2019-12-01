@@ -19,6 +19,8 @@
 #include "builtin_type_defs.h"
 #include "interpret_except.h"
 #include "parse_except.h"
+#include "semantic_except.h"
+#include "internal_interpret_except.h"
 #include "token.h"
 #include "line_info.h"
 #include "util.h"
