@@ -49,6 +49,12 @@
     <Filter Include="Source Files\support">
       <UniqueIdentifier>{39d69461-f985-4a98-b0ae-6b058851e8b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\errors">
+      <UniqueIdentifier>{43a31a32-dc61-4798-aabf-11db43a08d9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\errors">
+      <UniqueIdentifier>{7d43f4f1-0102-4783-a30f-264bf60c23d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -88,9 +94,6 @@
       <Filter>Source Files\lexing</Filter>
     </ClCompile>
     <ClCompile Include="interpreter.cpp">
-      <Filter>Source Files\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="interpret_except.cpp">
       <Filter>Source Files\interpreter</Filter>
     </ClCompile>
     <ClCompile Include="compound.cpp">
@@ -162,6 +165,12 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files\support</Filter>
     </ClCompile>
+    <ClCompile Include="interpret_except.cpp">
+      <Filter>Source Files\errors</Filter>
+    </ClCompile>
+    <ClCompile Include="parse_except.cpp">
+      <Filter>Source Files\errors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -207,9 +216,6 @@
       <Filter>Header Files\lexing</Filter>
     </ClInclude>
     <ClInclude Include="interpreter.h">
-      <Filter>Header Files\interpreter</Filter>
-    </ClInclude>
-    <ClInclude Include="interpret_except.h">
       <Filter>Header Files\interpreter</Filter>
     </ClInclude>
     <ClInclude Include="interpret_math.h">
@@ -298,6 +304,12 @@
     </ClInclude>
     <ClInclude Include="line_info.h">
       <Filter>Header Files\lexing</Filter>
+    </ClInclude>
+    <ClInclude Include="interpret_except.h">
+      <Filter>Header Files\errors</Filter>
+    </ClInclude>
+    <ClInclude Include="parse_except.h">
+      <Filter>Header Files\errors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
