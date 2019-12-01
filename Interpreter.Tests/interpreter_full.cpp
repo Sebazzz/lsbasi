@@ -272,6 +272,31 @@ END.
     REQUIRE( verify_int_symbol(result, L"a_global") == 20 );
 }
 
+TEST_CASE( "Interpretation succeeds - procedure variable hides global variable and sets global variable", "[interpreter_program]" ) {
+    const auto result = do_interpret_program(R"(
+PROGRAM Part12;
+VAR
+   a, c : REAL; b : INTEGER;
+
+PROCEDURE P1(a : REAL);
+BEGIN {P1}
+    c := a;
+END;  {P1}
+
+BEGIN {Part12}
+   a := 10;
+   b := 1337;
+   P1(b);
+END.  {Part12}
+)");
+
+    REQUIRE( result.output  == std::wstring(L"done") );
+
+    REQUIRE( verify_real_symbol(result, L"a") == 10 );
+    REQUIRE( verify_real_symbol(result, L"c") == 1337 );
+    REQUIRE( verify_int_symbol(result, L"b") == 1337 );
+}
+
 TEST_CASE( "Interpretation fails - procedures with parameters called with too many parameters", "[interpreter_program]" ) {
     const auto program = R"(
 PROGRAM Semi;                           

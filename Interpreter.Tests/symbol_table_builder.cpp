@@ -206,6 +206,33 @@ END.  {Part12}
 	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"k")) == typeid(variable_symbol) );
 }
 
+TEST_CASE( "Symbol lookup succeeds - nested procedure variable hides global variable", "[symbol_table_builder]" ) {
+    const auto result = do_parse_program(R"(
+PROGRAM Part12;
+VAR
+   a : REAL; b : INTEGER;
+
+PROCEDURE P1(a : REAL);
+BEGIN {P1}
+    b := a;
+END;  {P1}
+
+BEGIN {Part12}
+   a := 10;
+   b := 1337;
+   P1(b);
+END.  {Part12}
+)");
+
+	REQUIRE( typeid(*result.symbol_table->get(L"a")) == typeid(variable_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(procedure_symbol) );
+
+    auto proc_symbol = result.symbol_table->get<procedure_symbol>(L"P1");
+	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"a")) == typeid(variable_symbol) );
+	REQUIRE( proc_symbol->procedure().symbol_table().get(L"b").get() == result.symbol_table->get(L"b").get());
+	REQUIRE( proc_symbol->procedure().symbol_table().get(L"a").get() != result.symbol_table->get(L"a").get());
+}
+
 TEST_CASE( "Symbol duplicate declaration fails - program 1", "[symbol_table_builder]" ) {
     const auto program = R"(
 PROGRAM Simple;
