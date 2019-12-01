@@ -4,7 +4,7 @@
 
 using namespace ast;
 
-bin_op::bin_op(ast_ptr left, token_type op, ast_ptr right): ast_node(op),
+bin_op::bin_op(ast_ptr left, token_type op, ast_ptr right, token token): ast_node(std::move(token)),
                                                             m_left(std::move(left)),
                                                             m_op(op),
                                                             m_right(std::move(right))

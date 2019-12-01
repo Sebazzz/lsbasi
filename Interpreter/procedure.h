@@ -26,7 +26,7 @@ private:
 	std::shared_ptr<symbol_table> m_symbol_table;
 
 public:
-	procedure(procedure_identifier id, procedure_param_list params, block_ptr block);
+	procedure(procedure_identifier id, procedure_param_list params, block_ptr block, token token);
 
 	procedure(const procedure& other) = default;
 

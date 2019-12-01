@@ -4,7 +4,7 @@
 
 using namespace ast;
 
-assign::assign(assign_left_type left, ast_ptr right): ast_node(token_type::assign),
+assign::assign(assign_left_type left, ast_ptr right, token token): ast_node(std::move(token)),
                                                             m_left(std::move(left)),
                                                             m_right(std::move(right))
 {

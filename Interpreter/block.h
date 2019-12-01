@@ -17,7 +17,7 @@ private:
 	procedure_decl_list m_procedure_declarations;
 
 public:
-	block(var_decl_list var_declarations, procedure_decl_list procedure_declarations, compound_ptr compound);
+	block(var_decl_list var_declarations, procedure_decl_list procedure_declarations, compound_ptr compound, token token);
 
 	block(const block& other) = default;
 

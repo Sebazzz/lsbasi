@@ -1,22 +1,24 @@
 #include "pch.h"
-#include "ast_common.h"
 
 using namespace ast;
 
-ast_node::ast_node(token_type token): m_token(token)
+ast_node::ast_node(token token): m_token(std::move(token))
 {
 }
 
-token_type ast_node::get_token() const
+const token& ast_node::get_token() const
 {
 	return m_token;
 }
 
-ast_node::ast_node(const ast_node& other): m_token(other.m_token)
+line_info ast_node::get_line_info() const
 {
+	return m_token.position();
 }
 
-ast_node::ast_node(ast_node&& other) noexcept: m_token(other.m_token)
+ast_node::ast_node(const ast_node& other) = default;
+
+ast_node::ast_node(ast_node&& other) noexcept: m_token(std::move(other.m_token))
 {
 }
 

@@ -2,7 +2,7 @@
 #include "program.h"
 #include "ast_node_visitor.h"
 
-ast::program::program(program_identifier id, block_ptr block): ast_node(token_type::program),
+ast::program::program(program_identifier id, block_ptr block, token token): ast_node(std::move(token)),
                                                                m_identifier(std::move(id)),
                                                                m_block(std::move(block))
 {

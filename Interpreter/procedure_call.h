@@ -19,7 +19,7 @@ private:
 	procedure_arg_list m_args;
 
 public:
-	procedure_call(procedure_identifier procedure_identifier, procedure_arg_list shared_ptrs);
+	procedure_call(procedure_identifier procedure_identifier, procedure_arg_list shared_ptrs, token token);
 
 	procedure_call(const procedure_call& other);
 

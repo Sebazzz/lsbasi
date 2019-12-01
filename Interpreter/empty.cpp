@@ -2,7 +2,7 @@
 #include "empty.h"
 #include "ast_node_visitor.h"
 
-ast::empty::empty(): ast_node(token_type::eof)
+ast::empty::empty(token token): ast_node(std::move(token))
 {
 }
 

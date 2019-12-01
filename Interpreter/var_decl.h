@@ -17,7 +17,7 @@ private:
 	type_ptr m_type;
 
 public:
-	var_decl(var_identifier identifier, type_ptr type);
+	var_decl(var_identifier identifier, type_ptr type, token token);
 
 	~var_decl() = default;
 

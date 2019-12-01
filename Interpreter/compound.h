@@ -16,7 +16,7 @@ private:
 
 public:
 
-	compound(ast::statement_list ast_nodes);
+	compound(ast::statement_list ast_nodes, token token);
 
 	compound(const compound& other);
 

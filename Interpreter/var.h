@@ -14,7 +14,7 @@ private:
 	var_identifier m_identifier;
 
 public:
-	var(var_identifier identifier);
+	var(var_identifier identifier, token token);
 
 	var(const var& other) = default;
 

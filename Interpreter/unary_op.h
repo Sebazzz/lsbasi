@@ -15,7 +15,7 @@ private:
 	ast_ptr m_expr;
 
 public:
-	unary_op(token_type op, ast_ptr expr);
+	unary_op(token_type op, ast_ptr expr, token token);
 
 	unary_op(const unary_op& other) = default;
 

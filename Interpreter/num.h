@@ -16,8 +16,8 @@ private:
 	builtin_type m_type;
 
 public:
-	num(double value);
-	num(int value);
+	num(double value, token token);
+	num(int value, token token);
 
 	num(const num& other) = default;
 

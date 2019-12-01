@@ -17,7 +17,7 @@ private:
 	ast_ptr m_right;
 
 public:
-	assign(assign_left_type left, ast_ptr right);
+	assign(assign_left_type left, ast_ptr right, token token);
 
 	assign(const assign& other) = default;
 

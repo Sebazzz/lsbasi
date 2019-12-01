@@ -24,7 +24,7 @@ private:
 	std::shared_ptr<symbol_table> m_symbol_table;
 	
 public:
-	program(program_identifier id, block_ptr block);
+	program(program_identifier id, block_ptr block, token token);
 
 	program(const program& other) = default;
 

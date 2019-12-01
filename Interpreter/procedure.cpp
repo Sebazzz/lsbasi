@@ -2,7 +2,7 @@
 #include "procedure.h"
 #include "ast_node_visitor.h"
 
-ast::procedure::procedure(procedure_identifier id, procedure_param_list params, block_ptr block): ast_node(token_type::procedure),
+ast::procedure::procedure(procedure_identifier id, procedure_param_list params, block_ptr block, token token): ast_node(std::move(token)),
                                                                m_identifier(std::move(id)),
                                                                m_params(std::move(params)),
                                                                m_block(std::move(block))

@@ -5,11 +5,11 @@
 
 using namespace ast;
 
-num::num(const int value): ast_node(token_type::integer_const), m_value(value), m_type(builtin_type::integer)
+num::num(const int value, token token): ast_node(std::move(token)), m_value(value), m_type(builtin_type::integer)
 {
 }
 
-num::num(const double value): ast_node(token_type::integer_const), m_value(value), m_type(builtin_type::real)
+num::num(const double value, token token): ast_node(std::move(token)), m_value(value), m_type(builtin_type::real)
 {
 }
 

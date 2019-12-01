@@ -15,7 +15,7 @@ private:
 	ast_ptr m_right;
 
 public:
-	bin_op(ast_ptr left, token_type op, ast_ptr right);
+	bin_op(ast_ptr left, token_type op, ast_ptr right, token token);
 
 	bin_op(const bin_op& other) = default;
 

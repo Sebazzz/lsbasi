@@ -2,8 +2,7 @@
 #include "procedure_call.h"
 #include "ast_node_visitor.h"
 
-ast::procedure_call::procedure_call(ast::procedure_identifier procedure_identifier, procedure_arg_list shared_ptrs):
-	ast_node(token_type::identifier),
+ast::procedure_call::procedure_call(ast::procedure_identifier procedure_identifier, procedure_arg_list shared_ptrs, token token): ast_node(std::move(token)),
 	m_procedure_identifier(std::move(procedure_identifier)),
 	m_args(std::move(shared_ptrs))
 {

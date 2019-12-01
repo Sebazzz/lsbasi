@@ -4,7 +4,7 @@
 
 using namespace ast;
 
-var::var(var_identifier identifier): ast_node(token_type::identifier), m_identifier(std::move(identifier))
+var::var(var_identifier identifier, token token): ast_node(std::move(token)), m_identifier(std::move(identifier))
 {
 }
 

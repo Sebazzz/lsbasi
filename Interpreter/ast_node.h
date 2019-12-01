@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "token_type.h"
+#include "token.h"
 
 class ast_node_visitor;
 
@@ -36,13 +37,14 @@ namespace ast
 class ast::ast_node
 {
 private:
-	token_type m_token;
+	token m_token;
 
 protected:
-	explicit ast_node(token_type token);
+	explicit ast_node(token token);
 
 public:
-	[[nodiscard]] token_type get_token() const;
+	[[nodiscard]] const token& get_token() const;
+	[[nodiscard]] line_info get_line_info() const;
 
 	virtual ~ast_node() = default;
 

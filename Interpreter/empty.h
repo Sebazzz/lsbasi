@@ -11,7 +11,7 @@ class ast::empty final :
 	public ast_node
 {
 public:
-	explicit empty();
+	explicit empty(token token);
 
 	explicit empty(const ast_node& other);
 

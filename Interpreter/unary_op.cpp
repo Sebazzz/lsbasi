@@ -4,7 +4,7 @@
 
 using namespace ast;
 
-unary_op::unary_op(token_type op, ast_ptr expr): ast_node(op),
+unary_op::unary_op(token_type op, ast_ptr expr, token token): ast_node(std::move(token)),
                                                             m_op(op),
                                                             m_expr(std::move(expr))
 {

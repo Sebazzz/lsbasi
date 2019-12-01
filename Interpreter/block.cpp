@@ -2,7 +2,7 @@
 #include "block.h"
 #include "ast_node_visitor.h"
 
-ast::block::block(var_decl_list var_declarations, procedure_decl_list procedure_declarations, compound_ptr compound): ast_node(token_type::var_decl),
+ast::block::block(var_decl_list var_declarations, procedure_decl_list procedure_declarations, compound_ptr compound, token token): ast_node(std::move(token)),
                                                                           m_compound(std::move(compound)),
                                                                           m_var_declarations(std::move(var_declarations)),
                                                                           m_procedure_declarations(std::move(procedure_declarations))

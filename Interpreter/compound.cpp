@@ -2,7 +2,7 @@
 #include "compound.h"
 #include "ast_node_visitor.h"
 
-ast::compound::compound(ast::statement_list ast_nodes): ast_node(token_type::begin),
+ast::compound::compound(ast::statement_list ast_nodes, token token): ast_node(std::move(token)),
                                                                             m_statements(std::move(ast_nodes))
 {
 }

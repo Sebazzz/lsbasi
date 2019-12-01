@@ -14,7 +14,7 @@ private:
 	type_identifier m_identifier;
 
 public:
-	type(type_identifier identifier);
+	type(type_identifier identifier, token token);
 
 	type(const type& other) = default;
 

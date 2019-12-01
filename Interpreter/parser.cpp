@@ -69,7 +69,8 @@ ast_ptr parser::handle_integer(lexer_iterator& it) const
 	it.ensure_token("Found end while searching for integer");
 
 	const auto num_str = it->value();
-
+	const auto token = it.current_token();
+	
 	try
 	{
 		switch (it->type())
@@ -82,7 +83,7 @@ ast_ptr parser::handle_integer(lexer_iterator& it) const
 				// ReSharper restore CppUseAuto
 				
 				it.advance();
-				return make_ast_ptr<num>(val_i);
+				return make_ast_ptr<num>(val_i, token);
 			}
 
 		case token_type::real_const:
@@ -93,7 +94,7 @@ ast_ptr parser::handle_integer(lexer_iterator& it) const
 				// ReSharper restore CppUseAuto
 				
 				it.advance();
-				return make_ast_ptr<num>(val_r);
+				return make_ast_ptr<num>(val_r, token);
 			}
 			
 		default:
@@ -110,6 +111,7 @@ ast_ptr parser::handle_integer(lexer_iterator& it) const
 
 ast_ptr parser::handle_unary(lexer_iterator& it) const
 {
+	const auto token = it.current_token();
 	const auto tokenType = it->type();
 	if (tokenType != token_type::plus && tokenType != token_type::minus)
 	{
@@ -117,7 +119,7 @@ ast_ptr parser::handle_unary(lexer_iterator& it) const
 	}
 
 	it.advance();
-	return make_ast_ptr<unary_op>(tokenType, handle_factor(it));
+	return make_ast_ptr<unary_op>(tokenType, handle_factor(it), token);
 }
 
 ast_ptr parser::handle_factor(lexer_iterator& it) const
@@ -131,7 +133,7 @@ ast_ptr parser::handle_factor(lexer_iterator& it) const
 
 	if (it->type() == token_type::identifier)
 	{
-		const auto identifier = make_ast_node_ptr<var>(it->value());
+		const auto identifier = make_ast_node_ptr<var>(it->value(), it.current_token());
 		it.advance();
 		return identifier;
 	}
@@ -160,6 +162,7 @@ ast_ptr parser::handle_term(lexer_iterator& it) const
 	// We expect a factor with possibly a multiply or divide
 	ast_ptr result = handle_factor(it);
 
+	const auto token = it.current_token();
 	while (!it.is_at_end())
 	{
 		const auto operatorType = it->type();
@@ -169,7 +172,7 @@ ast_ptr parser::handle_term(lexer_iterator& it) const
 			case token_type::divide_integer:
 			case token_type::divide_real: // FIXME: until we implement real division
 				it.advance();
-				result = make_ast_ptr<bin_op>(result, operatorType, handle_factor(it));
+				result = make_ast_ptr<bin_op>(result, operatorType, handle_factor(it), token);
 				break;
 
 			// Not a multiply or divide, just continue
@@ -184,6 +187,7 @@ ast_ptr parser::handle_term(lexer_iterator& it) const
 ast_ptr parser::handle_expr(lexer_iterator& it) const
 {
 	ast_ptr result = handle_term(it);
+	const auto token = it.current_token();
 	
 	while (!it.is_at_end())
 	{
@@ -193,7 +197,7 @@ ast_ptr parser::handle_expr(lexer_iterator& it) const
 			case token_type::plus:
 			case token_type::minus:
 				it.advance();
-				result = make_ast_ptr<bin_op>(result, operatorType, handle_term(it));
+				result = make_ast_ptr<bin_op>(result, operatorType, handle_term(it), token);
 				break;
 
 			default:
@@ -208,7 +212,8 @@ ast_ptr parser::handle_expr(lexer_iterator& it) const
 ast_ptr parser::handle_program(lexer_iterator& it) const
 {
 	// PROGRAM
-	it.skip_required(token_type::program);
+	const auto token = it.expect(token_type::program);
+	it.advance();
 
 	// variable
 	program_identifier identifier = it.expect(token_type::identifier).value();
@@ -225,12 +230,13 @@ ast_ptr parser::handle_program(lexer_iterator& it) const
 		throw parse_except(L"Expected end of program" + it->to_string(), it->position());
 	}
 
-	return make_ast_ptr<program>(identifier, block);
+	return make_ast_ptr<program>(identifier, block, token);
 }
 
 ast_node_ptr<procedure> parser::handle_procedure(lexer_iterator& it) const
 {
-	it.skip_required(token_type::procedure);
+	const auto token = it.expect(token_type::procedure);
+	it.advance();
 
 	// ID
 	const auto procedure_id = it.expect(token_type::identifier).value();
@@ -264,11 +270,13 @@ ast_node_ptr<procedure> parser::handle_procedure(lexer_iterator& it) const
 
 	it.skip_required(token_type::semicolon);
 
-	return make_ast_node_ptr<procedure>(procedure_id, param_list, block);
+	return make_ast_node_ptr<procedure>(procedure_id, param_list, block, token);
 }
 
 ast::ast_node_ptr<ast::block> parser::handle_block(lexer_iterator& it) const
 {
+	const auto token = it.current_token();
+	
 	var_decl_list variable_declaration_list;
 	handle_var_decl_list(it, variable_declaration_list);
 
@@ -277,7 +285,7 @@ ast::ast_node_ptr<ast::block> parser::handle_block(lexer_iterator& it) const
 
 	const auto compound = handle_compound(it);
 	
-	return make_ast_node_ptr<block>(variable_declaration_list, procedure_declaration_list, compound);
+	return make_ast_node_ptr<block>(variable_declaration_list, procedure_declaration_list, compound, token);
 }
 
 void parser::handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_declaration_list) const
@@ -296,17 +304,17 @@ void parser::handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_de
 
 void parser::handle_var_decl_or_parameter_list(lexer_iterator& it, ast::var_decl_list& var_declaration_list, std::function<void(lexer_iterator&)>& end_of_decl_logic) const
 {
-	std::vector<var_identifier> identifiers;
+	std::vector<std::pair<var_identifier, token>> identifiers;
 	do
 	{
 		// Get the identifiers
 		identifiers.clear();
 		do
 		{
-			auto identifier = it.expect(token_type::identifier).value();
+			auto identifier_token = it.expect(token_type::identifier);
 			it.advance();
 
-			identifiers.push_back(identifier);
+			identifiers.emplace_back(identifier_token.value(), identifier_token);
 
 			if (it->type() == token_type::comma)
 			{
@@ -320,6 +328,7 @@ void parser::handle_var_decl_or_parameter_list(lexer_iterator& it, ast::var_decl
 
 		// Get the type
 		type_identifier v_type;
+		const auto type_token = it.current_token();
 		switch (it->type())
 		{
 			case token_type::identifier:
@@ -331,7 +340,7 @@ void parser::handle_var_decl_or_parameter_list(lexer_iterator& it, ast::var_decl
 		for (auto && identifier : identifiers)
 		{
 			var_declaration_list.push_back(
-				make_ast_node_ptr<var_decl>(identifier, make_ast_node_ptr<type>(v_type))
+				make_ast_node_ptr<var_decl>(identifier.first, make_ast_node_ptr<type>(v_type, type_token), identifier.second)
 			);
 		}
 
@@ -357,14 +366,15 @@ void parser::handle_procedure_decl_list(lexer_iterator& it, ast::procedure_decl_
 
 compound_ptr parser::handle_compound(lexer_iterator& it) const
 {
-	it.skip_required(token_type::begin);
+	const auto token = it.expect(token_type::begin);
+	it.advance();
 
 	statement_list statement_list;
 	handle_statement_list(it, statement_list);
 
 	it.skip_required(token_type::end);
 
-	return make_ast_node_ptr<compound>(statement_list);
+	return make_ast_node_ptr<compound>(statement_list, token);
 }
 
 void parser::handle_statement_list(lexer_iterator& it, statement_list& statement_list) const
@@ -404,7 +414,7 @@ ast_ptr parser::handle_statement(lexer_iterator& it) const
 	if (it->type() == token_type::end)
 	{
 		// Empty
-		return make_ast_ptr<empty>();
+		return make_ast_ptr<empty>(it.current_token());
 	}
 
 	if (it->type() == token_type::identifier)
@@ -443,7 +453,8 @@ ast_ptr parser::handle_assign_or_procedure_call(lexer_iterator& it) const
 
 ast_ptr parser::handle_procedure_call(const std::wstring& identifier, lexer_iterator& it) const
 {
-	it.skip_required(token_type::group_start);
+	const auto token = it.expect(token_type::group_start);
+	it.advance();
 	it.ensure_token("Expected parameter list for procedure call");
 
 	// The parameters for a procedure is a comma delimited list of expressions
@@ -461,14 +472,15 @@ ast_ptr parser::handle_procedure_call(const std::wstring& identifier, lexer_iter
 	it.skip_required(token_type::group_end);
 	it.ensure_token("Found end of file while parsing procedure argument list");
 
-	return make_ast_ptr<procedure_call>(identifier, arg_list);
+	return make_ast_ptr<procedure_call>(identifier, arg_list, token);
 }
 
 ast_ptr parser::handle_assign(const std::wstring& identifier, lexer_iterator& it) const
 {
-	const auto var_identifier = make_ast_node_ptr<var>(identifier);
+	const auto var_identifier = make_ast_node_ptr<var>(identifier, it.current_token());
 	
-	it.skip_required(token_type::assign);
+	const auto token = it.expect(token_type::assign);
+	it.advance();
 
 	// We could just do this check further down the stack, however,
 	// if we handle it here, the error message is more clear
@@ -476,5 +488,5 @@ ast_ptr parser::handle_assign(const std::wstring& identifier, lexer_iterator& it
 	
 	const auto expression = this->handle_expr(it);
 
-	return make_ast_ptr<assign>(var_identifier, expression);
+	return make_ast_ptr<assign>(var_identifier, expression, token);
 }
