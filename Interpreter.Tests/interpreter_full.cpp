@@ -317,6 +317,55 @@ END.
 		Catch::Message("In a call to procedure P1 too many arguments have been provided"));
 }
 
+TEST_CASE( "Interpretation fails - procedure used in assignment", "[interpreter_program]" ) {
+    const auto program = R"(
+PROGRAM Semi;                           
+VAR a_global: INTEGER;
+PROCEDURE P1(a : INTEGER);
+BEGIN {P1}
+    a_global:=a
+END;
+
+BEGIN       
+    a_global:= P1(5);
+END.        
+)";
+
+    // This error message is quite bad, but logical as it happens in the parsing phase.
+    // The grammar currently does not support functions, so we don't allow it as part of an expression.
+    REQUIRE_THROWS_MATCHES( 
+		do_interpret_program(program), 
+		interpret_except, 
+		Catch::Message("Invalid token found - Expected type end; Got token: TOK(group_start)"));
+}
+
+TEST_CASE( "Interpretation fails - procedure used as argument", "[interpreter_program]" ) {
+    const auto program = R"(
+PROGRAM Semi;                           
+VAR a_global: INTEGER;
+PROCEDURE P1(a : INTEGER);
+BEGIN
+    a_global:=a
+END;
+
+PROCEDURE P2(a : INTEGER);
+BEGIN
+    a_global:=a
+END;
+
+BEGIN       
+    a_global:= P1(P2(5));
+END.        
+)";
+
+    // This error message is quite bad, but logical as it happens in the parsing phase.
+    // The grammar currently does not support functions, so we don't allow it as part of an expression.
+    REQUIRE_THROWS_MATCHES( 
+		do_interpret_program(program), 
+		interpret_except, 
+		Catch::Message("Invalid token found - Expected type end; Got token: TOK(group_start)"));
+}
+
 TEST_CASE( "Interpretation fails - procedures with parameters called with not enough parameters", "[interpreter_program]" ) {
     const auto program = R"(
 PROGRAM Semi;                           
