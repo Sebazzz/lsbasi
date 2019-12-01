@@ -61,6 +61,15 @@ void repl_mode()
 		{
 			std::wcout << console_color::reversed << console_color::bright_red << console_color::bold << L"Error interpreting --> " <<  console_color::faint;
 			std::wcout << console_color::red << e.what() << console_color::reset << std::endl;
+
+			// Give some indication where the error has occurred, if we have the information
+			if (e.has_line_info())
+			{
+				const int col = e.line_info().column;
+				
+				std::wcout << std::endl << "\t" << input << std::endl;
+				std::wcout << "\t" << std::wstring(col - 1, L'-') << console_color::bright_red << L'^' << console_color::reset << std::endl;
+			}
 		}
 		
 		std::wcout << std::endl;
