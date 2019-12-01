@@ -290,5 +290,7 @@
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="lexer.natvis" />
+    <Natvis Include="execution.natvis" />
+    <Natvis Include="ast.natvis" />
   </ItemGroup>
 </Project>

@@ -310,7 +310,9 @@
     <ClInclude Include="var_decl.h" />
   </ItemGroup>
   <ItemGroup>
+    <Natvis Include="ast.natvis" />
     <Natvis Include="lexer.natvis" />
+    <Natvis Include="execution.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

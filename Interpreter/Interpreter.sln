@@ -7,6 +7,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Interpreter", "Interpreter.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Interpreter.Tests", "..\Interpreter.Tests\Interpreter.Tests.vcxproj", "{C68F364F-CBDE-48D3-81D0-B462F8B7F779}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E6470971-1697-4943-A710-EF0891EAE4CA}"
+	ProjectSection(SolutionItems) = preProject
+		ast.natvis = ast.natvis
+		execution.natvis = execution.natvis
+		lexer.natvis = lexer.natvis
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
