@@ -17,6 +17,9 @@ namespace ast {
 		real
 	};
 
+	/**
+	 * Represents the result of an expression
+	 */
 	union expression_value
 	{
 		builtin_integer int_val;
@@ -25,6 +28,11 @@ namespace ast {
 		expression_value(builtin_integer value) : int_val(value){}
 		expression_value(builtin_real value) : real_val(value){}
 	};
+
+	// Note about data type size of expression_value:
+	// a double is 64-bit so it is at max 64-bits. 
+	static_assert(sizeof(expression_value) == sizeof(double), "Expect data size to be at most 64-bit (8 bytes)");
+	
 
 	// Fwd declarations
 	class compound;
