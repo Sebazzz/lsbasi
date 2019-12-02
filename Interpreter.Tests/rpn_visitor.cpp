@@ -7,7 +7,8 @@ std::wstring do_rpn(const std::wstring& input)
     std::wstringstream input_stream;
 	input_stream.str(input);
 
-    parser parser(input_stream);
+	const interpreter_context_ptr context = std::make_shared<interpreter_context>();
+    parser parser(input_stream, context);
     const auto result = parser.parse_repl();
 
     rpn_visitor visitor;

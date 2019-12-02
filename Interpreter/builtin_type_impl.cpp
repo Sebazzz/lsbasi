@@ -21,6 +21,7 @@ void builtin_type_impl::convert_value(ast::expression_value& expr_value, builtin
 		{
 			case ast::builtin_type::integer:
 			case ast::builtin_type::real:
+			case ast::builtin_type::string:
 				return;
 
 			default:
@@ -37,6 +38,12 @@ void builtin_type_impl::convert_value(ast::expression_value& expr_value, builtin
 
 	// Implicit conversion from real to int is not allowed
 	if (expr_type.type() == ast::builtin_type::real && this->m_symbol->type() == ast::builtin_type::integer)
+	{
+		throw runtime_type_error(L"Attempting to convert expression of type " + expr_type.to_string() + L" to " + this->m_symbol->to_string(), line_info);
+	}
+
+	// Implicit conversion from string to any is not allowed
+	if (expr_type.type() == ast::builtin_type::string || this->m_symbol->type() == ast::builtin_type::string)
 	{
 		throw runtime_type_error(L"Attempting to convert expression of type " + expr_type.to_string() + L" to " + this->m_symbol->to_string(), line_info);
 	}

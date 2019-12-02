@@ -9,6 +9,10 @@ num::num(const int value, token token): ast_node(std::move(token)), m_value(valu
 {
 }
 
+num::num(builtin_string_ptr value, token token): ast_node(std::move(token)), m_value(value), m_type(builtin_type::string)
+{
+}
+
 num::num(const double value, token token): ast_node(std::move(token)), m_value(value), m_type(builtin_type::real)
 {
 }
@@ -42,10 +46,12 @@ std::wstring num::val_to_string() const
 {
 	switch (this->type())
 	{
-	case ast::builtin_type::integer:
+	case builtin_type::integer:
 		return std::to_wstring(this->m_value.int_val);
-	case ast::builtin_type::real:
+	case builtin_type::real:
 		return std::to_wstring(this->m_value.real_val);
+	case builtin_type::string:
+		return *this->m_value.string_ptr_val;
 	default:
 		throw internal_interpret_except("Unsupported number type: " + std::to_string(static_cast<int>(this->type())), this->get_line_info())
 		;

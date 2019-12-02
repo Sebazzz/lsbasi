@@ -8,6 +8,7 @@
 struct interpret_result
 {
     std::shared_ptr<scope_context> global_scope;
+    interpreter_context_ptr context;
     ast_ptr ast;
     std::wstring output;
 };
@@ -20,7 +21,7 @@ int verify_int_symbol(const interpret_result& result, const symbol_identifier& i
 
     if (builtin_type->type() != ast::builtin_type::integer)
     {
-        throw std::logic_error("Symbol was not an integer)");
+        throw std::logic_error("Symbol was not an integer");
     }
 
     return contents.int_val;
@@ -34,10 +35,24 @@ double verify_real_symbol(const interpret_result& result, const symbol_identifie
 
     if (builtin_type->type() != ast::builtin_type::real)
     {
-        throw std::logic_error("Symbol was not an real)");
+        throw std::logic_error("Symbol was not an real");
     }
 
     return contents.real_val;
+}
+
+builtin_string verify_string_symbol(const interpret_result& result, const symbol_identifier& identifier)
+{
+    const auto var_symbol = result.global_scope->symbols.get<variable_symbol>(identifier);
+    const auto& contents = result.global_scope->memory->get(var_symbol);
+    const auto& builtin_type = result.global_scope->symbols.get<builtin_type_symbol>(var_symbol->variable().type()->identifier());
+
+    if (builtin_type->type() != ast::builtin_type::string)
+    {
+        throw std::logic_error("Symbol was not an string");
+    }
+
+    return *contents.string_ptr_val;
 }
 
 interpret_result do_interpret_program(const char* input)
@@ -53,6 +68,7 @@ interpret_result do_interpret_program(const char* input)
 
     return {
         inter_info.global_scope,
+        inter_info.interpreter_context,
         inter_info.ast,
         result
     };
@@ -88,6 +104,53 @@ END.
     REQUIRE( verify_real_symbol(result, L"b") == 2 );
 }
 
+TEST_CASE( "Assignment from string to real disallowed", "[interpreter_program]" ) {
+    const auto program = R"(
+PROGRAM Simple;
+VAR str: STRING; b: REAL;
+BEGIN       
+   str := 'HELLO WORLD';  
+   b := str;  
+END.        
+)";
+
+        REQUIRE_THROWS_MATCHES( do_interpret_program(program), 
+			runtime_type_error, 
+			Catch::Message("Runtime type error: Attempting to assign variable variable b with invalid type: Runtime type error: Attempting to convert expression of type built-in STRING to built-in REAL"));
+
+}
+
+TEST_CASE( "Assignment from string to integer disallowed", "[interpreter_program]" ) {
+    const auto program = R"(
+PROGRAM Simple;
+VAR str: STRING; b: INTEGER;
+BEGIN       
+   str := 'HELLO WORLD';  
+   b := str;  
+END.        
+)";
+
+        REQUIRE_THROWS_MATCHES( do_interpret_program(program), 
+			runtime_type_error, 
+			Catch::Message("Runtime type error: Attempting to assign variable variable b with invalid type: Runtime type error: Attempting to convert expression of type built-in STRING to built-in INTEGER"));
+
+}
+
+TEST_CASE( "Interpretation succeeds - program with string", "[interpreter_program]" ) {
+    const auto result = do_interpret_program(R"(
+PROGRAM Simple;
+VAR a, b: STRING;
+BEGIN       
+   a := 'hello world';
+   b := a;
+END.        
+)");
+
+    REQUIRE( result.output == std::wstring(L"done") );
+
+    REQUIRE( verify_string_symbol(result, L"a") == L"hello world" );
+    REQUIRE( verify_string_symbol(result, L"b") == L"hello world" );
+}
 
 TEST_CASE( "Interpretation succeeds - program 1", "[interpreter_program]" ) {
     const auto result = do_interpret_program(R"(

@@ -13,7 +13,9 @@ parse_result do_parse_program(const char* input)
 {
     std::wstringstream input_stream;
 	input_stream.str(raw_to_wstring(input));
-    parser sut(input_stream);
+
+	const interpreter_context_ptr context = std::make_shared<interpreter_context>();
+    parser sut(input_stream, context);
 
     const auto result = sut.parse();
 

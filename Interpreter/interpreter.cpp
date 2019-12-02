@@ -7,7 +7,7 @@
 
 void interpreter::ensure_parsed()
 {
-	if (!this->parsed_ast)
+	if (!this->m_parsed_ast)
 	{
 		this->do_parse();
 	}
@@ -17,20 +17,20 @@ void interpreter::do_parse()
 {
 	if (this->m_repl_mode)
 	{
-		this->parsed_ast = this->parser.parse_repl();
+		this->m_parsed_ast = this->m_parser.parse_repl();
 	} else
 	{
-		this->parsed_ast = this->parser.parse();
+		this->m_parsed_ast = this->m_parser.parse();
 	}
 }
 
-interpreter::interpreter(lexer_input_stream input_stream, bool repl_mode): parser(input_stream), m_repl_mode(repl_mode)
+interpreter::interpreter(lexer_input_stream input_stream, bool repl_mode): m_context_ptr(std::make_shared<interpreter_context>()), m_parser(input_stream, m_context_ptr), m_repl_mode(repl_mode)
 {
 }
 
 std::wstring interpreter::tokenize()
 {
-	return this->parser.stringify_parse_tree();
+	return this->m_parser.stringify_parse_tree();
 }
 
 std::wstring interpreter::stringify_ast()
@@ -39,7 +39,7 @@ std::wstring interpreter::stringify_ast()
 
 	this->ensure_parsed();
 
-	ast::ast_node& node = *this->parsed_ast;
+	ast::ast_node& node = *this->m_parsed_ast;
 	visitor.visit(node);
 
 	return visitor.get_string();
@@ -48,7 +48,7 @@ std::wstring interpreter::stringify_ast()
 std::wstring interpreter::interpret_repl() const
 {
 	eval_visitor eval;
-	eval.visit(*this->parsed_ast);
+	eval.visit(*this->m_parsed_ast);
 	
 	const auto result = eval.result();
 
@@ -63,12 +63,13 @@ std::wstring interpreter::interpret_repl() const
 std::wstring interpreter::interpret_program()
 {
 	exec_visitor eval;
-	eval.visit(*this->parsed_ast);
+	eval.visit(*this->m_parsed_ast);
 
 	// Load global scope
 	this->m_interpretation_info = {
 		eval.global_scope(),
-		this->parsed_ast
+		this->m_context_ptr,
+		this->m_parsed_ast
 	};
 	
 	return std::wstring(L"done");

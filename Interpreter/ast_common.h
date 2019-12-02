@@ -1,5 +1,6 @@
 #pragma once
 // ReSharper disable CppUnusedIncludeDirective - utility header
+#include <utility>
 #include "ast_node.h"
 #include "builtin_type_defs.h"
 
@@ -14,7 +15,8 @@ namespace ast {
 
 	enum class builtin_type {
 		integer,
-		real
+		real,
+		string
 	};
 
 	/**
@@ -24,15 +26,16 @@ namespace ast {
 	{
 		builtin_integer int_val;
 		builtin_real real_val;
+		builtin_string_ptr string_ptr_val;
 
 		expression_value(builtin_integer value) : int_val(value){}
 		expression_value(builtin_real value) : real_val(value){}
+		expression_value(builtin_string_ptr value) : string_ptr_val(value){}
 	};
 
 	// Note about data type size of expression_value:
 	// a double is 64-bit so it is at max 64-bits. 
-	static_assert(sizeof(expression_value) == sizeof(double), "Expect data size to be at most 64-bit (8 bytes)");
-	
+	static_assert(sizeof(expression_value) == (sizeof(void*) * 2), "Expect data size to be at most two pointers (8 bytes)");
 
 	// Fwd declarations
 	class compound;

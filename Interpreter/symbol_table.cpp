@@ -12,6 +12,10 @@ symbol_table::symbol_table(): m_scope_name(L"RUNTIME")
 	this->m_variables.try_emplace(
 		builtin_type_symbol::var_type_to_string(ast::builtin_type::real), 
 		builtin_type_symbol::get_for_builtin_type(ast::builtin_type::real));
+
+	this->m_variables.try_emplace(
+		builtin_type_symbol::var_type_to_string(ast::builtin_type::string), 
+		builtin_type_symbol::get_for_builtin_type(ast::builtin_type::string));
 }
 
 symbol_table::symbol_table(std::wstring scope_name, symbol_table* parent): m_parent(parent), m_scope_name(std::move(scope_name))

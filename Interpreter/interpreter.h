@@ -2,6 +2,7 @@
 #include "parser.h"
 #include "memory_table.h"
 #include "scope_context.h"
+#include "interpreter_context.h"
 
 /**
  *
@@ -14,13 +15,15 @@ public:
 	struct interpretation_info
 	{
 		std::shared_ptr<scope_context> global_scope;
+		interpreter_context_ptr interpreter_context;
 		ast_ptr ast;
 	};
 	
 private:
-	parser parser;
+	interpreter_context_ptr m_context_ptr;
+	parser m_parser;
 	
-	ast_ptr parsed_ast;
+	ast_ptr m_parsed_ast;
 	bool m_repl_mode;
 
 	void ensure_parsed();

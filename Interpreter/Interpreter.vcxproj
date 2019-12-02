@@ -226,6 +226,7 @@
     <ClCompile Include="builtin_type_symbol.cpp" />
     <ClCompile Include="exec_error.cpp" />
     <ClCompile Include="internal_interpret_except.cpp" />
+    <ClCompile Include="interpreter_context.cpp" />
     <ClCompile Include="parse_except.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -288,6 +289,7 @@
     <ClInclude Include="exec_visitor.h" />
     <ClInclude Include="internal_interpret_except.h" />
     <ClInclude Include="interpreter.h" />
+    <ClInclude Include="interpreter_context.h" />
     <ClInclude Include="interpret_except.h" />
     <ClInclude Include="invoke_repl_visitor.h" />
     <ClInclude Include="lexer.h" />

@@ -10,6 +10,7 @@
 #include "procedure.h"
 #include "var_decl.h"
 #include <functional>
+#include <utility>
 #include "procedure_call.h"
 
 using namespace ast;
@@ -64,7 +65,7 @@ ast_ptr parser::parse()
 	return result;
 }
 
-ast_ptr parser::handle_integer(lexer_iterator& it) const
+ast_ptr parser::handle_integer_or_literal(lexer_iterator& it) const
 {
 	it.ensure_token("Found end while searching for integer");
 
@@ -96,9 +97,21 @@ ast_ptr parser::handle_integer(lexer_iterator& it) const
 				it.advance();
 				return make_ast_ptr<num>(val_r, token);
 			}
+
+		case token_type::string_const:
+			{
+				// Pool the internal string
+				builtin_string_ptr str_ptr = this->m_interpreter_context->string_pool.get_or_add(num_str);
+				
+				it.advance();
+
+				// We can essentially clear the internal string and replace it with a token,
+				// I don't believe the string value is actually used somewhere else
+				return make_ast_ptr<num>(str_ptr, ::token(token.type(), L"POOLED", token.position()));
+			}
 			
 		default:
-			throw parse_except(L"Expected integer or real: " + it->to_string(), it->position());
+			throw parse_except(L"Expected string literal, integer or real: " + it->to_string(), it->position());
 		}
 	} catch (std::invalid_argument& e)
 	{
@@ -143,7 +156,7 @@ ast_ptr parser::handle_factor(lexer_iterator& it) const
 		return handle_unary(it);
 	}
 
-	return handle_integer(it);
+	return handle_integer_or_literal(it);
 }
 
 ast_ptr parser::handle_group(lexer_iterator& it) const
@@ -491,6 +504,6 @@ ast_ptr parser::handle_assign(const std::wstring& identifier, lexer_iterator& it
 	return make_ast_ptr<assign>(var_identifier, expression, token);
 }
 
-parser::parser(lexer_input_stream input_stream): lexer(input_stream)
+parser::parser(lexer_input_stream input_stream, interpreter_context_ptr interpreter_context): lexer(input_stream), m_interpreter_context(std::move(interpreter_context))
 {
 }

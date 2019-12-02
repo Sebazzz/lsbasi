@@ -16,6 +16,9 @@ private:
 
 	std::wstring m_scope_name;
 
+	/**
+	 * This private constructor creates a global scope
+	 */
 	explicit symbol_table();
 
 public:

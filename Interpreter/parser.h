@@ -5,6 +5,7 @@
 #include "compound.h"
 #include "block.h"
 #include <functional>
+#include "interpreter_context.h"
 
 // Grammar:
 //
@@ -52,8 +53,9 @@ class parser
 {
 private:
 	lexer lexer;
+	interpreter_context_ptr m_interpreter_context;
 	
-	ast_ptr handle_integer(lexer_iterator& it) const;
+	ast_ptr handle_integer_or_literal(lexer_iterator& it) const;
 	ast_ptr handle_unary(lexer_iterator& it) const;
 	ast_ptr handle_factor(lexer_iterator& it) const;
 	ast_ptr handle_group(lexer_iterator& it) const;
@@ -83,7 +85,7 @@ private:
 	ast_ptr handle_assign(const std::wstring& identifier, lexer_iterator& it) const;
 
 public:
-	explicit parser(lexer_input_stream input_stream);
+	explicit parser(lexer_input_stream input_stream, interpreter_context_ptr interpreter_context);
 
 	/**
 	 * Tokenizes the string and return string representation of the tokens
