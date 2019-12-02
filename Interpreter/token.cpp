@@ -74,6 +74,9 @@ const wchar_t* token::token_type_to_string(token_type type)
 	case token_type::real_const:
 		return L"real";
 
+	case token_type::string_const:
+		return L"str";
+
 	case token_type::group_start:
 		return L"group_start";
 

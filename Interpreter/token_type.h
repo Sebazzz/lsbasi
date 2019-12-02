@@ -5,6 +5,7 @@ enum class token_type
 	// data values
 	integer_const,
 	real_const,
+	string_const,
 
 	// data types
 	type,

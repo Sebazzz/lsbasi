@@ -12,7 +12,7 @@ class lexer final
 	constexpr static wchar_t NO_NEXT_CHAR = 0;
 	
 	// Constant
-	const lexer_input_stream m_input_stream;
+	lexer_input_stream m_input_stream;
 
 	// State variables
 	wchar_t m_current_char;
@@ -29,6 +29,7 @@ class lexer final
 	bool skip_whitespace();
 	bool skip_comment();
 
+	token read_string();
 	token read_digit();
 	token read_operator();
 	token read_identifier_or_keyword();

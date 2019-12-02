@@ -1,5 +1,6 @@
 #include "common_test.h"
 #include "../Interpreter/lexer.h"
+#include "../Interpreter/parse_except.h"
 
 std::unique_ptr<std::wstringstream> make_lexer_input_stream(const char* input)
 {
@@ -88,6 +89,43 @@ END.
     REQUIRE( do_lex(lex) == std::wstring(L"token(end,END) [4,1]") );
     REQUIRE( do_lex(lex) == std::wstring(L"token(.) [4,4]") );
 }
+
+TEST_CASE( "Lexer tokenize test - string support", "[lexer]" ) {
+    const auto input = make_lexer_input_stream(R"(
+BEGIN
+   a := 'my string long long';
+END.
+)");
+
+    lexer lex(*input);
+
+    REQUIRE( do_lex(lex) == std::wstring(L"token(begin,BEGIN) [2,1]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,a) [3,4]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(:=) [3,6]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(str,my string long long) [3,9]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(semi) [3,30]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(end,END) [4,1]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(.) [4,4]") );
+}
+
+TEST_CASE( "Lexer tokenize test - string support (unterminated results in error)", "[lexer]" ) {
+    const auto input = make_lexer_input_stream(R"(
+BEGIN
+   a := 'my string long long;
+END.
+)");
+
+    lexer lex(*input);
+
+    REQUIRE( do_lex(lex) == std::wstring(L"token(begin,BEGIN) [2,1]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,a) [3,4]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(:=) [3,6]") );
+
+    REQUIRE_THROWS_MATCHES( 
+		do_lex(lex), 
+		parse_except, 
+		Catch::Message("Syntax error: Unterminated string literal: my string long long;"));
+} 
 
 TEST_CASE( "Lexer tokenize test - procedure", "[lexer]" ) {
     const auto input = make_lexer_input_stream(R"(

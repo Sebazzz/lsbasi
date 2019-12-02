@@ -64,6 +64,30 @@ bool lexer::skip_comment()
 	return true;
 }
 
+token lexer::read_string()
+{
+	const auto stream_pos = this->m_stream_position;
+	std::wstring full_string;
+
+	// Current char is the string start delimiter, so skip it. Read until newline or end delimiter.
+	this->advance();
+	while (!this->is_at_end() && !(this->m_current_char == '\n' || this->m_current_char == '\''))
+	{
+		full_string += this->m_current_char;
+		this->advance();
+	}
+
+	if (this->m_current_char == '\n')
+	{
+		throw parse_except(L"Unterminated string literal: " + full_string, stream_pos);
+	}
+
+	// Skip delimiter
+	this->advance();
+	
+	return token(token_type::string_const, full_string, stream_pos);
+}
+
 token lexer::read_digit()
 {
 	const auto stream_pos = this->m_stream_position;
@@ -200,6 +224,11 @@ token lexer::get_next_token()
 		if (this->skip_comment())
 		{
 			continue;
+		}
+
+		if (this->m_current_char == '\'')
+		{
+			return this->read_string();
 		}
 
 		if (std::isalpha(this->m_current_char) || this->m_current_char == '_')
