@@ -105,6 +105,31 @@ int interpret_file(const std::wstring& file_path)
 		std::wcout << "Error interpreting [" << file_path << "]" << std::endl;
 		std::wcout << e.what() << std::endl;
 
+		if (e.has_line_info())
+		{
+			// Attempt to find the line and indicate the error
+
+			// ... Reset the stream to find the line
+			file.seekg(0);
+			
+			const auto line_info = e.line_info();
+			int line_number = 0;
+			std::wstring buf;
+			while(std::getline(file, buf)) {
+				if (++line_number == line_info.line_number)
+				{
+					break;
+				}
+			}
+
+			if (!buf.empty())
+			{
+				std::wcout << std::endl << "\t" << buf << std::endl;
+				std::wcout << "\t" << std::wstring(line_info.column - 1, L'-') << console_color::bright_red << L'^' << console_color::reset << std::endl;
+			}
+			
+		}
+
 		return -1;
 	}
 
