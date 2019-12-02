@@ -1,6 +1,14 @@
 #include "common_test.h"
 #include "../Interpreter/lexer.h"
 
+std::unique_ptr<std::wstringstream> make_lexer_input_stream(const char* input)
+{
+    std::unique_ptr<std::wstringstream> input_stream(new std::wstringstream());
+	input_stream->str(raw_to_wstring(input));
+
+    return input_stream;
+}
+
 std::wstring do_lex(lexer& lex)
 {
     const auto token = lex.get_next_token();
@@ -8,7 +16,8 @@ std::wstring do_lex(lexer& lex)
 }
 
 TEST_CASE( "Lexer tokenize test - single line", "[lexer]" ) {
-    lexer lex(L"BEGIN a := 2; END.");
+    const auto input = make_lexer_input_stream("BEGIN a := 2; END.");
+    lexer lex(*input);
 
     REQUIRE( do_lex(lex) == std::wstring(L"token(begin,BEGIN) [1,1]") );
     REQUIRE( do_lex(lex) == std::wstring(L"token(idf,a) [1,7]") );
@@ -20,7 +29,8 @@ TEST_CASE( "Lexer tokenize test - single line", "[lexer]" ) {
 }
 
 TEST_CASE( "Lexer tokenize test - single line + real", "[lexer]" ) {
-    lexer lex(L"BEGIN a := 2.75; END.");
+    const auto input = make_lexer_input_stream("BEGIN a := 2.75; END.");
+    lexer lex(*input);
 
     REQUIRE( do_lex(lex) == std::wstring(L"token(begin,BEGIN) [1,1]") );
     REQUIRE( do_lex(lex) == std::wstring(L"token(idf,a) [1,7]") );
@@ -32,7 +42,8 @@ TEST_CASE( "Lexer tokenize test - single line + real", "[lexer]" ) {
 }
 
 TEST_CASE( "Lexer tokenize test - single line - division int", "[lexer]" ) {
-    lexer lex(L"BEGIN a := 2 div 4; END.");
+    const auto input = make_lexer_input_stream("BEGIN a := 2 div 4; END.");
+    lexer lex(*input);
 
     REQUIRE( do_lex(lex) == std::wstring(L"token(begin,BEGIN) [1,1]") );
     REQUIRE( do_lex(lex) == std::wstring(L"token(idf,a) [1,7]") );
@@ -46,7 +57,8 @@ TEST_CASE( "Lexer tokenize test - single line - division int", "[lexer]" ) {
 }
 
 TEST_CASE( "Lexer tokenize test - single line - division real", "[lexer]" ) {
-    lexer lex(L"BEGIN a := 2 / 4; END.");
+    const auto input = make_lexer_input_stream("BEGIN a := 2 / 4; END.");
+    lexer lex(*input);
 
     REQUIRE( do_lex(lex) == std::wstring(L"token(begin,BEGIN) [1,1]") );
     REQUIRE( do_lex(lex) == std::wstring(L"token(idf,a) [1,7]") );
@@ -60,11 +72,13 @@ TEST_CASE( "Lexer tokenize test - single line - division real", "[lexer]" ) {
 }
 
 TEST_CASE( "Lexer tokenize test - multiline", "[lexer]" ) {
-    lexer lex(raw_to_wstring(R"(
+    const auto input = make_lexer_input_stream(R"(
 BEGIN
    a := 2;
 END.
-)"));
+)");
+
+    lexer lex(*input);
 
     REQUIRE( do_lex(lex) == std::wstring(L"token(begin,BEGIN) [2,1]") );
     REQUIRE( do_lex(lex) == std::wstring(L"token(idf,a) [3,4]") );
@@ -76,12 +90,14 @@ END.
 }
 
 TEST_CASE( "Lexer tokenize test - procedure", "[lexer]" ) {
-    lexer lex(raw_to_wstring(R"(
+    const auto input = make_lexer_input_stream(R"(
 PROCEDURE P1;
   BEGIN
      a := 2;
   END;
-)"));
+)");
+
+    lexer lex(*input);
 
     REQUIRE( do_lex(lex) == std::wstring(L"token(procedure,PROCEDURE) [2,1]") );
     REQUIRE( do_lex(lex) == std::wstring(L"token(idf,P1) [2,11]") );
@@ -96,12 +112,14 @@ PROCEDURE P1;
 }
 
 TEST_CASE( "Lexer tokenize test - procedure with params", "[lexer]" ) {
-    lexer lex(raw_to_wstring(R"(
+    const auto input = make_lexer_input_stream(R"(
 PROCEDURE P1(a : INTEGER);
   BEGIN
      a := 2;
   END;
-)"));
+)");
+
+    lexer lex(*input);
 
     REQUIRE( do_lex(lex) == std::wstring(L"token(procedure,PROCEDURE) [2,1]") );
     REQUIRE( do_lex(lex) == std::wstring(L"token(idf,P1) [2,11]") );
@@ -121,12 +139,14 @@ PROCEDURE P1(a : INTEGER);
 }
 
 TEST_CASE( "Lexer tokenize test - multiline with comment", "[lexer]" ) {
-    lexer lex(raw_to_wstring(R"(
+    const auto input = make_lexer_input_stream(R"(
 BEGIN
    a := 2;
    { should ignore this! }
 END.
-)"));
+)");
+
+    lexer lex(*input);
 
     REQUIRE( do_lex(lex) == std::wstring(L"token(begin,BEGIN) [2,1]") );
     REQUIRE( do_lex(lex) == std::wstring(L"token(idf,a) [3,4]") );

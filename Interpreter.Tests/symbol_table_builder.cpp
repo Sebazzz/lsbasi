@@ -11,7 +11,9 @@ struct parse_result
 
 parse_result do_parse_program(const char* input)
 {
-    parser sut(raw_to_wstring(input));
+    std::wstringstream input_stream;
+	input_stream.str(raw_to_wstring(input));
+    parser sut(input_stream);
 
     const auto result = sut.parse();
 

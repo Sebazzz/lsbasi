@@ -490,3 +490,7 @@ ast_ptr parser::handle_assign(const std::wstring& identifier, lexer_iterator& it
 
 	return make_ast_ptr<assign>(var_identifier, expression, token);
 }
+
+parser::parser(lexer_input_stream input_stream): lexer(input_stream)
+{
+}

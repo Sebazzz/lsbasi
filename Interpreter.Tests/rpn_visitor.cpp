@@ -2,9 +2,12 @@
 #include "../Interpreter/parser.h"
 #include "../Interpreter/rpn_visitor.h"
 
-std::wstring do_rpn(std::wstring input)
+std::wstring do_rpn(const std::wstring& input)
 {
-    parser parser(std::move(input));
+    std::wstringstream input_stream;
+	input_stream.str(input);
+
+    parser parser(input_stream);
     const auto result = parser.parse_repl();
 
     rpn_visitor visitor;

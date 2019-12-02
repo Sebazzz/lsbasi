@@ -42,7 +42,10 @@ double verify_real_symbol(const interpret_result& result, const symbol_identifie
 
 interpret_result do_interpret_program(const char* input)
 {
-    interpreter sut(raw_to_wstring(input), false);
+    std::wstringstream input_stream;
+	input_stream.str(raw_to_wstring(input));
+
+    interpreter sut(input_stream, false);
 
     const auto result = sut.interpret();
 

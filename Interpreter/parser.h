@@ -2,7 +2,6 @@
 #include "lexer.h"
 #include "lexer_iterator.h"
 #include "ast_common.h"
-#include <vector>
 #include "compound.h"
 #include "block.h"
 #include <functional>
@@ -84,10 +83,7 @@ private:
 	ast_ptr handle_assign(const std::wstring& identifier, lexer_iterator& it) const;
 
 public:
-	explicit parser(std::wstring input)
-		: lexer(std::move(input))
-	{
-	}
+	explicit parser(lexer_input_stream input_stream);
 
 	/**
 	 * Tokenizes the string and return string representation of the tokens

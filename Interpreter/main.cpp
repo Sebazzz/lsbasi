@@ -4,6 +4,7 @@
 #include "pch.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "interpreter.h"
 #include "console_color.h"
 #include "rpn_visitor.h"
@@ -35,15 +36,20 @@ void repl_mode()
 
 		try
 		{
+			std::wstringstream input_stream;
+			input_stream.str(input);
+			
 			{
-				interpreter interpreter(input, true);
+				interpreter interpreter(input_stream, true);
 
 				std::wstring tokenStr = interpreter.tokenize();
 				std::wcout << L"Tokens: " << tokenStr << std::endl;
+
+				input_stream.seekg(0);
 			}
 
 			{
-				interpreter interpreter(input, true);
+				interpreter interpreter(input_stream, true);
 
 				std::wstring astStr = interpreter.stringify_ast();
 				std::wcout << L"AST:    " << astStr << std::endl;
@@ -56,6 +62,8 @@ void repl_mode()
 
 				std::wstring result = interpreter.interpret();
 				std::wcout << L"Result: " << result << std::endl;
+				
+				input_stream.seekg(0);
 			}
 		} catch (interpret_except& e)
 		{
@@ -88,13 +96,7 @@ int interpret_file(const std::wstring& file_path)
 		return -1;
 	}
 	
-	std::wstring all;
-	std::wstring buf;
-	while(std::getline(file, buf)) {
-	     all += buf;
-	}
-
-	interpreter interpreter(all);
+	interpreter interpreter(file);
 	try
 	{
 		std::wcout << interpreter.interpret() << std::endl;

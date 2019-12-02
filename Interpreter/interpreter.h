@@ -43,10 +43,7 @@ private:
 	interpretation_info m_interpretation_info;
 	
 public:
-	explicit interpreter(std::wstring input, bool repl_mode = false)
-		: parser(std::move(input)), m_repl_mode(repl_mode)
-	{
-	}
+	explicit interpreter(lexer_input_stream input_stream, bool repl_mode = false);
 
 	/**
 	 * Tokenizes the string and return string representation of the tokens

@@ -2,6 +2,7 @@
 
 // STL
 #include <string>
+#include <sstream>
 
 // Lib
 #include "catch.hpp"

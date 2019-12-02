@@ -7,6 +7,8 @@
  *
  * As an added bonus it actually allows abstracting away where the tokens come from: whether
  * they are streaming from the network, file, or in-memory string.
+ *
+ * This iterator is only valid for the lifetime of the lexer it is created from.
  */
 class lexer_iterator
 {

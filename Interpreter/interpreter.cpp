@@ -3,7 +3,6 @@
 #include "stringify_visitor.h"
 #include "eval_visitor.h"
 #include "exec_visitor.h"
-#include "memory_table.h"
 #include "builtin_type_symbol.h"
 
 void interpreter::ensure_parsed()
@@ -23,6 +22,10 @@ void interpreter::do_parse()
 	{
 		this->parsed_ast = this->parser.parse();
 	}
+}
+
+interpreter::interpreter(lexer_input_stream input_stream, bool repl_mode): parser(input_stream), m_repl_mode(repl_mode)
+{
 }
 
 std::wstring interpreter::tokenize()

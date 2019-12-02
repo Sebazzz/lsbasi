@@ -1,11 +1,12 @@
 #include "pch.h"
-#include "lexer.h"
+#include <istream>
 #include <map>
+#include "lexer.h"
 #include "util.h"
 
 bool lexer::is_at_end() const
 {
-	return this->m_position >= this->input.size();
+	return this->m_input_stream.eof();
 }
 
 void lexer::advance()
@@ -18,28 +19,20 @@ void lexer::advance()
 		this->m_stream_position.column = 0;
 	}
 	
-	this->m_position++;
 	this->m_stream_position.column++;
-
-	if (this->is_at_end())
-	{
-		this->m_current_char = 0;
-	} else
-	{
-		this->m_current_char = this->input[this->m_position];
-	}
+	this->m_current_char = this->m_input_stream.get();
 }
 
 wchar_t lexer::peek() const
 {
-	const auto next_pos = this->m_position + 1;
+	const auto next_char = this->m_input_stream.peek();
 
-	if (next_pos >= this->input.size())
+	if (next_char == lexer_input_traits::eof())
 	{
 		return NO_NEXT_CHAR;
 	}
 
-	return this->input[next_pos];
+	return next_char;
 }
 
 bool lexer::skip_whitespace()
@@ -83,6 +76,11 @@ token lexer::read_digit()
 	while (!this->is_at_end())
 	{
 		this->advance();
+
+		if (this->is_at_end())
+		{
+			break;
+		}
 
 		if (this->m_current_char == '.')
 		{
@@ -172,10 +170,9 @@ token lexer::token_with_line_info(const token& static_token, const line_info& po
 	return token(static_token.type(), static_token.value(), position);
 }
 
-lexer::lexer(std::wstring input): input(std::move(input)), m_stream_position({1, 1})
+lexer::lexer(lexer_input_stream input_stream): m_input_stream(input_stream), m_stream_position({1, 1})
 {
-	this->m_position = 0;
-	this->m_current_char = !this->input.empty() ? this->input[this->m_position] : 0;
+	this->m_current_char = this->m_input_stream.get();
 }
 
 /*
@@ -186,9 +183,10 @@ lexer::lexer(std::wstring input): input(std::move(input)), m_stream_position({1,
  */
 token lexer::get_next_token()
 {
-	if (this->input.empty())
+	// If we have never moved position then it means the file was empty to begin with
+	if (this->m_stream_position.column == 1 && this->m_stream_position.line_number == 1 && this->m_input_stream.eof())
 	{
-		throw interpret_except("string is empty");
+		throw parse_except("string is empty", this->m_stream_position);
 	}
 	
 	auto result_token = token::eof();

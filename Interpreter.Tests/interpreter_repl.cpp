@@ -2,9 +2,12 @@
 #include "../Interpreter/interpreter.h"
 #include "../Interpreter/interpret_except.h"
 
-std::wstring do_interpret(std::wstring input)
+std::wstring do_interpret(const std::wstring& input)
 {
-    interpreter sut(std::move(input), true);
+    std::wstringstream input_stream;
+	input_stream.str(input);
+
+    interpreter sut(input_stream, true);
 
     return sut.interpret();
 }
@@ -65,7 +68,7 @@ TEST_CASE( "Interpretation fails on bad syntax", "[interpreter]" ) {
     //REQUIRE_THROWS_MATCHES( do_interpret(L"50 ++ 50"), interpret_except, Catch::Message("Expected integer"));
     REQUIRE_THROWS_MATCHES( do_interpret(L"+"), parse_except, Catch::Message("Syntax error: Found end while searching for factor"));
     REQUIRE_THROWS_MATCHES( do_interpret(L"-"), parse_except, Catch::Message("Syntax error: Found end while searching for factor"));
-    REQUIRE_THROWS_MATCHES( do_interpret(L""), interpret_except, Catch::Message("string is empty"));
+    REQUIRE_THROWS_MATCHES( do_interpret(L""), parse_except, Catch::Message("Syntax error: string is empty"));
     REQUIRE_THROWS_MATCHES( do_interpret(L"5--"), parse_except, Catch::Message("Syntax error: Found end while searching for factor"));
 }
 
