@@ -72,7 +72,7 @@ END.
     REQUIRE_THROWS_MATCHES( do_interpret_program(program), runtime_type_error, Catch::Message("Runtime type error: Attempting to assign variable variable a with invalid type: Runtime type error: Attempting to convert expression of type built-in REAL to built-in INTEGER"));
 }
 
-TEST_CASE( "Interpretation from integer to real allowed", "[interpreter_program]" ) {
+TEST_CASE( "Implicit assignment from integer to real allowed", "[interpreter_program]" ) {
     const auto result = do_interpret_program(R"(
 PROGRAM Simple;
 VAR a: INTEGER; b: REAL;
