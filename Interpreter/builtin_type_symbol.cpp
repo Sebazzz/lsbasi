@@ -3,10 +3,22 @@
 #include "builtin_type_symbol.h"
 
 builtin_type_symbol::builtin_type_symbol(ast::builtin_type type):
-	type_symbol(var_type_to_string(type)),
-	m_type(type),
-	m_type_impl(std::make_unique<builtin_type_impl>(this))
+	type_symbol(var_type_to_string(type)), m_type(type)
 {
+	switch (type)
+	{
+	case ast::builtin_type::integer:
+		this->m_type_impl = std::make_unique<builtin_integer_impl>(this);
+		break;
+	case ast::builtin_type::real:
+		this->m_type_impl = std::make_unique<builtin_real_impl>(this);
+		break;
+	case ast::builtin_type::string:
+		this->m_type_impl = std::make_unique<builtin_string_impl>(this);
+		break;
+	default:
+		throw runtime_type_error("Unsupported type", {static_cast<int>(type), static_cast<int>(type)});
+	}
 }
 
 ast::builtin_type builtin_type_symbol::type() const

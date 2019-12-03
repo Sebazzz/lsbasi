@@ -12,43 +12,6 @@ void builtin_type_impl::assign_self_type(eval_value& eval_value) const
 	eval_value.type = std::shared_ptr<type_symbol>(this->m_symbol, null_deleter);
 }
 
-void builtin_type_impl::convert_value(ast::expression_value& expr_value, builtin_type_symbol& expr_type, line_info line_info) const
-{
-	// No conversion if same type
-	if (expr_type.type() == this->m_symbol->type())
-	{
-		switch (expr_type.type())
-		{
-			case ast::builtin_type::integer:
-			case ast::builtin_type::real:
-			case ast::builtin_type::string:
-				return;
-
-			default:
-				throw runtime_type_error(L"Attempting to assign expression of type " + expr_type.to_string() + L" to " + this->m_symbol->to_string(), line_info);
-		}
-	}
-	
-	// Implicit conversion if destination is of type real
-	if (expr_type.type() == ast::builtin_type::integer && this->m_symbol->type() == ast::builtin_type::real)
-	{
-		expr_value.real_val = expr_value.int_val;
-		return;
-	}
-
-	// Implicit conversion from real to int is not allowed
-	if (expr_type.type() == ast::builtin_type::real && this->m_symbol->type() == ast::builtin_type::integer)
-	{
-		throw runtime_type_error(L"Attempting to convert expression of type " + expr_type.to_string() + L" to " + this->m_symbol->to_string(), line_info);
-	}
-
-	// Implicit conversion from string to any is not allowed
-	if (expr_type.type() == ast::builtin_type::string || this->m_symbol->type() == ast::builtin_type::string)
-	{
-		throw runtime_type_error(L"Attempting to convert expression of type " + expr_type.to_string() + L" to " + this->m_symbol->to_string(), line_info);
-	}
-}
-
 builtin_type_impl::builtin_type_impl(builtin_type_symbol* builtin_type_symbol): m_symbol(builtin_type_symbol)
 {
 }
@@ -114,4 +77,57 @@ void builtin_type_impl::change_type(eval_value& eval_value, line_info) const
 			this->assign_self_type(eval_value);
 		}
 	}
+}
+
+void builtin_real_impl::convert_value(ast::expression_value& expr_value, builtin_type_symbol& expr_type, line_info line_info) const
+{
+	// Implicit conversion if destination is of type real
+	if (expr_type.type() == ast::builtin_type::integer)
+	{
+		expr_value.real_val = expr_value.int_val;
+		return;
+	}
+
+	// No conversion if same type
+	if (expr_type.type() != ast::builtin_type::real)
+	{
+		throw runtime_type_error(L"Attempting to assign expression of type " + expr_type.to_string() + L" to " + this->m_symbol->to_string(), line_info);
+	}
+}
+
+builtin_real_impl::builtin_real_impl(builtin_type_symbol* builtin_type_symbol):builtin_type_impl(builtin_type_symbol)
+{
+	
+}
+
+void builtin_integer_impl::convert_value(ast::expression_value&, builtin_type_symbol& expr_type,	line_info line_info) const
+{
+	// Implicit conversion from real to int is not allowed
+	if (expr_type.type() == ast::builtin_type::real)
+	{
+		throw runtime_type_error(L"Attempting to convert expression of type " + expr_type.to_string() + L" to " + this->m_symbol->to_string(), line_info);
+	}
+
+	// No conversion if same type
+	if (expr_type.type() != ast::builtin_type::integer)
+	{
+		throw runtime_type_error(L"Attempting to assign expression of type " + expr_type.to_string() + L" to " + this->m_symbol->to_string(), line_info);
+	}
+}
+
+builtin_integer_impl::builtin_integer_impl(builtin_type_symbol* builtin_type_symbol):builtin_type_impl(builtin_type_symbol)
+{
+}
+
+void builtin_string_impl::convert_value(ast::expression_value&, builtin_type_symbol& expr_type,	line_info line_info) const
+{
+	// No conversion if same type
+	if (expr_type.type() != ast::builtin_type::string)
+	{
+		throw runtime_type_error(L"Attempting to assign expression of type " + expr_type.to_string() + L" to " + this->m_symbol->to_string(), line_info);
+	}
+}
+
+builtin_string_impl::builtin_string_impl(builtin_type_symbol* builtin_type_symbol):builtin_type_impl(builtin_type_symbol)
+{
 }

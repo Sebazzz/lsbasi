@@ -116,7 +116,7 @@ END.
 
         REQUIRE_THROWS_MATCHES( do_interpret_program(program), 
 			runtime_type_error, 
-			Catch::Message("Runtime type error: Attempting to assign variable variable b with invalid type: Runtime type error: Attempting to convert expression of type built-in STRING to built-in REAL"));
+			Catch::Message("Runtime type error: Attempting to assign variable variable b with invalid type: Runtime type error: Attempting to assign expression of type built-in STRING to built-in REAL"));
 
 }
 
@@ -132,7 +132,7 @@ END.
 
         REQUIRE_THROWS_MATCHES( do_interpret_program(program), 
 			runtime_type_error, 
-			Catch::Message("Runtime type error: Attempting to assign variable variable b with invalid type: Runtime type error: Attempting to convert expression of type built-in STRING to built-in INTEGER"));
+			Catch::Message("Runtime type error: Attempting to assign variable variable b with invalid type: Runtime type error: Attempting to assign expression of type built-in STRING to built-in INTEGER"));
 
 }
 
@@ -152,6 +152,23 @@ END.
     REQUIRE( verify_string_symbol(result, L"b") == L"hello world" );
 }
 
+TEST_CASE( "Interpretation succeeds - program with string concatenation", "[interpreter_program]" ) {
+    const auto result = do_interpret_program(R"(
+PROGRAM Simple;
+VAR a, b, c: STRING;
+BEGIN       
+   a := 'hello';
+   b := 'world';
+   c := a + ' ' + b;
+END.        
+)");
+
+    REQUIRE( result.output == std::wstring(L"done") );
+
+    REQUIRE( verify_string_symbol(result, L"a") == L"hello" );
+    REQUIRE( verify_string_symbol(result, L"b") == L"world" );
+    REQUIRE( verify_string_symbol(result, L"c") == L"hello world" );
+}
 TEST_CASE( "Interpretation succeeds - program 1", "[interpreter_program]" ) {
     const auto result = do_interpret_program(R"(
 PROGRAM Simple;
