@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "builtin_type_impl.h"
+#include "interpret_math.h"
+#include "var.h"
 
 
 /**
@@ -12,22 +14,27 @@ void builtin_type_impl::assign_self_type(eval_value& eval_value) const
 	eval_value.type = std::shared_ptr<type_symbol>(this->m_symbol, null_deleter);
 }
 
+void builtin_type_impl::implicit_type_conversion(ast::expression_value&, builtin_type_symbol*) const
+{
+	throw internal_interpret_except("Type conversion is not implemented");
+}
+
 builtin_type_impl::builtin_type_impl(builtin_type_symbol* builtin_type_symbol): m_symbol(builtin_type_symbol)
 {
 }
 
-void builtin_type_impl::convert_value(eval_value& eval_value, line_info line_info) const
+void builtin_type_impl::execute_binary_operation(eval_value& result, const eval_value& right_val, token_type op, line_info line_info) const
 {
-	const auto& current_type = eval_value.type;
+	const auto& current_type = result.type;
 
 	// Try to find built-in type
 	{
 		const auto builtin_type = dynamic_cast<builtin_type_symbol*>(current_type.get());
 
-		if (builtin_type != nullptr)
+		if (builtin_type != nullptr && 
+			(builtin_type->type() == this->m_symbol->type() || this->supports_type_conversion_from(builtin_type->type(), token_type::assign)))
 		{
-			this->convert_value(eval_value.value, *builtin_type, line_info);
-			this->assign_self_type(eval_value);
+			this->execute_binary_operation(result, right_val.value, *builtin_type, op);
 			return;
 		}
 	}
@@ -38,60 +45,92 @@ void builtin_type_impl::convert_value(eval_value& eval_value, line_info line_inf
 		this->m_symbol->to_string() + L" from " + current_type->to_string(), line_info);
 }
 
-void builtin_type_impl::change_type(eval_value& eval_value, line_info) const
+bool builtin_type_impl::supports_implicit_type_conversion_from(symbol_type_ptr<type_symbol> type, token_type op) const
 {
-	const auto& current_type = eval_value.type;
-	
-	// Try to find built-in type
-	const auto eval_value_builtin_type = dynamic_cast<builtin_type_symbol*>(current_type.get());
+	const auto builtin_type = dynamic_cast<builtin_type_symbol*>(type.get());
 
+	if (builtin_type != nullptr)
 	{
-		if (eval_value_builtin_type != nullptr)
-		{
-			if (eval_value_builtin_type->type() == this->m_symbol->type() ||
-				eval_value_builtin_type->type() == ast::builtin_type::real /*Widest type available*/)
-			{
-				// Nothing to do
-				return;
-			}
-
-			// At this point we are a int or real
-			// The incoming value is a int or unknown
-
-			switch (this->m_symbol->type())
-			{
-				
-			case ast::builtin_type::integer:
-				eval_value.value.int_val = static_cast<int>(eval_value.value.real_val);
-				break;
-				
-			case ast::builtin_type::real:
-				eval_value.value.real_val = eval_value.value.int_val;
-				break;
-
-				// Ignore unhandled types
-			default:
-				return;
-			}
-			
-			this->assign_self_type(eval_value);
-		}
+		// Assignment from same type is always allowed
+		return builtin_type->type() == this->m_symbol->type() || 
+			   this->supports_type_conversion_from(builtin_type->type(), op); // Else the derived impl may know more
 	}
+
+	return false;
 }
 
-void builtin_real_impl::convert_value(ast::expression_value& expr_value, builtin_type_symbol& expr_type, line_info line_info) const
+void builtin_type_impl::implicit_type_conversion(eval_value& value) const
 {
-	// Implicit conversion if destination is of type real
-	if (expr_type.type() == ast::builtin_type::integer)
+	if (!this->supports_implicit_type_conversion_from(value.type, token_type::assign))
 	{
-		expr_value.real_val = expr_value.int_val;
+		throw internal_interpret_except("Support method should have been called");
+	}
+
+	const auto builtin_type = dynamic_cast<builtin_type_symbol*>(value.type.get());
+	if (builtin_type == nullptr)
+	{
+		throw internal_interpret_except("Cannot find built-in type in evaluation value");
+	}
+	
+	if (builtin_type->type() == this->m_symbol->type())
+	{
 		return;
 	}
 
-	// No conversion if same type
-	if (expr_type.type() != ast::builtin_type::real)
+	this->implicit_type_conversion(value.value, builtin_type);
+	this->assign_self_type(value);
+}
+
+bool builtin_real_impl::supports_type_conversion_from(ast::builtin_type from_type, token_type) const
+{
+	// Widening from integer from real is allowed
+	return from_type == ast::builtin_type::integer;
+}
+
+void builtin_real_impl::execute_binary_operation(eval_value& result, const expression_value& from, const builtin_type_symbol& right_val, token_type op) const
+{
+	// Implicit conversion to real
+	expression_value from_op = from;
+	if (right_val.type() == ast::builtin_type::integer)
 	{
-		throw runtime_type_error(L"Attempting to assign expression of type " + expr_type.to_string() + L" to " + this->m_symbol->to_string(), line_info);
+		from_op.real_val = from.int_val;
+	}
+
+	switch (op) {
+	case token_type::plus:
+		add_interpret(result.value.real_val, from_op.real_val);
+		break;
+		
+	case token_type::minus:
+		subtract_interpret(result.value.real_val, from_op.real_val);
+		break;
+		
+	case token_type::multiply:
+		multiply_interpret(result.value.real_val, from_op.real_val);
+		break;
+
+	// FIXME: we should probably error out if wrong operator is used
+	case token_type::divide_integer:
+		divide_interpret(result.value.real_val, from_op.real_val);
+		break;
+
+	case token_type::divide_real:
+		divide_interpret(result.value.real_val, from_op.real_val);
+		break;
+		
+	default:
+		throw exec_error("Invalid operator for bin_op: " + std::to_string(static_cast<int>(op)), {-1,-1});
+	}
+}
+
+void builtin_real_impl::implicit_type_conversion(ast::expression_value& value, builtin_type_symbol* builtin_type) const
+{
+	if (builtin_type->type() == ast::builtin_type::integer)
+	{
+		value.real_val = value.int_val;
+	} else
+	{
+		throw internal_interpret_except("Type conversion is not allowed");
 	}
 }
 
@@ -100,18 +139,35 @@ builtin_real_impl::builtin_real_impl(builtin_type_symbol* builtin_type_symbol):b
 	
 }
 
-void builtin_integer_impl::convert_value(ast::expression_value&, builtin_type_symbol& expr_type,	line_info line_info) const
+bool builtin_integer_impl::supports_type_conversion_from(ast::builtin_type from_type, token_type) const
 {
-	// Implicit conversion from real to int is not allowed
-	if (expr_type.type() == ast::builtin_type::real)
-	{
-		throw runtime_type_error(L"Attempting to convert expression of type " + expr_type.to_string() + L" to " + this->m_symbol->to_string(), line_info);
-	}
+	return from_type == ast::builtin_type::integer;
+}
 
-	// No conversion if same type
-	if (expr_type.type() != ast::builtin_type::integer)
-	{
-		throw runtime_type_error(L"Attempting to assign expression of type " + expr_type.to_string() + L" to " + this->m_symbol->to_string(), line_info);
+void builtin_integer_impl::execute_binary_operation(eval_value& result, const expression_value& from, const builtin_type_symbol&, token_type op) const
+{
+	switch (op) {
+	case token_type::plus:
+		add_interpret(result.value.int_val, from.int_val);
+		break;
+		
+	case token_type::minus:
+		subtract_interpret(result.value.int_val, from.int_val);
+		break;
+		
+	case token_type::multiply:
+		multiply_interpret(result.value.int_val, from.int_val);
+		break;
+
+	case token_type::divide_integer:
+		divide_interpret(result.value.int_val, from.int_val);
+		break;
+
+	case token_type::divide_real:
+		throw exec_error("REAL division not supported for integers", {-1,-1});
+		
+	default:
+		throw exec_error("Invalid operator for bin_op: " + std::to_string(static_cast<int>(op)), {-1,-1});
 	}
 }
 
@@ -119,13 +175,22 @@ builtin_integer_impl::builtin_integer_impl(builtin_type_symbol* builtin_type_sym
 {
 }
 
-void builtin_string_impl::convert_value(ast::expression_value&, builtin_type_symbol& expr_type,	line_info line_info) const
+bool builtin_string_impl::supports_type_conversion_from(ast::builtin_type from_type, token_type) const
 {
-	// No conversion if same type
-	if (expr_type.type() != ast::builtin_type::string)
+	return from_type == ast::builtin_type::string; // This method will actually never be called
+}
+
+void builtin_string_impl::execute_binary_operation(eval_value& current, const expression_value& from, const builtin_type_symbol&, token_type op) const
+{
+	if (op != token_type::plus)
 	{
-		throw runtime_type_error(L"Attempting to assign expression of type " + expr_type.to_string() + L" to " + this->m_symbol->to_string(), line_info);
+		throw exec_error("Invalid operator for string", {-1,-1});
 	}
+
+	// FIXME: this is a memory leak, we need to add this to the string pool
+	const auto new_str = new builtin_string(*current.value.string_ptr_val);
+	new_str->append(*from.string_ptr_val);
+	current.value.string_ptr_val = new_str;
 }
 
 builtin_string_impl::builtin_string_impl(builtin_type_symbol* builtin_type_symbol):builtin_type_impl(builtin_type_symbol)

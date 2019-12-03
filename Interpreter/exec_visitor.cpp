@@ -33,14 +33,14 @@ void exec_visitor::visit(ast::assign& assign)
 	const auto identifier = assign.left()->identifier();
 	const auto var_symbol = ctx.symbols.get<variable_symbol>(identifier);
 	const auto type = ctx.symbols.get<type_symbol>(var_symbol->variable().type()->identifier());
+	const auto& assign_type_impl = type->type_impl();
 
-	try
+	if (!assign_type_impl.supports_implicit_type_conversion_from(result.type, token_type::assign))
 	{
-		type->type_impl().convert_value(result, assign.get_line_info());
-	} catch (interpret_except& e)
-	{
-		throw runtime_type_error(L"Attempting to assign variable " + var_symbol->to_string() + L" with invalid type: " + string_to_wstring(e.what()), assign.get_line_info());
+		throw runtime_type_error(L"Attempting to assign variable " + var_symbol->to_string() + L" (which is of type " + type->to_string() + L") from expression with invalid type: " + result.type->to_string(), assign.get_line_info());
 	}
+
+	assign_type_impl.implicit_type_conversion(result);
 	
 	ctx.memory->set(var_symbol, result.value);
 }
@@ -122,14 +122,13 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 
 		// Assign it with conversion
 		auto param_type = proc_ctx.symbols.get<type_symbol>(param->type()->identifier());
-
-		try
+		
+		const auto& assign_type_impl = param_type->type_impl();
+		if (!assign_type_impl.supports_implicit_type_conversion_from(arg_value.type, token_type::assign))
 		{
-			param_type->type_impl().convert_value(arg_value, arg->get_line_info());
-		} catch (interpret_except& e)
-		{
-			throw runtime_type_error(L"Attempting to assign parameter " + param->identifier() + L" of " + procedure_symbol->to_string() + L" with invalid type: " + string_to_wstring(e.what()), arg->get_line_info());
+			throw runtime_type_error(L"Attempting to assign parameter " + param->identifier() + L" of " + procedure_symbol->to_string() + L" with invalid type: " + arg_value.type->to_string(), arg->get_line_info());
 		}
+		assign_type_impl.implicit_type_conversion(arg_value);
 
 		auto param_var = proc_ctx.symbols.get<variable_symbol>(param->identifier());
 		proc_ctx.memory->set(param_var, arg_value.value);

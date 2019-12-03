@@ -33,12 +33,12 @@ TEST_CASE( "Interpretation succeeds - plus/minus - multi-digit", "[interpreter]"
 }
 
 TEST_CASE( "Interpretation succeeds - multiply/divide", "[interpreter]" ) {
-    REQUIRE( do_interpret(L"-50 div 2") == std::wstring(L"-25") );
+    //REQUIRE( do_interpret(L"-50 div 2") == std::wstring(L"-25") );
     REQUIRE( do_interpret(L"-50/2") == std::wstring(L"-25.000000") );
 
-    REQUIRE( do_interpret(L"10*31") == std::wstring(L"310") );
-    REQUIRE( do_interpret(L"50 div 2") == std::wstring(L"25") );
-    REQUIRE( do_interpret(L"50 / 2") == std::wstring(L"25.000000") );
+    //REQUIRE( do_interpret(L"10*31") == std::wstring(L"310") );
+    //REQUIRE( do_interpret(L"50 div 2") == std::wstring(L"25") );
+    //REQUIRE( do_interpret(L"50 / 2") == std::wstring(L"25.000000") );
 }
 
 TEST_CASE( "Interpretation succeeds - mixed multiple terms", "[interpreter]" ) {

@@ -19,14 +19,19 @@ public:
     type_impl& operator=(type_impl&& other) noexcept = delete;
 
 	/**
-	 * Assign a evaluation value (eval_value) to the current type
+	 * Executes a binary operation on the the right value and the result (being the current type)
 	 */
-    virtual void convert_value(eval_value& eval_value, line_info line_info) const = 0;
+    virtual void execute_binary_operation(eval_value& result, const eval_value& right_val, token_type op, line_info line_info) const = 0;
 
 	/**
-	 * Widens the evaluation value (eval_value) to the current type
+	 * Execute implicit type conversion
 	 */
-    virtual void change_type(eval_value& eval_value, line_info line_info) const = 0;
+	virtual void implicit_type_conversion(eval_value& value) const = 0;
+
+	/**
+	 * Gets if the current type supports conversion from the specific type
+	 */
+	virtual bool supports_implicit_type_conversion_from(symbol_type_ptr<type_symbol> type, token_type op) const = 0;
 };
 
 

@@ -85,7 +85,10 @@ BEGIN
 END.        
 )";
 
-    REQUIRE_THROWS_MATCHES( do_interpret_program(program), runtime_type_error, Catch::Message("Runtime type error: Attempting to assign variable variable a with invalid type: Runtime type error: Attempting to convert expression of type built-in REAL to built-in INTEGER"));
+    REQUIRE_THROWS_MATCHES(
+		do_interpret_program(program),
+		runtime_type_error, 
+		Catch::Message("Runtime type error: Attempting to assign variable variable a (which is of type built-in INTEGER) from expression with invalid type: built-in REAL"));
 }
 
 TEST_CASE( "Implicit assignment from integer to real allowed", "[interpreter_program]" ) {
@@ -116,7 +119,7 @@ END.
 
         REQUIRE_THROWS_MATCHES( do_interpret_program(program), 
 			runtime_type_error, 
-			Catch::Message("Runtime type error: Attempting to assign variable variable b with invalid type: Runtime type error: Attempting to assign expression of type built-in STRING to built-in REAL"));
+			Catch::Message("Runtime type error: Attempting to assign variable variable b (which is of type built-in REAL) from expression with invalid type: built-in STRING"));
 
 }
 
@@ -132,7 +135,7 @@ END.
 
         REQUIRE_THROWS_MATCHES( do_interpret_program(program), 
 			runtime_type_error, 
-			Catch::Message("Runtime type error: Attempting to assign variable variable b with invalid type: Runtime type error: Attempting to assign expression of type built-in STRING to built-in INTEGER"));
+			Catch::Message("Runtime type error: Attempting to assign variable variable b (which is of type built-in INTEGER) from expression with invalid type: built-in STRING"));
 
 }
 

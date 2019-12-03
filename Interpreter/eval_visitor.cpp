@@ -15,61 +15,66 @@ eval_visitor::eval_visitor() : m_result { builtin_type_symbol::get_for_builtin_t
 
 void eval_visitor::visit(ast::bin_op& binaryOperator)
 {
-	eval_value result = this->accept(*binaryOperator.left());
+	eval_value left_val = this->accept(*binaryOperator.left());
 	eval_value right_val = this->accept(*binaryOperator.right());
 
-	// Implicit conversion to real
-	const bool operator_has_real_conversion = binaryOperator.op() == token_type::divide_real;
-
-	// ... Call to convert result to real if necessary
-	if (operator_has_real_conversion)
+	// Special case for real division
+	if (binaryOperator.op() == token_type::divide_real)
 	{
-		const auto real_type_symbol = builtin_type_symbol::get_for_builtin_type(ast::builtin_type::real);
-		const auto& real_type_impl = real_type_symbol->type_impl();
-		
-		real_type_impl.convert_value(right_val, binaryOperator.get_line_info());
-		real_type_impl.convert_value(result, binaryOperator.get_line_info());
+		// This lifts all types to a real
+		// TODO: I'd like to look this up through the symbol table, but this visitor has no concept of the symbol table
+		const auto real_type = builtin_type_symbol::get_for_builtin_type(ast::builtin_type::real);
+
+		if (left_val.type != real_type && real_type->type_impl().supports_implicit_type_conversion_from(left_val.type, token_type::divide_real))
+		{
+			real_type->type_impl().implicit_type_conversion(left_val);
+		}
 	}
 
-	// ... Call to convert value to result type if necessary
-	right_val.type->type_impl().change_type(result, binaryOperator.get_line_info());
-	result.type->type_impl().convert_value(right_val, binaryOperator.get_line_info());
+	// Get the types and do type widening
+	const auto& left_val_type_impl = left_val.type->type_impl();
+	const auto& right_val_type_impl = right_val.type->type_impl();
+
+	const bool right_to_result_conversion_allowed = left_val_type_impl.supports_implicit_type_conversion_from(right_val.type, binaryOperator.op());
+	const bool result_to_right_conversion_allowed = right_val_type_impl.supports_implicit_type_conversion_from(left_val.type, binaryOperator.op());
+
+	// In a type conversion you always have a widening of types if the types are not the same.
+	// Otherwise the types are simply not compatible.
+	if (!right_to_result_conversion_allowed && !result_to_right_conversion_allowed)
+	{
+		throw runtime_type_error(L"Unsupported type conversion to " + right_val.type->to_string() + L" from " + left_val.type->to_string(), binaryOperator.get_line_info());
+	}
+
+	const type_impl* result_type_impl;
+	if (right_to_result_conversion_allowed)
+	{
+		left_val_type_impl.implicit_type_conversion(right_val);
+		result_type_impl = &left_val_type_impl;
+	} else if (result_to_right_conversion_allowed)
+	{
+		right_val_type_impl.implicit_type_conversion(left_val);
+		result_type_impl = &right_val_type_impl;
+	} else
+	{
+		throw internal_interpret_except("At this point, both types should be the same");
+	}
 
 	try
 	{
-		switch (binaryOperator.op())
-		{
-		case token_type::plus:
-			add_interpret(result, right_val);
-			break;
-			
-		case token_type::minus:
-			subtract_interpret(result, right_val);
-			break;
-			
-		case token_type::multiply:
-			multiply_interpret(result, right_val);
-			break;
-
-		// FIXME: we should probably error out if wrong operator is used
-		case token_type::divide_integer:
-			divide_interpret(result, right_val);
-			break;
-
-		case token_type::divide_real:
-			divide_interpret(result, right_val);
-			break;
-			
-		default:
-			throw exec_error(L"Invalid operator for bin_op: " + binaryOperator.get_token().to_string(), binaryOperator.get_line_info());
-		}
-	} catch (exec_error& e)
+		result_type_impl->execute_binary_operation(left_val, right_val, binaryOperator.op(), binaryOperator.get_line_info());
+	}
+	catch (runtime_type_error& e)
+	{
+		const std::string error_message = "Type error in binary operation: " + wstring_to_string(binaryOperator.get_token().to_string()) + " - " + std::string(e.what());
+		throw runtime_type_error(error_message, binaryOperator.get_line_info());
+	}
+	catch (exec_error& e)
 	{
 		const std::string error_message = "Unable to execute binary operation: " + wstring_to_string(binaryOperator.get_token().to_string()) + std::string(" - ") + std::string(e.what());
 		throw exec_error(error_message, binaryOperator.get_line_info());
 	}
 
-	this->register_visit_result(result);
+	this->register_visit_result(left_val);
 }
 
 void eval_visitor::visit(ast::num& number)
@@ -97,21 +102,22 @@ void eval_visitor::visit(ast::unary_op& unaryOperator)
 	const auto expr = unaryOperator.expr();
 	auto result = this->accept(*expr);
 
-	switch (unaryOperator.op())
+	if (unaryOperator.op() == token_type::minus)
 	{
-	case token_type::plus:
-		// No-op
-		break;
-	case token_type::minus:
-		negate_interpret(result);
-		break;
-	default:
+		eval_value negative_op = {
+			// TODO: I'd like to look this up through the symbol table, but this visitor has no concept of the symbol table
+			builtin_type_symbol::get_for_builtin_type(ast::builtin_type::integer),
+			expression_value(static_cast<builtin_integer>(-1))
+		};
+		
+		result.type->type_impl().implicit_type_conversion(negative_op);
+		result.type->type_impl().execute_binary_operation(result, negative_op, token_type::multiply, unaryOperator.get_line_info());
+	} else if (unaryOperator.op() != token_type::plus)
+	{
 		throw exec_error(L"Unsupported unary operation: " + unaryOperator.get_token().to_string(), unaryOperator.get_line_info());
 	}
-
-	// ReSharper disable CppSomeObjectMembersMightNotBeInitialized - false positive
+	
 	this->register_visit_result(result);
-	// ReSharper restore CppSomeObjectMembersMightNotBeInitialized
 }
 
 eval_value eval_visitor::result() const

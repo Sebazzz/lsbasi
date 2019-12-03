@@ -10,9 +10,23 @@ protected:
 	 */
 	builtin_type_symbol* m_symbol;
 	
+	virtual void execute_binary_operation(eval_value& current, const ast::expression_value& from, const builtin_type_symbol& right_val, token_type op) const = 0;
+
+	/**
+	 * Helper function to copy the symbol type pointer
+	 */
 	virtual void assign_self_type(eval_value& eval_value) const;
-	virtual void convert_value(ast::expression_value& expr_value, builtin_type_symbol& expr_type, line_info line_info) const = 0;
 	
+	/**
+	 * Gets if the current type supports conversion from the specific type
+	 */
+	virtual bool supports_type_conversion_from(ast::builtin_type from_type, token_type op) const = 0;
+
+	/**
+	 * Converts the specified value to the current type
+	 */
+	virtual void implicit_type_conversion(ast::expression_value& value, builtin_type_symbol* builtin_type) const;
+
 public:
 	explicit builtin_type_impl(builtin_type_symbol* builtin_type_symbol);
 
@@ -22,14 +36,24 @@ public:
 	builtin_type_impl& operator=(const builtin_type_impl& other) = delete;
 	builtin_type_impl& operator=(builtin_type_impl&& other) noexcept = delete;
 
-	void convert_value(eval_value& eval_value, line_info line_info) const override;
-	void change_type(eval_value& eval_value, line_info line_info) const override;
+	/**
+	 * Gets if the current type supports conversion from the specific type
+	 */
+	bool supports_implicit_type_conversion_from(symbol_type_ptr<type_symbol> type, token_type op) const override;
+
+	void implicit_type_conversion(eval_value& value) const override;
+	
+	void execute_binary_operation(eval_value& result, const eval_value& right_val, token_type op, line_info line_info) const override;
 };
 
 class builtin_real_impl final : public builtin_type_impl
 {
 protected:
-	void convert_value(ast::expression_value& expr_value, builtin_type_symbol& expr_type, line_info line_info) const override;
+	[[nodiscard]] bool supports_type_conversion_from(ast::builtin_type from_type, token_type op) const override;
+
+	void execute_binary_operation(eval_value& result, const ast::expression_value& from, const builtin_type_symbol& right_val, token_type op) const override;
+
+	void implicit_type_conversion(ast::expression_value& value, builtin_type_symbol* builtin_type) const override;
 	
 public:
 	explicit builtin_real_impl(builtin_type_symbol* builtin_type_symbol);
@@ -41,11 +65,12 @@ public:
 	builtin_real_impl& operator=(builtin_real_impl&& other) noexcept = delete;
 };
 
-
 class builtin_integer_impl final : public builtin_type_impl
 {
 protected:
-	void convert_value(ast::expression_value& expr_value, builtin_type_symbol& expr_type, line_info line_info) const override;
+	[[nodiscard]] bool supports_type_conversion_from(ast::builtin_type from_type, token_type op) const override;
+
+	void execute_binary_operation(eval_value& result, const ast::expression_value& from, const builtin_type_symbol& right_val, token_type op) const override;
 	
 public:
 	explicit builtin_integer_impl(builtin_type_symbol* builtin_type_symbol);
@@ -60,7 +85,9 @@ public:
 class builtin_string_impl final : public builtin_type_impl
 {
 protected:
-	void convert_value(ast::expression_value& expr_value, builtin_type_symbol& expr_type, line_info line_info) const override;
+	[[nodiscard]] bool supports_type_conversion_from(ast::builtin_type from_type, token_type op) const override;
+	
+	void execute_binary_operation(eval_value& current, const ast::expression_value& from, const builtin_type_symbol& right_val, token_type op) const override;
 	
 public:
 	explicit builtin_string_impl(builtin_type_symbol* builtin_type_symbol);
