@@ -2,6 +2,7 @@
 #include "builtin_type_impl.h"
 #include "interpret_math.h"
 #include "var.h"
+#include <cmath>
 
 void builtin_type_impl::assign_self_type(eval_value& eval_value, type_operation_context& type_operation_context) const
 {
@@ -103,8 +104,11 @@ void builtin_real_impl::execute_binary_operation(eval_value& result, const expre
 		multiply_interpret(result.value.real_val, from_op.real_val);
 		break;
 
-	// FIXME: we should probably error out if wrong operator is used
 	case token_type::divide_integer:
+		// Integer division of a real. This calls for truncation.
+		from_op.real_val = trunc(from_op.real_val);
+		result.value.real_val = trunc(result.value.real_val);
+		
 		divide_interpret(result.value.real_val, from_op.real_val);
 		break;
 
