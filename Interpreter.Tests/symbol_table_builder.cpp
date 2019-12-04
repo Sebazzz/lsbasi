@@ -132,6 +132,28 @@ END.
 	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(procedure_symbol) );
 }
 
+TEST_CASE( "Symbol lookup succeeds - procedures declared not in order", "[symbol_table_builder]" ) {
+    const auto result = do_parse_program(R"(
+PROGRAM Semi;                           
+
+PROCEDURE P1;
+BEGIN
+    P2()
+END;
+
+PROCEDURE P2;
+BEGIN
+
+END;
+
+BEGIN       
+END.        
+)");
+
+	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(procedure_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"P2")) == typeid(procedure_symbol) );
+}
+
 TEST_CASE( "Symbol lookup succeeds - procedure with parameters", "[symbol_table_builder]" ) {
     const auto result = do_parse_program(R"(
 PROGRAM Semi;
