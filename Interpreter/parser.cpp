@@ -183,7 +183,7 @@ ast_ptr parser::handle_term(lexer_iterator& it) const
 		{
 			case token_type::multiply:
 			case token_type::divide_integer:
-			case token_type::divide_real: // FIXME: until we implement real division
+			case token_type::divide_real:
 				it.advance();
 				result = make_ast_ptr<bin_op>(result, operatorType, handle_factor(it), token);
 				break;
