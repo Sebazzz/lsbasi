@@ -5,23 +5,22 @@
 #include "eval_value.h"
 #include "scope_context.h"
 #include "interpreter_context.h"
+#include <optional>
 
 class eval_visitor abstract : public ast_node_visitor
 {
 private:
-	eval_value m_result;
-
 	/*
-	 * Hold the last evaluated items. This to work around that we don't have visitor with return type.
+	 * Hold the last evaluated item. This to work around that we don't have visitor with return type.
 	 */
-	std::stack<eval_value> m_stack;
+	std::optional<eval_value> m_result;
 
 protected:
 	/**
 	 * Helper function to visit the specified node and get the result back
 	 */
 	template <class T>
-	eval_value accept(T& node);
+	eval_value visit_with_result(T& node);
 
 	/**
 	 * Helper method to register the result for further up the call stack
@@ -55,17 +54,17 @@ public:
 };
 
 template <class T>
-eval_value eval_visitor::accept(T& node)
+eval_value eval_visitor::visit_with_result(T& node)
 {
 	node.accept(*this);
 
-	if (this->m_stack.empty())
+	if (!this->m_result)
 	{
-		throw exec_error(std::string("Previous node accept did not yield a value: ") + typeid(node).name(), node.get_line_info());
+		throw internal_interpret_except(std::string("Previous node accept did not yield a value: ") + typeid(node).name(), node.get_line_info());
 	}
 
-	const eval_value val = this->m_stack.top();
-	this->m_stack.pop();
+	const eval_value val = this->m_result.value();
+	this->m_result.reset();
 	return val;
 }
 

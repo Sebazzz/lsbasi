@@ -39,7 +39,7 @@ void exec_visitor::visit(ast::assign& assign)
 
 	// Get result
 	const auto assign_expr = assign.right();
-	auto result = this->accept(*assign_expr);
+	auto result = this->visit_with_result(*assign_expr);
 
 	// Register result
 	const auto identifier = assign.left()->identifier();
@@ -145,7 +145,7 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 		type_operation_context.line_info = arg->get_line_info();
 
 		// Resolve the value
-		eval_value arg_value = this->accept(*arg);
+		eval_value arg_value = this->visit_with_result(*arg);
 
 		// Assign it with conversion
 		auto param_type = proc_ctx.symbols.get<type_symbol>(param->type()->identifier());

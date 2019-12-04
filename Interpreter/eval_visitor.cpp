@@ -6,17 +6,19 @@
 
 void eval_visitor::register_visit_result(const eval_value& result)
 {
-	this->m_stack.push(result);
+	this->m_result = result;
 }
 
-eval_visitor::eval_visitor() : m_result { builtin_type_symbol::get_for_builtin_type(ast::builtin_type::integer), 0 }
+eval_visitor::eval_visitor()
 {
+	// Set a static return value
+	this->m_result = { builtin_type_symbol::get_for_builtin_type(ast::builtin_type::integer), 0 };
 }
 
 void eval_visitor::visit(ast::bin_op& binaryOperator)
 {
-	eval_value left_val = this->accept(*binaryOperator.left());
-	eval_value right_val = this->accept(*binaryOperator.right());
+	eval_value left_val = this->visit_with_result(*binaryOperator.left());
+	eval_value right_val = this->visit_with_result(*binaryOperator.right());
 
 	// Type context required for type operations
 	type_operation_context type_operation_context = {
@@ -93,11 +95,7 @@ void eval_visitor::visit(ast::ast_node& node)
 {
 	ast_node_visitor::visit(node);
 
-	if (this->m_stack.empty() == false)
-	{
-		this->m_result = this->m_stack.top();
-		this->m_stack.pop();
-	} else
+	if (!this->m_result)
 	{
 		throw exec_error(L"Expected the expression to return a value", node.get_line_info());
 	}
@@ -106,7 +104,7 @@ void eval_visitor::visit(ast::ast_node& node)
 void eval_visitor::visit(ast::unary_op& unaryOperator)
 {
 	const auto expr = unaryOperator.expr();
-	auto result = this->accept(*expr);
+	auto result = this->visit_with_result(*expr);
 
 	if (unaryOperator.op() == token_type::minus)
 	{
@@ -135,5 +133,5 @@ void eval_visitor::visit(ast::unary_op& unaryOperator)
 
 eval_value eval_visitor::result() const
 {
-	return this->m_result;
+	return this->m_result.value();
 }
