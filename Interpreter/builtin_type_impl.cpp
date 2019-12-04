@@ -3,18 +3,12 @@
 #include "interpret_math.h"
 #include "var.h"
 
-
-/**
- * We put in a shared pointer but since we don't own the object, don't delete it.
- */
-void null_deleter(type_symbol*) {}
-
-void builtin_type_impl::assign_self_type(eval_value& eval_value) const
+void builtin_type_impl::assign_self_type(eval_value& eval_value, type_operation_context& type_operation_context) const
 {
-	eval_value.type = std::shared_ptr<type_symbol>(this->m_symbol, null_deleter);
+	eval_value.type = type_operation_context.symbol_table.get(this->m_symbol->type());
 }
 
-void builtin_type_impl::implicit_type_conversion(ast::expression_value&, builtin_type_symbol*) const
+void builtin_type_impl::implicit_type_conversion(ast::expression_value&, builtin_type_symbol*, type_operation_context&) const
 {
 	throw internal_interpret_except("Type conversion is not implemented");
 }
@@ -23,7 +17,7 @@ builtin_type_impl::builtin_type_impl(builtin_type_symbol* builtin_type_symbol): 
 {
 }
 
-void builtin_type_impl::execute_binary_operation(eval_value& result, const eval_value& right_val, token_type op, line_info line_info) const
+void builtin_type_impl::execute_binary_operation(eval_value& result, const eval_value& right_val, token_type op, type_operation_context& type_operation_context) const
 {
 	const auto& current_type = result.type;
 
@@ -34,7 +28,7 @@ void builtin_type_impl::execute_binary_operation(eval_value& result, const eval_
 		if (builtin_type != nullptr && 
 			(builtin_type->type() == this->m_symbol->type() || this->supports_type_conversion_from(builtin_type->type(), token_type::assign)))
 		{
-			this->execute_binary_operation(result, right_val.value, *builtin_type, op);
+			this->execute_binary_operation(result, right_val.value, *builtin_type, op, type_operation_context);
 			return;
 		}
 	}
@@ -42,7 +36,7 @@ void builtin_type_impl::execute_binary_operation(eval_value& result, const eval_
 	// It was not a built-in type.
 	// This type conversion is not supported (note: at time of writing we don't have anything except built-in types)
 	throw runtime_type_error(L"Unsupported type conversion to " + 
-		this->m_symbol->to_string() + L" from " + current_type->to_string(), line_info);
+		this->m_symbol->to_string() + L" from " + current_type->to_string(), type_operation_context.line_info);
 }
 
 bool builtin_type_impl::supports_implicit_type_conversion_from(symbol_type_ptr<type_symbol> type, token_type op) const
@@ -59,7 +53,7 @@ bool builtin_type_impl::supports_implicit_type_conversion_from(symbol_type_ptr<t
 	return false;
 }
 
-void builtin_type_impl::implicit_type_conversion(eval_value& value) const
+void builtin_type_impl::implicit_type_conversion(eval_value& value, type_operation_context& type_operation_context) const
 {
 	if (!this->supports_implicit_type_conversion_from(value.type, token_type::assign))
 	{
@@ -77,8 +71,8 @@ void builtin_type_impl::implicit_type_conversion(eval_value& value) const
 		return;
 	}
 
-	this->implicit_type_conversion(value.value, builtin_type);
-	this->assign_self_type(value);
+	this->implicit_type_conversion(value.value, builtin_type, type_operation_context);
+	this->assign_self_type(value, type_operation_context);
 }
 
 bool builtin_real_impl::supports_type_conversion_from(ast::builtin_type from_type, token_type) const
@@ -87,7 +81,7 @@ bool builtin_real_impl::supports_type_conversion_from(ast::builtin_type from_typ
 	return from_type == ast::builtin_type::integer;
 }
 
-void builtin_real_impl::execute_binary_operation(eval_value& result, const expression_value& from, const builtin_type_symbol& right_val, token_type op) const
+void builtin_real_impl::execute_binary_operation(eval_value& result, const expression_value& from, const builtin_type_symbol& right_val, token_type op, type_operation_context&) const
 {
 	// Implicit conversion to real
 	expression_value from_op = from;
@@ -123,7 +117,7 @@ void builtin_real_impl::execute_binary_operation(eval_value& result, const expre
 	}
 }
 
-void builtin_real_impl::implicit_type_conversion(ast::expression_value& value, builtin_type_symbol* builtin_type) const
+void builtin_real_impl::implicit_type_conversion(ast::expression_value& value, builtin_type_symbol* builtin_type, type_operation_context&) const
 {
 	if (builtin_type->type() == ast::builtin_type::integer)
 	{
@@ -144,7 +138,7 @@ bool builtin_integer_impl::supports_type_conversion_from(ast::builtin_type from_
 	return from_type == ast::builtin_type::integer;
 }
 
-void builtin_integer_impl::execute_binary_operation(eval_value& result, const expression_value& from, const builtin_type_symbol&, token_type op) const
+void builtin_integer_impl::execute_binary_operation(eval_value& result, const expression_value& from, const builtin_type_symbol&, token_type op, type_operation_context&) const
 {
 	switch (op) {
 	case token_type::plus:
@@ -180,17 +174,17 @@ bool builtin_string_impl::supports_type_conversion_from(ast::builtin_type from_t
 	return from_type == ast::builtin_type::string; // This method will actually never be called
 }
 
-void builtin_string_impl::execute_binary_operation(eval_value& current, const expression_value& from, const builtin_type_symbol&, token_type op) const
+void builtin_string_impl::execute_binary_operation(eval_value& current, const expression_value& from, const builtin_type_symbol&, token_type op, type_operation_context& type_operation_context) const
 {
 	if (op != token_type::plus)
 	{
 		throw exec_error("Invalid operator for string", {-1,-1});
 	}
 
-	// FIXME: this is a memory leak, we need to add this to the string pool
-	const auto new_str = new builtin_string(*current.value.string_ptr_val);
-	new_str->append(*from.string_ptr_val);
-	current.value.string_ptr_val = new_str;
+	// Add this to the string pool
+	auto new_str = builtin_string(*current.value.string_ptr_val);
+	new_str.append(*from.string_ptr_val);
+	current.value.string_ptr_val = type_operation_context.interpreter_context.string_pool.get_or_add(new_str);
 }
 
 builtin_string_impl::builtin_string_impl(builtin_type_symbol* builtin_type_symbol):builtin_type_impl(builtin_type_symbol)

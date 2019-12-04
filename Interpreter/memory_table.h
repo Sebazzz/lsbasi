@@ -21,7 +21,7 @@ private:
 	 */
 	memory_table* m_parent = nullptr;
 
-	explicit memory_table(memory_table* parent);\
+	explicit memory_table(memory_table* parent);
 	
 
 public:

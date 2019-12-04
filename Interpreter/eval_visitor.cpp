@@ -18,16 +18,22 @@ void eval_visitor::visit(ast::bin_op& binaryOperator)
 	eval_value left_val = this->accept(*binaryOperator.left());
 	eval_value right_val = this->accept(*binaryOperator.right());
 
+	// Type context required for type operations
+	type_operation_context type_operation_context = {
+		this->get_interpreter_context(),
+		this->get_current_scope().symbols,
+		binaryOperator.get_line_info()
+	};
+	
 	// Special case for real division
 	if (binaryOperator.op() == token_type::divide_real)
 	{
 		// This lifts all types to a real
-		// TODO: I'd like to look this up through the symbol table, but this visitor has no concept of the symbol table
-		const auto real_type = builtin_type_symbol::get_for_builtin_type(ast::builtin_type::real);
+		const auto real_type = type_operation_context.symbol_table.get(ast::builtin_type::real);
 
 		if (left_val.type != real_type && real_type->type_impl().supports_implicit_type_conversion_from(left_val.type, token_type::divide_real))
 		{
-			real_type->type_impl().implicit_type_conversion(left_val);
+			real_type->type_impl().implicit_type_conversion(left_val, type_operation_context);
 		}
 	}
 
@@ -48,11 +54,11 @@ void eval_visitor::visit(ast::bin_op& binaryOperator)
 	const type_impl* result_type_impl;
 	if (right_to_result_conversion_allowed)
 	{
-		left_val_type_impl.implicit_type_conversion(right_val);
+		left_val_type_impl.implicit_type_conversion(right_val, type_operation_context);
 		result_type_impl = &left_val_type_impl;
 	} else if (result_to_right_conversion_allowed)
 	{
-		right_val_type_impl.implicit_type_conversion(left_val);
+		right_val_type_impl.implicit_type_conversion(left_val, type_operation_context);
 		result_type_impl = &right_val_type_impl;
 	} else
 	{
@@ -61,7 +67,7 @@ void eval_visitor::visit(ast::bin_op& binaryOperator)
 
 	try
 	{
-		result_type_impl->execute_binary_operation(left_val, right_val, binaryOperator.op(), binaryOperator.get_line_info());
+		result_type_impl->execute_binary_operation(left_val, right_val, binaryOperator.op(), type_operation_context);
 	}
 	catch (runtime_type_error& e)
 	{
@@ -104,14 +110,21 @@ void eval_visitor::visit(ast::unary_op& unaryOperator)
 
 	if (unaryOperator.op() == token_type::minus)
 	{
+		const auto& scope_context = this->get_current_scope();
+		
 		eval_value negative_op = {
-			// TODO: I'd like to look this up through the symbol table, but this visitor has no concept of the symbol table
-			builtin_type_symbol::get_for_builtin_type(ast::builtin_type::integer),
+			scope_context.symbols.get(ast::builtin_type::integer),
 			expression_value(static_cast<builtin_integer>(-1))
 		};
+
+		type_operation_context type_operation_context = {
+			this->get_interpreter_context(),
+			scope_context.symbols,
+			unaryOperator.get_line_info()
+		};
 		
-		result.type->type_impl().implicit_type_conversion(negative_op);
-		result.type->type_impl().execute_binary_operation(result, negative_op, token_type::multiply, unaryOperator.get_line_info());
+		result.type->type_impl().implicit_type_conversion(negative_op, type_operation_context);
+		result.type->type_impl().execute_binary_operation(result, negative_op, token_type::multiply, type_operation_context);
 	} else if (unaryOperator.op() != token_type::plus)
 	{
 		throw exec_error(L"Unsupported unary operation: " + unaryOperator.get_token().to_string(), unaryOperator.get_line_info());

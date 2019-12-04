@@ -186,6 +186,9 @@
     <ClCompile Include="interpreter_context.cpp">
       <Filter>Source Files\interpreter</Filter>
     </ClCompile>
+    <ClCompile Include="repl_visitor.cpp">
+      <Filter>Source Files\ast_visitor\execution</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -340,6 +343,12 @@
     </ClInclude>
     <ClInclude Include="interpreter_context.h">
       <Filter>Header Files\interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="type_operation_context.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="repl_visitor.h">
+      <Filter>Header Files\ast_visitor\execution</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

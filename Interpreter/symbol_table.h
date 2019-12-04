@@ -1,9 +1,9 @@
 #pragma once
-#include <utility>
 #include "pch.h"
 #include "symbol.h"
 
-class symbol_table
+class type_symbol;
+class symbol_table final
 {
 private:
 	std::map<symbol_identifier, symbol_ptr, case_insensitive_string_comparer> m_variables;
@@ -49,6 +49,11 @@ public:
 	 * Gets a symbol from the current or parent scope. Throws if not found.
 	 */
 	symbol_ptr get(const symbol_identifier& identifier);
+
+	/**
+	 * Gets a built-in symbol
+	 */
+	symbol_type_ptr<type_symbol> get(const ast::builtin_type type_spec);
 
 	/**
 	 * Gets a symbol from the current or parent scope. Throws if not found or not of the expected type.

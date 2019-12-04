@@ -10,12 +10,12 @@ protected:
 	 */
 	builtin_type_symbol* m_symbol;
 	
-	virtual void execute_binary_operation(eval_value& current, const ast::expression_value& from, const builtin_type_symbol& right_val, token_type op) const = 0;
+	virtual void execute_binary_operation(eval_value& current, const ast::expression_value& from, const builtin_type_symbol& right_val, token_type op, type_operation_context& type_operation_context) const = 0;
 
 	/**
 	 * Helper function to copy the symbol type pointer
 	 */
-	virtual void assign_self_type(eval_value& eval_value) const;
+	virtual void assign_self_type(eval_value& eval_value, type_operation_context& type_operation_context) const;
 	
 	/**
 	 * Gets if the current type supports conversion from the specific type
@@ -25,7 +25,7 @@ protected:
 	/**
 	 * Converts the specified value to the current type
 	 */
-	virtual void implicit_type_conversion(ast::expression_value& value, builtin_type_symbol* builtin_type) const;
+	virtual void implicit_type_conversion(ast::expression_value& value, builtin_type_symbol* builtin_type, type_operation_context& type_operation_context) const;
 
 public:
 	explicit builtin_type_impl(builtin_type_symbol* builtin_type_symbol);
@@ -41,9 +41,9 @@ public:
 	 */
 	bool supports_implicit_type_conversion_from(symbol_type_ptr<type_symbol> type, token_type op) const override;
 
-	void implicit_type_conversion(eval_value& value) const override;
+	void implicit_type_conversion(eval_value& value, type_operation_context& type_operation_context) const override;
 	
-	void execute_binary_operation(eval_value& result, const eval_value& right_val, token_type op, line_info line_info) const override;
+	void execute_binary_operation(eval_value& result, const eval_value& right_val, token_type op, type_operation_context& type_context) const override;
 };
 
 class builtin_real_impl final : public builtin_type_impl
@@ -51,9 +51,9 @@ class builtin_real_impl final : public builtin_type_impl
 protected:
 	[[nodiscard]] bool supports_type_conversion_from(ast::builtin_type from_type, token_type op) const override;
 
-	void execute_binary_operation(eval_value& result, const ast::expression_value& from, const builtin_type_symbol& right_val, token_type op) const override;
+	void execute_binary_operation(eval_value& result, const ast::expression_value& from, const builtin_type_symbol& right_val, token_type op, type_operation_context& type_operation_context) const override;
 
-	void implicit_type_conversion(ast::expression_value& value, builtin_type_symbol* builtin_type) const override;
+	void implicit_type_conversion(ast::expression_value& value, builtin_type_symbol* builtin_type, type_operation_context& type_operation_context) const override;
 	
 public:
 	explicit builtin_real_impl(builtin_type_symbol* builtin_type_symbol);
@@ -70,7 +70,7 @@ class builtin_integer_impl final : public builtin_type_impl
 protected:
 	[[nodiscard]] bool supports_type_conversion_from(ast::builtin_type from_type, token_type op) const override;
 
-	void execute_binary_operation(eval_value& result, const ast::expression_value& from, const builtin_type_symbol& right_val, token_type op) const override;
+	void execute_binary_operation(eval_value& result, const ast::expression_value& from, const builtin_type_symbol& right_val, token_type op, type_operation_context& type_operation_context) const override;
 	
 public:
 	explicit builtin_integer_impl(builtin_type_symbol* builtin_type_symbol);
@@ -87,7 +87,7 @@ class builtin_string_impl final : public builtin_type_impl
 protected:
 	[[nodiscard]] bool supports_type_conversion_from(ast::builtin_type from_type, token_type op) const override;
 	
-	void execute_binary_operation(eval_value& current, const ast::expression_value& from, const builtin_type_symbol& right_val, token_type op) const override;
+	void execute_binary_operation(eval_value& current, const ast::expression_value& from, const builtin_type_symbol& right_val, token_type op, type_operation_context& type_operation_context) const override;
 	
 public:
 	explicit builtin_string_impl(builtin_type_symbol* builtin_type_symbol);

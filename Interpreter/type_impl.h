@@ -1,5 +1,6 @@
 #pragma once
 #include "eval_value.h"
+#include "type_operation_context.h"
 
 class symbol;
 
@@ -21,12 +22,12 @@ public:
 	/**
 	 * Executes a binary operation on the the right value and the result (being the current type)
 	 */
-    virtual void execute_binary_operation(eval_value& result, const eval_value& right_val, token_type op, line_info line_info) const = 0;
+    virtual void execute_binary_operation(eval_value& result, const eval_value& right_val, token_type op, type_operation_context& type_operation_context) const = 0;
 
 	/**
 	 * Execute implicit type conversion
 	 */
-	virtual void implicit_type_conversion(eval_value& value) const = 0;
+	virtual void implicit_type_conversion(eval_value& value, type_operation_context& type_operation_context) const = 0;
 
 	/**
 	 * Gets if the current type supports conversion from the specific type

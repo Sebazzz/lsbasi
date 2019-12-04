@@ -4,15 +4,19 @@
 #include "eval_visitor.h"
 #include "scope_context.h"
 
-class exec_visitor :
-	public eval_visitor
+class exec_visitor final :	public eval_visitor
 {
 private:
 	scope_manager m_stack;
+	interpreter_context& m_interpreter_context;
 
+protected:
+	scope_context& get_current_scope() override;
+	interpreter_context& get_interpreter_context() const override;
+	
 public:
 	~exec_visitor() override = default;
-	exec_visitor();
+	exec_visitor(interpreter_context& interpreter_context);
 	exec_visitor(const exec_visitor& other) = delete;
 	exec_visitor(exec_visitor&& other) noexcept = delete;
 	exec_visitor& operator=(const exec_visitor& other) = delete;

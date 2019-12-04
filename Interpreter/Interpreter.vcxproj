@@ -253,6 +253,7 @@
     <ClCompile Include="procedure.cpp" />
     <ClCompile Include="procedure_call.cpp" />
     <ClCompile Include="program.cpp" />
+    <ClCompile Include="repl_visitor.cpp" />
     <ClCompile Include="rpn_visitor.cpp" />
     <ClCompile Include="runtime_type_error.cpp" />
     <ClCompile Include="scope_context.cpp" />
@@ -304,6 +305,7 @@
     <ClInclude Include="procedure.h" />
     <ClInclude Include="procedure_call.h" />
     <ClInclude Include="program.h" />
+    <ClInclude Include="repl_visitor.h" />
     <ClInclude Include="rpn_visitor.h" />
     <ClInclude Include="runtime_type_error.h" />
     <ClInclude Include="scope_context.h" />
@@ -317,6 +319,7 @@
     <ClInclude Include="token_type.h" />
     <ClInclude Include="type.h" />
     <ClInclude Include="type_impl.h" />
+    <ClInclude Include="type_operation_context.h" />
     <ClInclude Include="type_symbol.h" />
     <ClInclude Include="unary_op.h" />
     <ClInclude Include="util.h" />

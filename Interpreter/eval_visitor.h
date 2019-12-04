@@ -3,8 +3,10 @@
 #include "ast_node_visitor.h"
 #include "ast_common.h"
 #include "eval_value.h"
+#include "scope_context.h"
+#include "interpreter_context.h"
 
-class eval_visitor : public ast_node_visitor
+class eval_visitor abstract : public ast_node_visitor
 {
 private:
 	eval_value m_result;
@@ -25,6 +27,16 @@ protected:
 	 * Helper method to register the result for further up the call stack
 	 */
 	void register_visit_result(const eval_value& result);
+
+	/**
+	 * Gets the current scope. In REPL mode this may be fixed, in full interpretation mode this may vary.
+	 */
+	virtual scope_context& get_current_scope() = 0;
+
+	/**
+	 * Gets the interpretation context
+	 */
+	virtual interpreter_context& get_interpreter_context() const = 0;
 
 public:
 	~eval_visitor() override = default;

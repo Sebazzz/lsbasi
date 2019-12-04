@@ -4,6 +4,7 @@
 #include "eval_visitor.h"
 #include "exec_visitor.h"
 #include "builtin_type_symbol.h"
+#include "repl_visitor.h"
 
 void interpreter::ensure_parsed()
 {
@@ -47,22 +48,29 @@ std::wstring interpreter::stringify_ast()
 
 std::wstring interpreter::interpret_repl() const
 {
-	eval_visitor eval;
+	repl_visitor eval(*this->m_context_ptr);
 	eval.visit(*this->m_parsed_ast);
 	
 	const auto result = eval.result();
+	const auto& result_type = dynamic_cast<builtin_type_symbol&>(*result.type.get());
 
-	if (dynamic_cast<builtin_type_symbol&>(*result.type.get()).type() == ast::builtin_type::integer)
+	switch (result_type.type())
 	{
+	case ast::builtin_type::integer:
 		return std::to_wstring(result.value.int_val);
+	case ast::builtin_type::real:
+		return std::to_wstring(result.value.real_val);
+	case ast::builtin_type::string:
+		// Copy the value because the memory is owned by the interpreter which may go out of scope
+		return *result.value.string_ptr_val;
+	default:
+		return L"Unsupported expression result";
 	}
-
-	return std::to_wstring(result.value.real_val);
 }
 
 std::wstring interpreter::interpret_program()
 {
-	exec_visitor eval;
+	exec_visitor eval(*this->m_context_ptr);
 	eval.visit(*this->m_parsed_ast);
 
 	// Load global scope

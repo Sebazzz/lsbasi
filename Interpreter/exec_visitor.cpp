@@ -4,7 +4,19 @@
 #include "builtin_type_symbol.h"
 #include "type_impl.h"
 
-exec_visitor::exec_visitor() = default;
+scope_context& exec_visitor::get_current_scope()
+{
+	return this->m_stack.current_context();
+}
+
+interpreter_context& exec_visitor::get_interpreter_context() const
+{
+	return this->m_interpreter_context;
+}
+
+exec_visitor::exec_visitor(interpreter_context& interpreter_context): m_interpreter_context(interpreter_context)
+{
+}
 
 void exec_visitor::visit(ast::ast_node& node)
 {
@@ -40,7 +52,12 @@ void exec_visitor::visit(ast::assign& assign)
 		throw runtime_type_error(L"Attempting to assign variable " + var_symbol->to_string() + L" (which is of type " + type->to_string() + L") from expression with invalid type: " + result.type->to_string(), assign.get_line_info());
 	}
 
-	assign_type_impl.implicit_type_conversion(result);
+	type_operation_context type_operation_context = {
+		this->get_interpreter_context(),
+		this->get_current_scope().symbols,
+		assign.get_line_info()
+	};
+	assign_type_impl.implicit_type_conversion(result, type_operation_context);
 	
 	ctx.memory->set(var_symbol, result.value);
 }
@@ -82,6 +99,13 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 {
 	auto& ctx = this->m_stack.current_context();
 
+	// General context for type operations
+	type_operation_context type_operation_context = {
+		this->get_interpreter_context(),
+		this->get_current_scope().symbols,
+		procedure_call.get_line_info()
+	};
+
 	// Find the referenced procedure
 	const auto procedure_symbol = ctx.symbols.get<::procedure_symbol>(procedure_call.procedure_identifier());
 	const auto& procedure_params = procedure_symbol->procedure().params();
@@ -117,6 +141,9 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 		const ast::ast_ptr arg = *arg_iterator;
 		const ast::ast_node_ptr<ast::var_decl> param = *param_iterator;
 
+		// Set line info
+		type_operation_context.line_info = arg->get_line_info();
+
 		// Resolve the value
 		eval_value arg_value = this->accept(*arg);
 
@@ -128,7 +155,8 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 		{
 			throw runtime_type_error(L"Attempting to assign parameter " + param->identifier() + L" of " + procedure_symbol->to_string() + L" with invalid type: " + arg_value.type->to_string(), arg->get_line_info());
 		}
-		assign_type_impl.implicit_type_conversion(arg_value);
+
+		assign_type_impl.implicit_type_conversion(arg_value, type_operation_context);
 
 		auto param_var = proc_ctx.symbols.get<variable_symbol>(param->identifier());
 		proc_ctx.memory->set(param_var, arg_value.value);
