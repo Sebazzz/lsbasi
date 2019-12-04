@@ -134,7 +134,7 @@ void symbol_table_builder::visit(ast::procedure& procedure)
 		return;
 	}
 
-	const auto symbol = std::static_pointer_cast<procedure_symbol>(make_symbol_ptr<procedure_symbol>(procedure));
+	const auto symbol = std::static_pointer_cast<procedure_symbol>(make_symbol_ptr<user_defined_procedure_symbol>(procedure));
 
 	// Procedure, delay actual nested symbol rendering so we don't need procedures to be declared in order
 	// ... already add the procedure to the current scope so it can be referenced

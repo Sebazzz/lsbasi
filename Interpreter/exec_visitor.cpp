@@ -109,7 +109,7 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 
 	// Find the referenced procedure
 	const auto procedure_symbol = ctx.symbols.get<::procedure_symbol>(procedure_call.procedure_identifier());
-	const auto& procedure_params = procedure_symbol->procedure().params();
+	const auto& procedure_params = procedure_symbol->params();
 	const auto& procedure_args = procedure_call.args();
 
 	// Verify that even the correct number of arguments have been given. Let's do this while iterating the args and params.
@@ -117,7 +117,7 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 	
 	// We now have to process each of the parameters before the invocation. We get their value,
 	// then put their values in the memory table for the procedure. After this the invocation is fairly simple.
-	auto& proc_ctx = this->m_stack.new_scope(procedure_symbol->procedure().symbol_table());
+	auto& proc_ctx = this->m_stack.new_scope(procedure_symbol->symbol_table());
 	
 	auto param_iterator = procedure_params.begin();
 	const auto params_end = procedure_params.end();
@@ -165,8 +165,20 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 		++param_iterator;
 		++arg_iterator;
 	}
-	// We have now bound all arguments in for the procedure. We can now evaluate the body.
-	procedure_symbol->procedure().block()->accept(*this);
+	
+	// We have now bound all arguments in for the procedure. We can now execute the procedure
+
+	// ... Try to handle as a user defined procedure
+	const auto user_defined_procedure = std::dynamic_pointer_cast<user_defined_procedure_symbol>(procedure_symbol);
+
+	if (user_defined_procedure)
+	{
+		// For user defined procedures we need to evaluate the body
+		user_defined_procedure->procedure().block()->accept(*this);
+	} else
+	{
+		throw internal_interpret_except("Unsupported procedure");
+	}
 
 	// Go back to previous context
 	this->m_stack.pop();
