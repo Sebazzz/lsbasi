@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "symbol.h"
 #include "symbol_table_builder.h"
+#include "procedure_symbol.h"
 #include "type_symbol.h"
 
 template<class T>

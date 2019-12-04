@@ -55,6 +55,12 @@
     <Filter Include="Source Files\errors">
       <UniqueIdentifier>{7d43f4f1-0102-4783-a30f-264bf60c23d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\ast_visitor\symbols">
+      <UniqueIdentifier>{41e0c78e-171d-4109-a351-d2ec85f6cd81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ast_visitor\symbols">
+      <UniqueIdentifier>{f2694930-938b-40c1-86eb-ec188cb2cd16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -135,23 +141,8 @@
     <ClCompile Include="memory_table.cpp">
       <Filter>Source Files\ast_visitor\execution</Filter>
     </ClCompile>
-    <ClCompile Include="symbol.cpp">
-      <Filter>Source Files\ast_visitor\execution</Filter>
-    </ClCompile>
-    <ClCompile Include="symbol_table.cpp">
-      <Filter>Source Files\ast_visitor\execution</Filter>
-    </ClCompile>
-    <ClCompile Include="symbol_table_builder.cpp">
-      <Filter>Source Files\ast_visitor\execution</Filter>
-    </ClCompile>
     <ClCompile Include="type.cpp">
       <Filter>Source Files\ast</Filter>
-    </ClCompile>
-    <ClCompile Include="type_symbol.cpp">
-      <Filter>Source Files\ast_visitor\execution</Filter>
-    </ClCompile>
-    <ClCompile Include="builtin_type_symbol.cpp">
-      <Filter>Source Files\ast_visitor\execution</Filter>
     </ClCompile>
     <ClCompile Include="builtin_type_impl.cpp">
       <Filter>Source Files\ast_visitor\execution</Filter>
@@ -188,6 +179,24 @@
     </ClCompile>
     <ClCompile Include="repl_visitor.cpp">
       <Filter>Source Files\ast_visitor\execution</Filter>
+    </ClCompile>
+    <ClCompile Include="symbol_table.cpp">
+      <Filter>Source Files\ast_visitor\symbols</Filter>
+    </ClCompile>
+    <ClCompile Include="symbol_table_builder.cpp">
+      <Filter>Source Files\ast_visitor\symbols</Filter>
+    </ClCompile>
+    <ClCompile Include="symbol.cpp">
+      <Filter>Source Files\ast_visitor\symbols</Filter>
+    </ClCompile>
+    <ClCompile Include="type_symbol.cpp">
+      <Filter>Source Files\ast_visitor\symbols</Filter>
+    </ClCompile>
+    <ClCompile Include="builtin_type_symbol.cpp">
+      <Filter>Source Files\ast_visitor\symbols</Filter>
+    </ClCompile>
+    <ClCompile Include="procedure_symbol.cpp">
+      <Filter>Source Files\ast_visitor\symbols</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -281,15 +290,6 @@
     <ClInclude Include="memory_table.h">
       <Filter>Header Files\ast_visitor\execution</Filter>
     </ClInclude>
-    <ClInclude Include="symbol.h">
-      <Filter>Header Files\ast_visitor\execution</Filter>
-    </ClInclude>
-    <ClInclude Include="symbol_table.h">
-      <Filter>Header Files\ast_visitor\execution</Filter>
-    </ClInclude>
-    <ClInclude Include="symbol_table_builder.h">
-      <Filter>Header Files\ast_visitor\execution</Filter>
-    </ClInclude>
     <ClInclude Include="type.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
@@ -300,12 +300,6 @@
       <Filter>Header Files\ast_visitor\execution</Filter>
     </ClInclude>
     <ClInclude Include="builtin_type_impl.h">
-      <Filter>Header Files\ast_visitor\execution</Filter>
-    </ClInclude>
-    <ClInclude Include="builtin_type_symbol.h">
-      <Filter>Header Files\ast_visitor\execution</Filter>
-    </ClInclude>
-    <ClInclude Include="type_symbol.h">
       <Filter>Header Files\ast_visitor\execution</Filter>
     </ClInclude>
     <ClInclude Include="eval_value.h">
@@ -349,6 +343,24 @@
     </ClInclude>
     <ClInclude Include="repl_visitor.h">
       <Filter>Header Files\ast_visitor\execution</Filter>
+    </ClInclude>
+    <ClInclude Include="builtin_type_symbol.h">
+      <Filter>Header Files\ast_visitor\symbols</Filter>
+    </ClInclude>
+    <ClInclude Include="procedure_symbol.h">
+      <Filter>Header Files\ast_visitor\symbols</Filter>
+    </ClInclude>
+    <ClInclude Include="type_symbol.h">
+      <Filter>Header Files\ast_visitor\symbols</Filter>
+    </ClInclude>
+    <ClInclude Include="symbol_table_builder.h">
+      <Filter>Header Files\ast_visitor\symbols</Filter>
+    </ClInclude>
+    <ClInclude Include="symbol_table.h">
+      <Filter>Header Files\ast_visitor\symbols</Filter>
+    </ClInclude>
+    <ClInclude Include="symbol.h">
+      <Filter>Header Files\ast_visitor\symbols</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 #include "common_test.h"
 #include "../Interpreter/parser.h"
 #include "../Interpreter/symbol.h"
+#include "../Interpreter/procedure_symbol.h"
 #include "../Interpreter/symbol_table_builder.h"
 
 struct parse_result

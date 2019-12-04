@@ -3,6 +3,8 @@
 #include "ast_node_visitor.h"
 #include "symbol_table.h"
 
+class procedure_symbol;
+
 /**
  * This class visits the AST and assigns symbol tables to the appropriate AST nodes
  */

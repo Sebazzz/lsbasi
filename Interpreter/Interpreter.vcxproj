@@ -252,6 +252,7 @@
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="procedure.cpp" />
     <ClCompile Include="procedure_call.cpp" />
+    <ClCompile Include="procedure_symbol.cpp" />
     <ClCompile Include="program.cpp" />
     <ClCompile Include="repl_visitor.cpp" />
     <ClCompile Include="rpn_visitor.cpp" />
@@ -304,6 +305,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="procedure.h" />
     <ClInclude Include="procedure_call.h" />
+    <ClInclude Include="procedure_symbol.h" />
     <ClInclude Include="program.h" />
     <ClInclude Include="repl_visitor.h" />
     <ClInclude Include="rpn_visitor.h" />

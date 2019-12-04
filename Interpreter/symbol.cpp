@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "symbol.h"
-#include "procedure.h"
 #include "var_decl.h"
 
 symbol::symbol(symbol_type symbol, const symbol_identifier& identifier): m_type(symbol), m_identifier(identifier)
@@ -21,20 +20,6 @@ bool symbol::operator<(const symbol& rhs) const
 
 	const case_insensitive_string_comparer comparer;
 	return comparer(this->m_identifier, rhs.m_identifier);
-}
-
-procedure_symbol::procedure_symbol(ast::procedure& procedure): symbol(symbol_type::procedure, procedure.identifier()), m_procedure(procedure)
-{
-}
-
-const ast::procedure& procedure_symbol::procedure() const
-{
-	return this->m_procedure;
-}
-
-std::wstring procedure_symbol::to_string() const
-{
-	return L"procedure " + this->m_procedure.identifier();
 }
 
 variable_symbol::variable_symbol(ast::var_decl& variable): symbol(symbol_type::procedure, variable.identifier()), m_var(variable)

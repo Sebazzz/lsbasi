@@ -3,6 +3,7 @@
 #include "exec_visitor.h"
 #include "builtin_type_symbol.h"
 #include "type_impl.h"
+#include "procedure_symbol.h"
 
 scope_context& exec_visitor::get_current_scope()
 {
