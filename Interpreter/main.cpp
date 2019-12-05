@@ -110,6 +110,7 @@ int interpret_file(const std::wstring& file_path)
 			// Attempt to find the line and indicate the error
 
 			// ... Reset the stream to find the line
+			file.clear();
 			file.seekg(0);
 			
 			const auto line_info = e.line_info();
