@@ -3,8 +3,9 @@
 
 namespace ast
 {
-	using procedure_param = var_decl_ptr;
-	using procedure_param_list = std::vector<procedure_param>;
+	using procedure_param = var_decl;
+	using procedure_param_ptr = var_decl_ptr;
+	using procedure_param_list = std::vector<procedure_param_ptr>;
 
 	class block;
 	class procedure;

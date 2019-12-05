@@ -170,14 +170,20 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 
 	// ... Try to handle as a user defined procedure
 	const auto user_defined_procedure = std::dynamic_pointer_cast<user_defined_procedure_symbol>(procedure_symbol);
+	const auto builtin_procedure = std::dynamic_pointer_cast<builtin_procedure_symbol>(procedure_symbol);
 
 	if (user_defined_procedure)
 	{
 		// For user defined procedures we need to evaluate the body
 		user_defined_procedure->procedure().block()->accept(*this);
-	} else
+	} else if (builtin_procedure)
 	{
-		throw internal_interpret_except("Unsupported procedure");
+		// Built-in procedures just need the scope to extract the variables they need
+		builtin_procedure->invoke(proc_ctx);
+	}
+	else
+	{
+		throw internal_interpret_except(std::string("Unsupported procedure: ") + typeid(*procedure_symbol).name());
 	}
 
 	// Go back to previous context

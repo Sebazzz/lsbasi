@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "symbol.h"
 
+class builtin_procedure_symbol;
 class type_symbol;
 class symbol_table final
 {
@@ -20,6 +21,11 @@ private:
 	 * This private constructor creates a global scope
 	 */
 	explicit symbol_table();
+
+	void register_builtin_type(ast::builtin_type type_spec);
+
+	template<class T>
+	void register_builtin_procedure();
 
 public:
 	explicit symbol_table(std::wstring scope_name, symbol_table* parent = nullptr);
@@ -71,6 +77,17 @@ public:
 	 */
 	[[nodiscard]] symbol_table_iterator iterator() const;
 };
+
+template <class T>
+void symbol_table::register_builtin_procedure()
+{
+	const symbol_type_ptr<T> procedure = make_symbol_type_ptr<T>(this);
+
+	this->m_variables.try_emplace(
+		procedure->identifier(),
+		procedure
+	);
+}
 
 template <class T>
 symbol_type_ptr<T> symbol_table::get(const symbol_identifier& identifier)

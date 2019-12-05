@@ -156,6 +156,17 @@ END.
     REQUIRE( verify_string_symbol(result, L"b") == L"hello world" );
 }
 
+TEST_CASE( "Interpretation succeeds - call to builtin procedure", "[interpreter_program]" ) {
+    const auto result = do_interpret_program(R"(
+PROGRAM Simple;
+BEGIN       
+   writeln('hello world')
+END.        
+)");
+
+    REQUIRE( result.output == std::wstring(L"done") );
+}
+
 TEST_CASE( "Interpretation succeeds - program with string concatenation", "[interpreter_program]" ) {
     const auto result = do_interpret_program(R"(
 PROGRAM Simple;
