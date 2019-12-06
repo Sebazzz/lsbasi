@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "builtin_type_impl.h"
 #include "builtin_type_symbol.h"
+#include "builtin_type_traits.h"
 
 builtin_type_symbol::builtin_type_symbol(ast::builtin_type type):
 	type_symbol(var_type_to_string(type)), m_type(type)
@@ -31,11 +32,11 @@ symbol_identifier builtin_type_symbol::var_type_to_string(ast::builtin_type type
 	switch (type)
 	{
 	case ast::builtin_type::integer:
-		return L"INTEGER";
+		return builtin_type_traits<ast::builtin_type::integer>::type_name;
 	case ast::builtin_type::real:
-		return L"REAL";
+		return builtin_type_traits<ast::builtin_type::real>::type_name;
 	case ast::builtin_type::string:
-		return L"STRING";
+		return builtin_type_traits<ast::builtin_type::string>::type_name;
 	default:
 		throw std::logic_error("Unknown built-in variable type");
 		;
