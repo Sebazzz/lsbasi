@@ -87,17 +87,7 @@ symbol_ptr symbol_table::get(const ast::var_identifier& identifier)
 
 symbol_type_ptr<type_symbol> symbol_table::get(const ast::builtin_type type_spec)
 {
-	switch (type_spec)
-	{
-		case ast::builtin_type::integer:
-			return this->get<type_symbol>(L"INTEGER");
-		case ast::builtin_type::real:
-			return this->get<type_symbol>(L"REAL");
-		case ast::builtin_type::string: 
-			return this->get<type_symbol>(L"STRING");
-		default:
-			throw internal_interpret_except("Unsupported internal type");
-	}
+	return this->get<type_symbol>(builtin_type_symbol::var_type_to_string(type_spec));
 }
 
 void symbol_table::declare(const symbol_ptr& symbol, line_info position)
