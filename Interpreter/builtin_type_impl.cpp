@@ -186,10 +186,36 @@ void builtin_string_impl::execute_binary_operation(eval_value& current, const ex
 		throw exec_error("Invalid operator for string", {-1,-1});
 	}
 
-	// Add this to the string pool
-	auto new_str = builtin_string(*current.value.string_ptr_val);
-	new_str.append(*from.string_ptr_val);
-	current.value.string_ptr_val = type_operation_context.interpreter_context.string_pool.get_or_add(new_str);
+	if (!current.value.string_ptr_val && !from.string_ptr_val)
+	{
+		// Nothing really to do, null and null yields null
+		current.value.string_ptr_val = nullptr;
+		return;
+	}
+
+	// If either arguments are null we can just take the original arg
+	{
+		if (!current.value.string_ptr_val)
+		{
+			// from is not null, so assign
+			current.value.string_ptr_val = from.string_ptr_val;
+			return;
+		}
+
+		if (!from.string_ptr_val)
+		{
+			// from is null, so just keep the current value
+			return;
+		}
+	}
+
+	// Real concatenate and add this to the string pool
+	{
+		auto new_str = builtin_string();
+		if (current.value.string_ptr_val) new_str.append(*current.value.string_ptr_val);
+		if (from.string_ptr_val) new_str.append(*from.string_ptr_val);
+		current.value.string_ptr_val = type_operation_context.interpreter_context.string_pool.get_or_add(new_str);
+	}
 }
 
 builtin_string_impl::builtin_string_impl(builtin_type_symbol* builtin_type_symbol):builtin_type_impl(builtin_type_symbol)

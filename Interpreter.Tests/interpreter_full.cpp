@@ -184,6 +184,23 @@ END.
     REQUIRE( verify_string_symbol(result, L"b") == L"world" );
     REQUIRE( verify_string_symbol(result, L"c") == L"hello world" );
 }
+
+TEST_CASE( "Interpretation succeeds - program with string concatenation and uninitialized variable", "[interpreter_program]" ) {
+    const auto result = do_interpret_program(R"(
+PROGRAM Simple;
+VAR a, b, c: STRING;
+BEGIN       
+   a := 'hello';
+   c := a + ' ' + b;
+END.        
+)");
+
+    REQUIRE( result.output == std::wstring(L"done") );
+
+    REQUIRE( verify_string_symbol(result, L"a") == L"hello" );
+    REQUIRE( verify_string_symbol(result, L"c") == L"hello " );
+}
+
 TEST_CASE( "Interpretation succeeds - program 1", "[interpreter_program]" ) {
     const auto result = do_interpret_program(R"(
 PROGRAM Simple;
