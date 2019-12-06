@@ -63,17 +63,3 @@ class builtin_procedure_symbol abstract : public procedure_symbol
 		[[nodiscard]] ::symbol_table& symbol_table() const override;
 		virtual void invoke(scope_context& procedure_scope) = 0;
 };
-
-/**
- * Represents the builtin-procedure: writeln
- */
-class builtin_procedure_writeln final : public builtin_procedure_symbol
-{
-private:
-	static void invoke_internal(builtin_string_ptr text);
-	
-public:
-	builtin_procedure_writeln(::symbol_table* runtime_symbol_table);
-
-	void invoke(scope_context& procedure_scope) override;
-};

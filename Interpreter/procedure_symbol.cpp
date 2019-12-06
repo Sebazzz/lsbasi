@@ -1,9 +1,6 @@
 #include "pch.h"
-#include <iostream>
 #include "procedure.h"
 #include "symbol_table.h"
-#include "scope_context.h"
-#include "memory_table.h"
 #include "procedure_symbol.h"
 
 procedure_symbol::procedure_symbol(const symbol_identifier& identifier): symbol(symbol_type::procedure, identifier)
@@ -63,22 +60,6 @@ const ast::procedure_param_list& builtin_procedure_symbol::params() const
 	return *this->m_symbol_table;
 }
 
-void builtin_procedure_writeln::invoke_internal(builtin_string_ptr text)
-{
-	std::wcout << *text << std::endl;
-}
-
-builtin_procedure_writeln::builtin_procedure_writeln(::symbol_table* runtime_symbol_table) : builtin_procedure_symbol(L"writeln", runtime_symbol_table)
-{
-	this->register_param(L"text", ast::builtin_type::string);
-}
-
-void builtin_procedure_writeln::invoke(scope_context& procedure_scope)
-{
-	const auto text_arg = procedure_scope.memory->get(procedure_scope.symbols.get(L"text")).string_ptr_val;
-	this->invoke_internal(text_arg);
-}
-
 std::wstring procedure_symbol::to_string() const
 {
 	return L"procedure " + this->identifier();
@@ -87,3 +68,4 @@ std::wstring procedure_symbol::to_string() const
 user_defined_procedure_symbol::user_defined_procedure_symbol(ast::procedure& procedure): procedure_symbol(procedure.identifier()), m_procedure(procedure)
 {
 }
+

@@ -198,6 +198,9 @@
     <ClCompile Include="procedure_symbol.cpp">
       <Filter>Source Files\ast_visitor\symbols</Filter>
     </ClCompile>
+    <ClCompile Include="builtin_procedures.cpp">
+      <Filter>Source Files\ast_visitor\symbols</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -360,6 +363,15 @@
       <Filter>Header Files\ast_visitor\symbols</Filter>
     </ClInclude>
     <ClInclude Include="symbol.h">
+      <Filter>Header Files\ast_visitor\symbols</Filter>
+    </ClInclude>
+    <ClInclude Include="builtin_type_traits.h">
+      <Filter>Header Files\ast_visitor\symbols</Filter>
+    </ClInclude>
+    <ClInclude Include="symbol_types.h">
+      <Filter>Header Files\ast_visitor\symbols</Filter>
+    </ClInclude>
+    <ClInclude Include="builtin_procedures.h">
       <Filter>Header Files\ast_visitor\symbols</Filter>
     </ClInclude>
   </ItemGroup>

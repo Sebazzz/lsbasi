@@ -2,6 +2,7 @@
 #include "builtin_type_symbol.h"
 #include "procedure_symbol.h"
 #include "symbol_table.h"
+#include "builtin_procedures.h"
 
 symbol_table::symbol_table(): m_scope_name(L"RUNTIME")
 {
