@@ -167,6 +167,18 @@ END.
     REQUIRE( result.output == std::wstring(L"done") );
 }
 
+TEST_CASE( "Interpretation succeeds - call to builtin procedure with uninitialized variable", "[interpreter_program]" ) {
+    const auto result = do_interpret_program(R"(
+PROGRAM Simple;
+VAR a: STRING;
+BEGIN       
+   writeln(a)
+END.        
+)");
+
+    REQUIRE( result.output == std::wstring(L"done") );
+}
+
 TEST_CASE( "Interpretation succeeds - program with string concatenation", "[interpreter_program]" ) {
     const auto result = do_interpret_program(R"(
 PROGRAM Simple;
