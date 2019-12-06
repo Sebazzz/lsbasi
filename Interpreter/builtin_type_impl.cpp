@@ -6,6 +6,7 @@
 
 void builtin_type_impl::assign_self_type(eval_value& eval_value, type_operation_context& type_operation_context) const
 {
+	// Note we want the original underlying shared pointer here. We'd could just otherwise reference this->m_symbol directly.
 	eval_value.type = type_operation_context.symbol_table.get(this->m_symbol->type());
 }
 
