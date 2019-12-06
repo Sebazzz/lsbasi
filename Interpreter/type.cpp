@@ -40,3 +40,13 @@ void type::accept(ast_node_visitor& visitor)
 {
 	visitor.visit(*this);
 }
+
+symbol_type_ptr<type_symbol> type::type_symbol() const
+{
+	if (!this->m_type_symbol)
+	{
+		throw internal_interpret_except(L"Type symbol was not made available in semantic analysis step");
+	}
+	
+	return this->m_type_symbol;
+}

@@ -28,10 +28,7 @@ void exec_visitor::visit(ast::compound& compound)
 {
 	ast_node_visitor::visit(compound);
 
-	this->register_visit_result({
-		builtin_type_symbol::get_for_builtin_type(ast::builtin_type::integer),
-		0
-	});
+	this->register_void_result();
 }
 
 void exec_visitor::visit(ast::assign& assign)
@@ -43,9 +40,8 @@ void exec_visitor::visit(ast::assign& assign)
 	auto result = this->visit_with_result(*assign_expr);
 
 	// Register result
-	const auto identifier = assign.left()->identifier();
-	const auto var_symbol = ctx.symbols.get<variable_symbol>(identifier);
-	const auto type = ctx.symbols.get<type_symbol>(var_symbol->variable().type()->identifier());
+	const auto var_symbol = assign.left()->variable_symbol();
+	const auto type = var_symbol->variable().type()->type_symbol();
 	const auto& assign_type_impl = type->type_impl();
 
 	if (!assign_type_impl.supports_implicit_type_conversion_from(result.type, token_type::assign))
@@ -68,12 +64,11 @@ void exec_visitor::visit(ast::var& var)
 	auto& ctx = this->m_stack.current_context();
 
 	// Lookup in current scope
-	const auto var_symbol = ctx.symbols.get<variable_symbol>(var.identifier());
-	
+	const auto var_symbol = var.variable_symbol();
 	const auto var_val = ctx.memory->get(var_symbol);
-	const auto builtin_type = ctx.symbols.get<builtin_type_symbol>(var_symbol->variable().type()->identifier());
+	const auto var_type = var_symbol->variable().type()->type_symbol();
 	
-	this->register_visit_result({builtin_type, var_val});
+	this->register_visit_result({var_type, var_val});
 }
 
 void exec_visitor::visit(ast::block& block)
@@ -98,8 +93,6 @@ void exec_visitor::visit(ast::procedure&)
 
 void exec_visitor::visit(ast::procedure_call& procedure_call)
 {
-	auto& ctx = this->m_stack.current_context();
-
 	// General context for type operations
 	type_operation_context type_operation_context = {
 		this->get_interpreter_context(),
@@ -108,7 +101,7 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 	};
 
 	// Find the referenced procedure
-	const auto procedure_symbol = ctx.symbols.get<::procedure_symbol>(procedure_call.procedure_identifier());
+	const auto procedure_symbol = procedure_call.procedure_symbol();
 	const auto& procedure_params = procedure_symbol->params();
 	const auto& procedure_args = procedure_call.args();
 
@@ -149,7 +142,7 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 		eval_value arg_value = this->visit_with_result(*arg);
 
 		// Assign it with conversion
-		auto param_type = proc_ctx.symbols.get<type_symbol>(param->type()->identifier());
+		auto param_type = param->type()->type_symbol();
 		
 		const auto& assign_type_impl = param_type->type_impl();
 		if (!assign_type_impl.supports_implicit_type_conversion_from(arg_value.type, token_type::assign))
@@ -159,7 +152,7 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 
 		assign_type_impl.implicit_type_conversion(arg_value, type_operation_context);
 
-		auto param_var = proc_ctx.symbols.get<variable_symbol>(param->identifier());
+		auto param_var = param->variable_symbol();
 		proc_ctx.memory->set(param_var, arg_value.value);
 
 		++param_iterator;

@@ -9,10 +9,20 @@ void eval_visitor::register_visit_result(const eval_value& result)
 	this->m_result = result;
 }
 
+void eval_visitor::register_void_result()
+{
+	this->m_result.reset();
+}
+
+bool eval_visitor::has_result() const
+{
+	// "!!this->m_result" would also work, but look odd
+	return this->m_result.has_value();
+}
+
 eval_visitor::eval_visitor()
 {
-	// Set a static return value
-	this->m_result = { builtin_type_symbol::get_for_builtin_type(ast::builtin_type::integer), 0 };
+	this->register_void_result();
 }
 
 void eval_visitor::visit(ast::bin_op& binaryOperator)
@@ -94,11 +104,6 @@ void eval_visitor::visit(ast::num& number)
 void eval_visitor::visit(ast::ast_node& node)
 {
 	ast_node_visitor::visit(node);
-
-	if (!this->m_result)
-	{
-		throw exec_error(L"Expected the expression to return a value", node.get_line_info());
-	}
 }
 
 void eval_visitor::visit(ast::unary_op& unaryOperator)

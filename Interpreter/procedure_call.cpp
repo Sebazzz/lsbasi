@@ -51,3 +51,13 @@ void ast::procedure_call::accept(ast_node_visitor& visitor)
 {
 	visitor.visit(*this);
 }
+
+symbol_type_ptr<procedure_symbol> ast::procedure_call::procedure_symbol() const
+{
+	if (!this->m_procedure_symbol)
+	{
+		throw internal_interpret_except(L"Procedure symbol was not made available in semantic analysis step");
+	}
+	
+	return this->m_procedure_symbol;
+}

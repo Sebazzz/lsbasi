@@ -44,6 +44,11 @@ ast::type_ptr ast::var_decl::type() const
 	return this->m_type;
 }
 
+symbol_type_ptr<variable_symbol> ast::var_decl::variable_symbol() const
+{
+	return this->m_variable_symbol;
+}
+
 void ast::var_decl::accept(ast_node_visitor& visitor)
 {
 	visitor.visit(*this);

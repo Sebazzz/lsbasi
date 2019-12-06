@@ -5,15 +5,12 @@
 #include "type_symbol.h"
 
 template<class T>
-void verify_exists(symbol_table& symbol_table_instance, const symbol_identifier& identifier, const line_info line_info)
+symbol_type_ptr<T> verify_exists(symbol_table& symbol_table_instance, const symbol_identifier& identifier, const line_info line_info)
 {
 	// Throws on failure
 	try
 	{
-		if (!symbol_table_instance.get<T>(identifier))
-		{
-			throw semantic_except("symbol_type::get will throw", line_info);
-		}
+		return symbol_table_instance.get<T>(identifier);
 	} catch (interpret_except& e)
 	{
 		throw semantic_except(std::string("Unable to resolve symbol of type '") + typeid(T).name() + "': " + e.what(), line_info);
@@ -53,6 +50,17 @@ void symbol_table_builder::delay_procedure_visit(const procedure_visit_context& 
 	this->m_procedures_to_visit.push(procedure_info);
 }
 
+void symbol_table_builder::initialize_builtin_procedure(builtin_procedure_symbol* builtin_procedure)
+{
+	// Built-in procedures have their symbol table pre-constructed. The types can be resolve according to
+	// our current context but the variables need to be properly resolved from their symbol tables.
+	for (auto && param : builtin_procedure->params())
+	{
+		param->m_variable_symbol = builtin_procedure->symbol_table().get<variable_symbol>(param->m_identifier);
+		param->type()->accept(*this);
+	}
+}
+
 void symbol_table_builder::visit(ast::ast_node& node)
 {
 	ast_node_visitor::visit(node);
@@ -60,19 +68,28 @@ void symbol_table_builder::visit(ast::ast_node& node)
 
 void symbol_table_builder::visit(ast::var& variable)
 {
-	verify_exists<variable_symbol>(*this->m_symbol_table, variable.identifier(), variable.get_line_info());
+	variable.m_variable_symbol = verify_exists<variable_symbol>(*this->m_symbol_table, variable.identifier(), variable.get_line_info());
 }
 
 void symbol_table_builder::visit(ast::type& type_ref)
 {
-	verify_exists<type_symbol>(*this->m_symbol_table, type_ref.identifier(), type_ref.get_line_info());
+	type_ref.m_type_symbol = verify_exists<type_symbol>(*this->m_symbol_table, type_ref.identifier(), type_ref.get_line_info());
 }
 
 void symbol_table_builder::visit(ast::procedure_call& procedure_call)
 {
 	// Verify that we can actually resolve this procedure
 	// The procedure that is being called must be declared in the same or any parent scope. 
-	verify_exists<procedure_symbol>(*this->m_symbol_table, procedure_call.procedure_identifier(), procedure_call.get_line_info());
+	procedure_call.m_procedure_symbol = verify_exists<procedure_symbol>(*this->m_symbol_table, procedure_call.procedure_identifier(), procedure_call.get_line_info());
+
+	// ... if this is a built-in procedure its types have not been assigned their symbols, so lets do that
+	{
+		const auto builtin_procedure = dynamic_cast<builtin_procedure_symbol*>(procedure_call.m_procedure_symbol.get());
+		if (builtin_procedure)
+		{
+			this->initialize_builtin_procedure(builtin_procedure);
+		}
+	}
 	
 	// Verify each of the parameters
 	try
@@ -91,9 +108,10 @@ void symbol_table_builder::visit(ast::var_decl& var_decl)
 {
 	this->ensure_symbol_table();
 
-	const auto symbol = make_symbol_ptr<variable_symbol>(var_decl);
+	const auto symbol = make_symbol_type_ptr<variable_symbol>(var_decl);
 	this->m_symbol_table->declare(symbol, var_decl.get_line_info());
-
+	var_decl.m_variable_symbol = symbol;
+	
 	ast_node_visitor::visit(var_decl);
 }
 

@@ -20,5 +20,7 @@ public:
 	repl_visitor(repl_visitor&& other) noexcept = delete;
 	repl_visitor& operator=(const repl_visitor& other) = delete;
 	repl_visitor& operator=(repl_visitor&& other) noexcept = delete;
+
+	void visit(ast::ast_node& node) override;
 };
 

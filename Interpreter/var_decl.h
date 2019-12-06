@@ -9,12 +9,17 @@ namespace ast
 	class var_decl;
 }
 
+class variable_symbol;
+class symbol_table_builder;
+
 class ast::var_decl :
 	public ast_node
 {
 private:
 	var_identifier m_identifier;
 	type_ptr m_type;
+	
+	symbol_type_ptr<variable_symbol> m_variable_symbol;
 
 public:
 	var_decl(var_identifier identifier, type_ptr type, token token);
@@ -31,7 +36,10 @@ public:
 
 	[[nodiscard]] const var_identifier& identifier() const;
 	[[nodiscard]] type_ptr type() const;
+	[[nodiscard]] symbol_type_ptr<variable_symbol> variable_symbol() const;
 	
 	void accept(ast_node_visitor& visitor) override;
+	
+	friend symbol_table_builder;
 };
 

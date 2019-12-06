@@ -40,3 +40,13 @@ void var::accept(ast_node_visitor& visitor)
 {
 	visitor.visit(*this);
 }
+
+symbol_type_ptr<variable_symbol> var::variable_symbol() const
+{
+	if (!this->m_variable_symbol)
+	{
+		throw internal_interpret_except(L"Variable symbol was not made available in semantic analysis step");
+	}
+	
+	return this->m_variable_symbol;
+}

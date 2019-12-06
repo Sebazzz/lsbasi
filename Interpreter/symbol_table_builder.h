@@ -39,6 +39,11 @@ private:
 	 */
 	void delay_procedure_visit(const procedure_visit_context& procedure_info);
 
+	/**
+	 * Initializes the types in a built-in procedure
+	 */
+	void initialize_builtin_procedure(builtin_procedure_symbol* builtin_procedure);
+
 public:
 	~symbol_table_builder() override = default;
 	symbol_table_builder() = default;

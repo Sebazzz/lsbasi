@@ -28,6 +28,11 @@ protected:
 	void register_visit_result(const eval_value& result);
 
 	/**
+	 * Helper method to register that from the current function there is no result (void, if you like)
+	 */
+	void register_void_result();
+
+	/**
 	 * Gets the current scope. In REPL mode this may be fixed, in full interpretation mode this may vary.
 	 */
 	virtual scope_context& get_current_scope() = 0;
@@ -36,6 +41,11 @@ protected:
 	 * Gets the interpretation context
 	 */
 	virtual interpreter_context& get_interpreter_context() const = 0;
+
+	/**
+	 * Gets whether the last evaluation returned a result
+	 */
+	bool has_result() const;
 
 public:
 	~eval_visitor() override = default;

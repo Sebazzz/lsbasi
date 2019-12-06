@@ -55,6 +55,7 @@ void memory_table::set(const symbol_ptr& symbol, expression_value value)
 		if (this->m_parent != nullptr)
 		{
 			this->m_parent->set(symbol, value);
+			
 			return;
 		}
 
