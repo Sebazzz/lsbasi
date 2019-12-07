@@ -4,7 +4,7 @@
 #include "bin_op.h"
 #include "unary_op.h"
 #include "empty.h"
-#include "var.h"
+#include "assignment_target.h"
 #include "assign.h"
 #include "program.h"
 #include "procedure.h"
@@ -155,7 +155,7 @@ ast_ptr parser::handle_factor(lexer_iterator& it) const
 			return this->handle_procedure_call(identifier_token.value(), it);
 		}
 
-		const auto var_node = make_ast_ptr<var>(identifier_token.value(), identifier_token);
+		const auto var_node = make_ast_ptr<assignment_target>(identifier_token.value(), identifier_token);
 		return var_node;
 	}
 
@@ -551,7 +551,7 @@ ast_ptr parser::handle_procedure_call(const std::wstring& identifier, lexer_iter
 
 ast_ptr parser::handle_assign(const std::wstring& identifier, lexer_iterator& it) const
 {
-	const auto var_identifier = make_ast_ptr<var>(identifier, it.current_token());
+	const auto var_identifier = make_ast_ptr<assignment_target>(identifier, it.current_token());
 	
 	const auto token = it.expect(token_type::assign);
 	it.advance();

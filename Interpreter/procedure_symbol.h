@@ -2,7 +2,6 @@
 #include "symbol.h"
 #include "procedure.h"
 #include "var_decl.h"
-#include "type_symbol.h"
 
 struct scope_context;
 
@@ -17,6 +16,8 @@ public:
 	
 	[[nodiscard]] std::wstring to_string() const override;
 
+	[[nodiscard]] virtual symbol_type_ptr<type_symbol> return_type() const = 0;
+	[[nodiscard]] virtual bool is_function() const = 0;
 	[[nodiscard]] virtual const ast::procedure_param_list& params() const = 0;
 	[[nodiscard]] virtual symbol_table& symbol_table() const = 0;
 };
@@ -34,6 +35,8 @@ public:
 	
 	[[nodiscard]] const ast::procedure& procedure() const;
 
+	[[nodiscard]] symbol_type_ptr<type_symbol> return_type() const override;
+	[[nodiscard]] bool is_function() const override;
 	[[nodiscard]] const ast::procedure_param_list& params() const override;
 	[[nodiscard]] ::symbol_table& symbol_table() const override;
 };
@@ -57,6 +60,7 @@ class builtin_procedure_symbol abstract : public procedure_symbol
 		builtin_procedure_symbol(const symbol_identifier& identifier, ::symbol_table* runtime_symbol_table);
 		ast::type_ptr get_builtin_type(ast::builtin_type type_spec) const;
 		void register_param(const symbol_identifier& identifier, ast::builtin_type builtin_type);
+		
 
 	public:
 		[[nodiscard]] const ast::procedure_param_list& params() const override;

@@ -2,6 +2,7 @@
 #include "procedure.h"
 #include "symbol_table.h"
 #include "procedure_symbol.h"
+#include "type_symbol.h"
 
 procedure_symbol::procedure_symbol(const symbol_identifier& identifier): symbol(symbol_type::procedure, identifier)
 {
@@ -10,6 +11,16 @@ procedure_symbol::procedure_symbol(const symbol_identifier& identifier): symbol(
 const ast::procedure& user_defined_procedure_symbol::procedure() const
 {
 	return this->m_procedure;
+}
+
+symbol_type_ptr<type_symbol> user_defined_procedure_symbol::return_type() const
+{
+	return this->m_procedure.return_type()->type_symbol();
+}
+
+bool user_defined_procedure_symbol::is_function() const
+{
+	return this->m_procedure.is_function();
 }
 
 const ast::procedure_param_list& user_defined_procedure_symbol::params() const

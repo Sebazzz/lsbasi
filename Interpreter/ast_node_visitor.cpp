@@ -39,7 +39,7 @@ void ast_node_visitor::visit(ast::assign& assign)
 	assign.right()->accept(*this);
 }
 
-void ast_node_visitor::visit(ast::var&)
+void ast_node_visitor::visit(ast::assignment_target&)
 {
 	// For derived classes to implement
 }
@@ -59,6 +59,11 @@ void ast_node_visitor::visit(ast::procedure& procedure)
 	for (auto& param_decl : procedure.params())
 	{
 		param_decl->accept(*this);
+	}
+
+	if (procedure.is_function())
+	{
+		procedure.return_type()->accept(*this);
 	}
 	
 	procedure.block()->accept(*this);

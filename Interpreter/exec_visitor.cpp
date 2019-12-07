@@ -40,13 +40,13 @@ void exec_visitor::visit(ast::assign& assign)
 	auto result = this->visit_with_result(*assign_expr);
 
 	// Register result
-	const auto var_symbol = assign.left()->variable_symbol();
-	const auto type = var_symbol->variable().type()->type_symbol();
+	const auto assign_target_symbol = assign.left()->assignment_symbol();
+	const auto type = assign.left()->type_symbol();
 	const auto& assign_type_impl = type->type_impl();
 
 	if (!assign_type_impl.supports_implicit_type_conversion_from(result.type, token_type::assign))
 	{
-		throw runtime_type_error(L"Attempting to assign variable " + var_symbol->to_string() + L" (which is of type " + type->to_string() + L") from expression with invalid type: " + result.type->to_string(), assign.get_line_info());
+		throw runtime_type_error(L"Attempting to assign variable " + assign_target_symbol->to_string() + L" (which is of type " + type->to_string() + L") from expression with invalid type: " + result.type->to_string(), assign.get_line_info());
 	}
 
 	type_operation_context type_operation_context = {
@@ -56,17 +56,17 @@ void exec_visitor::visit(ast::assign& assign)
 	};
 	assign_type_impl.implicit_type_conversion(result, type_operation_context);
 	
-	ctx.memory->set(var_symbol, result.value);
+	ctx.memory->set(assign_target_symbol, result.value);
 }
 
-void exec_visitor::visit(ast::var& var)
+void exec_visitor::visit(ast::assignment_target& assignment_target)
 {
 	auto& ctx = this->m_stack.current_context();
 
 	// Lookup in current scope
-	const auto var_symbol = var.variable_symbol();
+	const auto var_symbol = assignment_target.assignment_symbol();
 	const auto var_val = ctx.memory->get(var_symbol);
-	const auto var_type = var_symbol->variable().type()->type_symbol();
+	const auto var_type = assignment_target.type_symbol();
 	
 	this->register_visit_result({var_type, var_val});
 }
@@ -177,6 +177,20 @@ void exec_visitor::visit(ast::procedure_call& procedure_call)
 	else
 	{
 		throw internal_interpret_except(std::string("Unsupported procedure: ") + typeid(*procedure_symbol).name());
+	}
+
+	// Register return value if function
+	if (procedure_symbol->is_function())
+	{
+		const auto return_value = proc_ctx.memory->get(procedure_symbol);
+
+		this->register_visit_result({
+			procedure_symbol->return_type(),
+			return_value
+		});
+	} else
+	{
+		this->register_void_result();
 	}
 
 	// Go back to previous context

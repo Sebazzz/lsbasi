@@ -1,11 +1,11 @@
 #pragma once
 #include "ast_common.h"
 #include "token_type.h"
-#include "var.h"
+#include "assignment_target.h"
 
 namespace ast
 {
-	using assign_left_type = ast_node_ptr<var>;
+	using assign_left_type = ast_node_ptr<assignment_target>;
 	
 	class assign;
 }

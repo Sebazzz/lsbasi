@@ -43,9 +43,9 @@ void symbol_table_builder::visit_leftover_procedures()
 
 		if (procedure_info.procedure_node.is_function())
 		{
-			// TODO: declare variable for return value
+			nested_scope_visitor.symbol_table()->associated_routine(procedure_info.procedure_symbol);
 		}
-		
+
 		procedure_info.procedure_node.m_symbol_table = nested_scope_visitor.symbol_table();
 		procedure_info.procedure_node.accept(nested_scope_visitor);
 	}
@@ -72,9 +72,22 @@ void symbol_table_builder::visit(ast::ast_node& node)
 	ast_node_visitor::visit(node);
 }
 
-void symbol_table_builder::visit(ast::var& variable)
+void symbol_table_builder::visit(ast::assignment_target& variable)
 {
-	variable.m_variable_symbol = verify_exists<variable_symbol>(*this->m_symbol_table, variable.identifier(), variable.get_line_info());
+	// Assignment can either be to procedure (return value) or variable
+	const auto procedure_target = std::dynamic_pointer_cast<procedure_symbol>(this->m_symbol_table->get(variable.identifier()));
+	if (procedure_target)
+	{
+		if (!procedure_target->is_function())
+		{
+			throw semantic_except(L"Attempting to call procedure '" + procedure_target->identifier() + L"' as function", variable.get_line_info());
+		}
+		
+		variable.m_function_symbol = procedure_target;
+	} else
+	{
+		variable.m_variable_symbol = verify_exists<variable_symbol>(*this->m_symbol_table, variable.identifier(), variable.get_line_info());
+	}
 }
 
 void symbol_table_builder::visit(ast::type& type_ref)
@@ -158,7 +171,7 @@ void symbol_table_builder::visit(ast::procedure& procedure)
 		return;
 	}
 
-	const auto symbol = std::static_pointer_cast<procedure_symbol>(make_symbol_ptr<user_defined_procedure_symbol>(procedure));
+	const auto symbol = make_symbol_ptr<user_defined_procedure_symbol>(procedure);
 
 	// Procedure, delay actual nested symbol rendering so we don't need procedures to be declared in order
 	// ... already add the procedure to the current scope so it can be referenced

@@ -1,6 +1,6 @@
 #pragma once
 #include "ast_node_visitor.h"
-#include "var.h"
+#include "assignment_target.h"
 #include "eval_visitor.h"
 #include "scope_context.h"
 
@@ -25,7 +25,7 @@ public:
 	void visit(ast::ast_node& node) override;
 	void visit(ast::compound& compound) override;
 	void visit(ast::assign& assign) override;
-	void visit(ast::var& var) override;
+	void visit(ast::assignment_target& assignment_target) override;
 	void visit(ast::block& block) override;
 	void visit(ast::program& program) override;
 	void visit(ast::procedure& procedure) override;

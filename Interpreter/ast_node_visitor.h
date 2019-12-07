@@ -5,7 +5,7 @@
 #include "num.h"
 #include "compound.h"
 #include "assign.h"
-#include "var.h"
+#include "assignment_target.h"
 #include "empty.h"
 #include "block.h"
 #include "program.h"
@@ -53,7 +53,7 @@ public:
 	/**
 	 * Visit a variable - default implementation is no-op
 	 */
-	virtual void visit(ast::var& variable);
+	virtual void visit(ast::assignment_target& variable);
 
 	/**
 	 * Visit a empty statement - default implementation is no-op
@@ -61,7 +61,7 @@ public:
 	virtual void visit(ast::empty& empty_statement);
 
 	/**
-	 * Visit a program statement - default implementation is visit of var and block
+	 * Visit a program statement - default implementation is visit of assignment_target and block
 	 */
 	virtual void visit(ast::program& program);
 
@@ -86,7 +86,7 @@ public:
 	virtual void visit(ast::type& type_ref);
 
 	/**
-	 * Visit a block - default implementation visits var declarations and compound
+	 * Visit a block - default implementation visits assignment_target declarations and compound
 	 */
 	virtual void visit(ast::block& block);
 	

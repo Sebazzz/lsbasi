@@ -50,6 +50,17 @@ public:
 		auto param_id = 0;
 		this->invoke_impl(make_arg<Ts>(procedure_scope, ++param_id)...);
 	}
+
+	[[nodiscard]] bool is_function() const override
+	{
+		return false; // TODO: When we implement built-in functions
+	}
+
+
+	[[nodiscard]] symbol_type_ptr<type_symbol> return_type() const override
+	{
+		throw internal_interpret_except("Not supported"); // TODO: when we implement built-in functions
+	}
 };
 
 /**

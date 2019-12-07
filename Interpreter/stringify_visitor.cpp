@@ -57,7 +57,7 @@ void stringify_visitor::visit(ast::assign& assign)
 	assign.right()->accept(*this);
 }
 
-void stringify_visitor::visit(ast::var& variable)
+void stringify_visitor::visit(ast::assignment_target& variable)
 {
 	this->string_buf.append(variable.identifier());
 }

@@ -3,7 +3,9 @@
 #include "symbol.h"
 
 class builtin_procedure_symbol;
+class procedure_symbol;
 class type_symbol;
+
 class symbol_table final
 {
 private:
@@ -14,6 +16,8 @@ private:
 	 * we always either have a parent scope (thus memory) or we don't but the previous scope can never be dangling.
 	 */
 	symbol_table* m_parent = nullptr;
+
+	symbol_type_ptr<procedure_symbol> m_associated_procedure;
 
 	std::wstring m_scope_name;
 
@@ -76,6 +80,16 @@ public:
 	 * Gets an iterator at allows iterating over all the symbols
 	 */
 	[[nodiscard]] symbol_table_iterator iterator() const;
+
+	/**
+	 * Sets the current symbol table associated procedure it belongs to so the memory table can at a later stage use this information to pre-define variables.
+	 */
+	void associated_routine(const symbol_type_ptr<procedure_symbol>& routine);
+
+	/**
+	 * Gets, if available, the routine associated with this symbol
+	 */
+	[[nodiscard]] symbol_type_ptr<procedure_symbol> associated_routine() const;
 };
 
 template <class T>

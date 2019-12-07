@@ -53,7 +53,7 @@ public:
 	symbol_table_builder& operator=(symbol_table_builder&& other) noexcept = delete;
 
 	void visit(ast::ast_node& node) override;
-	void visit(ast::var& variable) override;
+	void visit(ast::assignment_target& variable) override;
 	void visit(ast::var_decl& var_decl) override;
 	void visit(ast::block& block) override;
 	void visit(ast::program& program) override;

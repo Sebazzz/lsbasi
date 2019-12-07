@@ -496,8 +496,8 @@ END.
     // The grammar currently does not support functions, so we don't allow it as part of an expression.
     REQUIRE_THROWS_MATCHES( 
 		do_interpret_program(program), 
-		parse_except, 
-		Catch::Message("Syntax error: Invalid token found: Expected type end; Got token: token(group_start)"));
+		internal_interpret_except,  // TODO: improve this error message, perhaps we should be able to fix this in the semantic analysis step
+		Catch::Message("INTERNAL INTERPRETER ERROR: Previous node accept did not yield a value: class ast::procedure_call"));
 }
 
 TEST_CASE( "Interpretation fails - procedure used as argument", "[interpreter_program]" ) {
@@ -523,8 +523,8 @@ END.
     // The grammar currently does not support functions, so we don't allow it as part of an expression.
     REQUIRE_THROWS_MATCHES( 
 		do_interpret_program(program), 
-		parse_except, 
-		Catch::Message("Syntax error: Invalid token found: Expected type end; Got token: token(group_start)"));
+		internal_interpret_except,  // TODO: improve this error message, perhaps we should be able to fix this in the semantic analysis step
+		Catch::Message("INTERNAL INTERPRETER ERROR: Previous node accept did not yield a value: class ast::procedure_call"));
 }
 
 TEST_CASE( "Interpretation fails - procedures with parameters called with not enough parameters", "[interpreter_program]" ) {

@@ -108,9 +108,6 @@
     <ClCompile Include="assign.cpp">
       <Filter>Source Files\ast</Filter>
     </ClCompile>
-    <ClCompile Include="var.cpp">
-      <Filter>Source Files\ast</Filter>
-    </ClCompile>
     <ClCompile Include="empty.cpp">
       <Filter>Source Files\ast</Filter>
     </ClCompile>
@@ -201,6 +198,9 @@
     <ClCompile Include="builtin_procedures.cpp">
       <Filter>Source Files\ast_visitor\symbols</Filter>
     </ClCompile>
+    <ClCompile Include="assignment_target.cpp">
+      <Filter>Source Files\ast</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_color.h">
@@ -255,9 +255,6 @@
       <Filter>Header Files\ast</Filter>
     </ClInclude>
     <ClInclude Include="assign.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="var.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
     <ClInclude Include="empty.h">
@@ -373,6 +370,9 @@
     </ClInclude>
     <ClInclude Include="builtin_procedures.h">
       <Filter>Header Files\ast_visitor\symbols</Filter>
+    </ClInclude>
+    <ClInclude Include="assignment_target.h">
+      <Filter>Header Files\ast</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

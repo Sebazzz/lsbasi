@@ -21,7 +21,7 @@ public:
 
 	void visit(ast::compound& compound) override;
 	void visit(ast::assign& assign) override;
-	void visit(ast::var& variable) override;
+	void visit(ast::assignment_target& variable) override;
 	void visit(ast::empty& empty_statement) override;
 	
 	std::wstring& get_string();

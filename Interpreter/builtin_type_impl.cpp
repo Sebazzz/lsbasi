@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "builtin_type_impl.h"
 #include "interpret_math.h"
-#include "var.h"
+#include "assignment_target.h"
 #include <cmath>
 
 void builtin_type_impl::assign_self_type(eval_value& eval_value, type_operation_context& type_operation_context) const

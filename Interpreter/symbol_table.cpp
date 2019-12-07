@@ -104,3 +104,13 @@ symbol_table::symbol_table_iterator symbol_table::iterator() const
 {
 	return symbol_table_iterator(this->m_variables.begin(), this->m_variables.end());
 }
+
+void symbol_table::associated_routine(const symbol_type_ptr<procedure_symbol>& routine)
+{
+	this->m_associated_procedure = routine;
+}
+
+symbol_type_ptr<procedure_symbol> symbol_table::associated_routine() const
+{
+	return this->m_associated_procedure;
+}

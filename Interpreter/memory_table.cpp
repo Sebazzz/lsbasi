@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "memory_table.h"
+#include "procedure_symbol.h"
 #include "symbol_table.h"
 
 memory_table::memory_table(memory_table* parent) : m_parent(parent)
@@ -25,6 +26,14 @@ void memory_table::init_from_symbol_table(symbol_table& symbol_table)
 		
 		iterator.next();
 	}
+
+	// Set return value place
+	const auto associated_routine = symbol_table.associated_routine();
+	if (associated_routine)
+	{
+		const auto symbol_ptr = std::static_pointer_cast<symbol, procedure_symbol>(associated_routine);
+		this->m_variables.try_emplace(symbol_ptr, memory_contents { 0 });
+	}
 }
 
 expression_value memory_table::get(const symbol_ptr& symbol)
@@ -39,7 +48,7 @@ expression_value memory_table::get(const symbol_ptr& symbol)
 			return this->m_parent->get(symbol);
 		}
 
-		throw std::logic_error("Cannot find symbol");
+		throw internal_interpret_except(L"Cannot find symbol while getting value from memory: " + symbol->to_string());
 	}
 
 	return it->second.value;
@@ -59,7 +68,7 @@ void memory_table::set(const symbol_ptr& symbol, expression_value value)
 			return;
 		}
 
-		throw std::logic_error("Cannot find symbol");
+		throw internal_interpret_except(L"Cannot find symbol while setting value in memory: " + symbol->to_string());
 	}
 
 	it->second.value = value;

@@ -270,7 +270,7 @@
     <ClCompile Include="type_symbol.cpp" />
     <ClCompile Include="unary_op.cpp" />
     <ClCompile Include="util.cpp" />
-    <ClCompile Include="var.cpp" />
+    <ClCompile Include="assignment_target.cpp" />
     <ClCompile Include="var_decl.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -329,7 +329,7 @@
     <ClInclude Include="type_symbol.h" />
     <ClInclude Include="unary_op.h" />
     <ClInclude Include="util.h" />
-    <ClInclude Include="var.h" />
+    <ClInclude Include="assignment_target.h" />
     <ClInclude Include="var_decl.h" />
   </ItemGroup>
   <ItemGroup>
