@@ -73,7 +73,7 @@ const ast::routine_param_list& builtin_routine_symbol::params() const
 
 std::wstring routine_symbol::to_string() const
 {
-	return L"procedure " + this->identifier();
+	return (this->is_function() ? L"function " : L"procedure ") + this->identifier();
 }
 
 user_defined_routine_symbol::user_defined_routine_symbol(ast::routine& procedure): routine_symbol(procedure.identifier()), m_procedure(procedure)
