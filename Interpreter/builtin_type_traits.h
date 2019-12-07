@@ -13,7 +13,7 @@ struct builtin_type_traits
 	using builtin_type = void*;
 	static constexpr wchar_t type_name[] = L"INVALID";
 
-	static symbol_identifier param_id()
+	static symbol_identifier param_id(int)
 	{
 		static_assert(false, L"Invalid template - this relies on specialization");
 		return L"?";
@@ -31,9 +31,9 @@ struct builtin_type_traits<ast::builtin_type::string>
 	using builtin_type = builtin_string_ptr;
 	static constexpr wchar_t type_name[] = L"STRING";
 
-	static symbol_identifier param_id()
+	static symbol_identifier param_id(int param_id)
 	{
-		return L"str_arg";
+		return L"str_arg" + std::to_wstring(param_id);
 	}
 
 	static builtin_type get_from_expression(ast::expression_value& expression_value)
@@ -49,9 +49,9 @@ struct builtin_type_traits<ast::builtin_type::integer>
 	using builtin_type = builtin_integer;
 	static constexpr wchar_t type_name[] = L"INTEGER";
 
-	static symbol_identifier param_id()
+	static symbol_identifier param_id(int param_id)
 	{
-		return L"int_val";
+		return L"int_val" + std::to_wstring(param_id);
 	}
 
 	static builtin_type get_from_expression(ast::expression_value& expression_value)
@@ -67,9 +67,9 @@ struct builtin_type_traits<ast::builtin_type::real>
 	using builtin_type = builtin_real;
 	static constexpr wchar_t type_name[] = L"REAL";
 
-	static symbol_identifier param_id()
+	static symbol_identifier param_id(int param_id)
 	{
-		return L"real_arg";
+		return L"real_arg" + std::to_wstring(param_id);
 	}
 
 	static builtin_type get_from_expression(ast::expression_value& expression_value)

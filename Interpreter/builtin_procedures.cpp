@@ -4,7 +4,7 @@
 
 // ----- writeln(STRING)
 
-void builtin_procedure_writeln::invoke_impl(arg_traits::builtin_type arg)
+void builtin_procedure_writeln::invoke_impl(builtin_type_traits<ast::builtin_type::string>::builtin_type arg)
 {
 	if (!arg)
 	{
