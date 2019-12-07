@@ -286,7 +286,7 @@ ast_node_ptr<procedure> parser::handle_procedure(lexer_iterator& it) const
 	return make_ast_ptr<procedure>(procedure_id, param_list, block, token);
 }
 
-ast::ast_node_ptr<ast::block> parser::handle_block(lexer_iterator& it) const
+ast_node_ptr<block> parser::handle_block(lexer_iterator& it) const
 {
 	const auto token = it.current_token();
 	
@@ -301,7 +301,7 @@ ast::ast_node_ptr<ast::block> parser::handle_block(lexer_iterator& it) const
 	return make_ast_ptr<block>(variable_declaration_list, procedure_declaration_list, compound, token);
 }
 
-void parser::handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_declaration_list) const
+void parser::handle_var_decl_list(lexer_iterator& it, var_decl_list& var_declaration_list) const
 {
 	if (it->type() != token_type::var_decl)
 	{
@@ -315,7 +315,7 @@ void parser::handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_de
 	this->handle_var_decl_or_parameter_list(it, var_declaration_list, skip_logic);
 }
 
-void parser::handle_var_decl_or_parameter_list(lexer_iterator& it, ast::var_decl_list& var_declaration_list, std::function<void(lexer_iterator&)>& end_of_decl_logic) const
+void parser::handle_var_decl_or_parameter_list(lexer_iterator& it, var_decl_list& var_declaration_list, std::function<void(lexer_iterator&)>& end_of_decl_logic) const
 {
 	std::vector<std::pair<var_identifier, token>> identifiers;
 	do
@@ -362,7 +362,7 @@ void parser::handle_var_decl_or_parameter_list(lexer_iterator& it, ast::var_decl
 	} while (!it.is_at_end() && it->type() == token_type::identifier);
 }
 
-void parser::handle_procedure_decl_list(lexer_iterator& it, ast::procedure_decl_list& procedure_declaration_list) const
+void parser::handle_procedure_decl_list(lexer_iterator& it, procedure_decl_list& procedure_declaration_list) const
 {
 	if (it->type() != token_type::procedure)
 	{
