@@ -37,7 +37,7 @@ private:
 	/**
 	 * Interpret, expecting full program
 	 */
-	[[nodiscard]] std::wstring interpret_program();
+	void interpret_program();
 
 	/**
 	 * After interpretation, contains the global scope

@@ -58,20 +58,34 @@ builtin_string verify_string_symbol(const interpret_result& result, const symbol
 
 interpret_result do_interpret_program(const char* input)
 {
+    // Replace the stdout so we can capture the interpreter output
+    const auto old_wcout_buf = std::wcout.rdbuf();
+    std::wstringstream wcout_stream;
+    std::wcout.rdbuf(wcout_stream.rdbuf());
+
+    // String-stream for interpreter input
     std::wstringstream input_stream;
 	input_stream.str(raw_to_wstring(input));
 
     interpreter sut(input_stream, false);
 
-    const auto result = sut.interpret();
-
+    // Collect results
+    std::wcout << sut.interpret();
     const auto inter_info = sut.get_interpretation_info();
+
+    // Restore std::wcout stream
+    std::wcout.rdbuf(old_wcout_buf);
+
+    // ... Capture output
+    wcout_stream.seekg(0);
+    std::wstring interpret_output = wcout_stream.str();
+    
 
     return {
         inter_info.global_scope,
         inter_info.interpreter_context,
         inter_info.ast,
-        result
+        interpret_output
     };
 }
 
@@ -102,7 +116,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output == std::wstring(L"done") );
+    REQUIRE( result.output == std::wstring(L"") );
 
     REQUIRE( verify_int_symbol(result, L"a") == 2 );
     REQUIRE( verify_real_symbol(result, L"b") == 2 );
@@ -150,7 +164,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output == std::wstring(L"done") );
+    REQUIRE( result.output == std::wstring(L"") );
 
     REQUIRE( verify_string_symbol(result, L"a") == L"hello world" );
     REQUIRE( verify_string_symbol(result, L"b") == L"hello world" );
@@ -164,7 +178,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output == std::wstring(L"done") );
+    REQUIRE( result.output == std::wstring(L"hello world\n") );
 }
 
 TEST_CASE( "Interpretation succeeds - call to builtin procedure with uninitialized variable", "[interpreter_program]" ) {
@@ -176,7 +190,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output == std::wstring(L"done") );
+    REQUIRE( result.output == std::wstring(L"\n") );
 }
 
 TEST_CASE( "Interpretation succeeds - program with string concatenation", "[interpreter_program]" ) {
@@ -190,7 +204,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output == std::wstring(L"done") );
+    REQUIRE( result.output == std::wstring(L"") );
 
     REQUIRE( verify_string_symbol(result, L"a") == L"hello" );
     REQUIRE( verify_string_symbol(result, L"b") == L"world" );
@@ -207,7 +221,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output == std::wstring(L"done") );
+    REQUIRE( result.output == std::wstring(L"") );
 
     REQUIRE( verify_string_symbol(result, L"a") == L"hello" );
     REQUIRE( verify_string_symbol(result, L"c") == L"hello " );
@@ -222,7 +236,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output == std::wstring(L"done") );
+    REQUIRE( result.output == std::wstring(L"") );
 
     REQUIRE( verify_int_symbol(result, L"a") == 2 );
 }
@@ -244,7 +258,7 @@ BEGIN
 END.                                    
 )");
 
-	REQUIRE(result.output  == std::wstring(L"done") );
+	REQUIRE(result.output  == std::wstring(L"") );
 
     REQUIRE( verify_int_symbol(result, L"x") == 11 );
     REQUIRE( verify_int_symbol(result, L"number") == 2 );
@@ -270,7 +284,7 @@ begIN
 ENd.                                    
 )");
 
-	REQUIRE(result.output  == std::wstring(L"done") );
+	REQUIRE(result.output  == std::wstring(L"") );
 
     REQUIRE( verify_int_symbol(result, L"x") == 11 );
     REQUIRE( verify_int_symbol(result, L"number") == 2 );
@@ -289,7 +303,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output  == std::wstring(L"done") );
+    REQUIRE( result.output  == std::wstring(L"") );
 
     REQUIRE( verify_int_symbol(result, L"_a") == 2 );
 }
@@ -303,7 +317,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output  == std::wstring(L"done") );
+    REQUIRE( result.output  == std::wstring(L"") );
 
     REQUIRE( verify_int_symbol(result, L"_a_b") == 2 );
 }
@@ -317,7 +331,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output == std::wstring(L"done") );
+    REQUIRE( result.output == std::wstring(L"") );
 
     REQUIRE( verify_int_symbol(result, L"_a") == 0 );
 }
@@ -337,7 +351,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output  == std::wstring(L"done") );
+    REQUIRE( result.output  == std::wstring(L"") );
 
     REQUIRE( verify_int_symbol(result, L"_a") == 2 );
 }
@@ -354,7 +368,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output  == std::wstring(L"done") );
+    REQUIRE( result.output  == std::wstring(L"") );
 
     REQUIRE( (!!result.global_scope->symbols.get<procedure_symbol>(L"P1")) == true );
 }
@@ -373,7 +387,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output  == std::wstring(L"done") );
+    REQUIRE( result.output  == std::wstring(L"") );
 
     REQUIRE( (!!result.global_scope->symbols.get<procedure_symbol>(L"P1")) == true );
     REQUIRE( verify_int_symbol(result, L"a_global") == 5 );
@@ -393,7 +407,7 @@ BEGIN
 END.        
 )");
 
-    REQUIRE( result.output  == std::wstring(L"done") );
+    REQUIRE( result.output  == std::wstring(L"") );
 
     REQUIRE( (!!result.global_scope->symbols.get<procedure_symbol>(L"P1")) == true );
     REQUIRE( verify_int_symbol(result, L"a_global") == 20 );
@@ -417,7 +431,7 @@ BEGIN {Part12}
 END.  {Part12}
 )");
 
-    REQUIRE( result.output  == std::wstring(L"done") );
+    REQUIRE( result.output  == std::wstring(L"") );
 
     REQUIRE( verify_real_symbol(result, L"a") == 10 );
     REQUIRE( verify_real_symbol(result, L"c") == 1337 );

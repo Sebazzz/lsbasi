@@ -68,7 +68,7 @@ std::wstring interpreter::interpret_repl() const
 	}
 }
 
-std::wstring interpreter::interpret_program()
+void interpreter::interpret_program()
 {
 	exec_visitor eval(*this->m_context_ptr);
 	eval.visit(*this->m_parsed_ast);
@@ -79,8 +79,6 @@ std::wstring interpreter::interpret_program()
 		this->m_context_ptr,
 		this->m_parsed_ast
 	};
-	
-	return std::wstring(L"done");
 }
 
 std::wstring interpreter::interpret()
@@ -91,8 +89,9 @@ std::wstring interpreter::interpret()
 	{
 		return interpret_repl();
 	}
-	
-	return interpret_program();
+
+	interpret_program();
+	return std::wstring();
 }
 
 interpreter::interpretation_info interpreter::get_interpretation_info() const
