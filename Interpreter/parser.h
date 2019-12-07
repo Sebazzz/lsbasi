@@ -65,7 +65,7 @@ private:
 	ast_ptr handle_program(lexer_iterator& it) const;
 	std::shared_ptr<ast::procedure> handle_procedure(lexer_iterator& it) const;
 	void handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_declaration_list) const;
-	void handle_procedure_decl_list(lexer_iterator& it, ast::procedure_decl_list& procedure_declaration_list) const;
+	void handle_routine_decl_list(lexer_iterator& it, ast::routine_decl_list& procedure_declaration_list) const;
 
 	/**
 	 * Common routine for handling procedure params or variable declarations.

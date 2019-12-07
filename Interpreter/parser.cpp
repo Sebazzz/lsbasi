@@ -293,8 +293,8 @@ ast_node_ptr<block> parser::handle_block(lexer_iterator& it) const
 	var_decl_list variable_declaration_list;
 	handle_var_decl_list(it, variable_declaration_list);
 
-	procedure_decl_list procedure_declaration_list;
-	handle_procedure_decl_list(it, procedure_declaration_list);
+	routine_decl_list procedure_declaration_list;
+	handle_routine_decl_list(it, procedure_declaration_list);
 
 	const auto compound = handle_compound(it);
 	
@@ -362,7 +362,7 @@ void parser::handle_var_decl_or_parameter_list(lexer_iterator& it, var_decl_list
 	} while (!it.is_at_end() && it->type() == token_type::identifier);
 }
 
-void parser::handle_procedure_decl_list(lexer_iterator& it, procedure_decl_list& procedure_declaration_list) const
+void parser::handle_routine_decl_list(lexer_iterator& it, routine_decl_list& procedure_declaration_list) const
 {
 	if (it->type() != token_type::procedure)
 	{

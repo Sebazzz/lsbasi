@@ -44,6 +44,6 @@ namespace ast {
 
 	// Common pointer types
 	using compound_ptr = ast_node_ptr<compound>;
-	using procedure_decl_ptr = ast_node_ptr<procedure>;
+	using routine_decl_ptr = ast_node_ptr<procedure>;
 	using var_decl_ptr = ast_node_ptr<var_decl>;
 }
