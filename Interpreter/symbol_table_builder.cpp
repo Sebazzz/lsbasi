@@ -108,7 +108,7 @@ void symbol_table_builder::visit(ast::var_decl& var_decl)
 {
 	this->ensure_symbol_table();
 
-	const auto symbol = make_symbol_type_ptr<variable_symbol>(var_decl);
+	const auto symbol = make_symbol_ptr<variable_symbol>(var_decl);
 	this->m_symbol_table->declare(symbol, var_decl.get_line_info());
 	var_decl.m_variable_symbol = symbol;
 	

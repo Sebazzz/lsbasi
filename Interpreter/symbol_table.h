@@ -81,7 +81,7 @@ public:
 template <class T>
 void symbol_table::register_builtin_procedure()
 {
-	const symbol_type_ptr<T> procedure = make_symbol_type_ptr<T>(this);
+	const symbol_type_ptr<T> procedure = make_symbol_ptr<T>(this);
 
 	this->m_variables.try_emplace(
 		procedure->identifier(),
