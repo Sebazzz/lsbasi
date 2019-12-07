@@ -23,6 +23,12 @@ struct builtin_type_traits
 	{
 		return &expression_value;
 	}
+
+	static ast::expression_value make_expression_value(const builtin_type)
+	{
+		static_assert(false, L"Invalid template - this relies on specialization");
+		return {0};
+	}
 };
 
 template<>
@@ -39,6 +45,11 @@ struct builtin_type_traits<ast::builtin_type::string>
 	static builtin_type get_from_expression(ast::expression_value& expression_value)
 	{
 		return expression_value.string_ptr_val;
+	}
+
+	static ast::expression_value make_expression_value(const builtin_type arg)
+	{
+		return ast::expression_value(arg);
 	}
 };
 
@@ -58,6 +69,11 @@ struct builtin_type_traits<ast::builtin_type::integer>
 	{
 		return expression_value.int_val;
 	}
+
+	static ast::expression_value make_expression_value(const builtin_type arg)
+	{
+		return ast::expression_value(arg);
+	}
 };
 
 
@@ -75,5 +91,10 @@ struct builtin_type_traits<ast::builtin_type::real>
 	static builtin_type get_from_expression(ast::expression_value& expression_value)
 	{
 		return expression_value.real_val;
+	}
+
+	static ast::expression_value make_expression_value(const builtin_type arg)
+	{
+		return ast::expression_value(arg);
 	}
 };

@@ -222,6 +222,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="assign.cpp" />
+    <ClCompile Include="builtin_functions.cpp" />
     <ClCompile Include="builtin_procedures.cpp" />
     <ClCompile Include="builtin_type_impl.cpp" />
     <ClCompile Include="builtin_type_symbol.cpp" />
@@ -280,6 +281,7 @@
     <ClInclude Include="ast_node_visitor.h" />
     <ClInclude Include="bin_op.h" />
     <ClInclude Include="block.h" />
+    <ClInclude Include="builtin_functions.h" />
     <ClInclude Include="builtin_procedures.h" />
     <ClInclude Include="builtin_type_defs.h" />
     <ClInclude Include="builtin_type_impl.h" />

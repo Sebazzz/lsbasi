@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "routine.h"
+#include "memory_table.h"
 #include "symbol_table.h"
+#include "scope_context.h"
 #include "routine_symbol.h"
 #include "type_symbol.h"
 
@@ -43,9 +45,20 @@ ast::type_ptr builtin_routine_symbol::get_builtin_type(ast::builtin_type type_sp
 	return ast::make_ast_ptr<ast::type>(identifier, token(token_type::identifier, identifier));
 }
 
+symbol_type_ptr<type_symbol> builtin_routine_symbol::get_builtin_type_symbol(ast::builtin_type type_spec) const
+{
+	return this->m_runtime_symbol_table->get(type_spec);
+}
+
 void builtin_routine_symbol::register_param(const symbol_identifier& identifier, ast::builtin_type builtin_type)
 {
 	this->m_param_list.push_back(ast::make_ast_ptr<ast::var_decl>(identifier, this->get_builtin_type(builtin_type), token(token_type::identifier, identifier, line_info {-1,-1})));
+}
+
+void builtin_routine_symbol::set_result(scope_context& procedure_scope, ast::expression_value expression_value) const
+{
+	// Could consider caching the procedure symbol
+	procedure_scope.memory->set(procedure_scope.symbols.get(this->identifier()), expression_value);
 }
 
 const ast::routine_param_list& builtin_routine_symbol::params() const

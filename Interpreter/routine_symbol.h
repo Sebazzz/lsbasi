@@ -59,8 +59,17 @@ class builtin_routine_symbol abstract : public routine_symbol
 	
 		builtin_routine_symbol(const symbol_identifier& identifier, ::symbol_table* runtime_symbol_table);
 		ast::type_ptr get_builtin_type(ast::builtin_type type_spec) const;
+		symbol_type_ptr<type_symbol> get_builtin_type_symbol(ast::builtin_type type_spec) const;
+
+		/**
+		 * Registers a parameter of the specified type with the specified name
+		 */
 		void register_param(const symbol_identifier& identifier, ast::builtin_type builtin_type);
-		
+
+		/**
+		 * For a function, sets the return result
+		 */
+		void set_result(scope_context& procedure_scope, ast::expression_value expression_value) const;
 
 	public:
 		[[nodiscard]] const ast::routine_param_list& params() const override;

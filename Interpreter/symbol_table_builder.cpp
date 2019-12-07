@@ -40,12 +40,8 @@ void symbol_table_builder::visit_leftover_procedures()
 		// We found a (nested) procedure. New scope.
 		symbol_table_builder nested_scope_visitor(procedure_info.routine_symbol->identifier(), this->m_symbol_table.get());
 		nested_scope_visitor.symbol_table()->declare(procedure_info.routine_symbol, procedure_info.procedure_node.get_line_info());
-
-		if (procedure_info.procedure_node.is_function())
-		{
-			nested_scope_visitor.symbol_table()->associated_routine(procedure_info.routine_symbol);
-		}
-
+		nested_scope_visitor.symbol_table()->associated_routine(procedure_info.routine_symbol);
+		
 		procedure_info.procedure_node.m_symbol_table = nested_scope_visitor.symbol_table();
 		procedure_info.procedure_node.accept(nested_scope_visitor);
 	}
@@ -56,7 +52,7 @@ void symbol_table_builder::delay_procedure_visit(const procedure_visit_context& 
 	this->m_procedures_to_visit.push(procedure_info);
 }
 
-void symbol_table_builder::initialize_builtin_procedure(builtin_routine_symbol* builtin_procedure)
+void symbol_table_builder::initialize_builtin_procedure(const symbol_type_ptr<builtin_routine_symbol> builtin_procedure)
 {
 	// Built-in procedures have their symbol table pre-constructed. The types can be resolve according to
 	// our current context but the variables need to be properly resolved from their symbol tables.
@@ -65,6 +61,9 @@ void symbol_table_builder::initialize_builtin_procedure(builtin_routine_symbol* 
 		param->m_variable_symbol = builtin_procedure->symbol_table().get<variable_symbol>(param->m_identifier);
 		param->type()->accept(*this);
 	}
+
+	// Set associated routine for the return value
+	builtin_procedure->symbol_table().associated_routine(builtin_procedure);
 }
 
 void symbol_table_builder::visit(ast::ast_node& node)
@@ -103,7 +102,7 @@ void symbol_table_builder::visit(ast::routine_call& procedure_call)
 
 	// ... if this is a built-in procedure its types have not been assigned their symbols, so lets do that
 	{
-		const auto builtin_procedure = dynamic_cast<builtin_routine_symbol*>(procedure_call.m_routine_symbol.get());
+		const auto builtin_procedure = std::dynamic_pointer_cast<builtin_routine_symbol, routine_symbol>(procedure_call.m_routine_symbol);
 		if (builtin_procedure)
 		{
 			this->initialize_builtin_procedure(builtin_procedure);

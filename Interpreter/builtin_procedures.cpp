@@ -17,7 +17,6 @@ void builtin_procedure_writeln::invoke_impl(builtin_type_traits<ast::builtin_typ
 	}
 }
 
-builtin_procedure_writeln::builtin_procedure_writeln(::symbol_table* runtime_symbol_table): builtin_procedure(
-	L"writeln", runtime_symbol_table)
+builtin_procedure_writeln::builtin_procedure_writeln(::symbol_table* runtime_symbol_table): builtin_procedure(L"writeln", runtime_symbol_table)
 {
 }

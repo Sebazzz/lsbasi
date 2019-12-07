@@ -53,13 +53,14 @@ public:
 
 	[[nodiscard]] bool is_function() const override
 	{
-		return false; // TODO: When we implement built-in functions
+		return false;
 	}
 
 
 	[[nodiscard]] symbol_type_ptr<type_symbol> return_type() const override
 	{
-		throw internal_interpret_except("Not supported"); // TODO: when we implement built-in functions
+		// Only supported for functions
+		throw internal_interpret_except("Not supported");
 	}
 };
 

@@ -2,6 +2,7 @@
 #include "builtin_type_symbol.h"
 #include "routine_symbol.h"
 #include "symbol_table.h"
+#include "builtin_functions.h"
 #include "builtin_procedures.h"
 
 symbol_table::symbol_table(): m_scope_name(L"RUNTIME")
@@ -11,6 +12,7 @@ symbol_table::symbol_table(): m_scope_name(L"RUNTIME")
 	this->register_builtin_type(ast::builtin_type::real);
 	this->register_builtin_type(ast::builtin_type::string);
 
+	this->register_builtin_procedure<builtin_function_random>();
 	this->register_builtin_procedure<builtin_procedure_writeln>();
 }
 

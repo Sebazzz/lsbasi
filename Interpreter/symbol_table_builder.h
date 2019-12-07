@@ -42,7 +42,7 @@ private:
 	/**
 	 * Initializes the types in a built-in procedure
 	 */
-	void initialize_builtin_procedure(builtin_routine_symbol* builtin_procedure);
+	void initialize_builtin_procedure(const symbol_type_ptr<builtin_routine_symbol> builtin_procedure);
 
 public:
 	~symbol_table_builder() override = default;

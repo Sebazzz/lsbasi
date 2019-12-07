@@ -227,6 +227,20 @@ END.
     REQUIRE( verify_string_symbol(result, L"c") == L"hello " );
 }
 
+TEST_CASE( "Interpretation succeeds - builtin function", "[interpreter_program]" ) {
+    const auto result = do_interpret_program(R"(
+PROGRAM Simple;
+VAR a: REAL;
+BEGIN       
+   a := random();
+END.        
+)");
+
+    REQUIRE( result.output == std::wstring(L"") );
+
+    REQUIRE( verify_real_symbol(result, L"a") != 0 /*Default value and very unlikely to be the outcome of random*/ );
+}
+
 TEST_CASE( "Interpretation succeeds - program 1", "[interpreter_program]" ) {
     const auto result = do_interpret_program(R"(
 PROGRAM Simple;
