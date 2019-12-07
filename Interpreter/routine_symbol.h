@@ -6,13 +6,13 @@
 struct scope_context;
 
 /**
- * Represents a procedure
+ * Represents a procedure or function
  */
-class procedure_symbol abstract : public symbol
+class routine_symbol abstract : public symbol
 {
 public:
-	explicit procedure_symbol(const symbol_identifier& identifier);
-	~procedure_symbol() override = default;
+	explicit routine_symbol(const symbol_identifier& identifier);
+	~routine_symbol() override = default;
 	
 	[[nodiscard]] std::wstring to_string() const override;
 
@@ -25,13 +25,13 @@ public:
 /**
  * Represents a user-defined procedure
  */
-class user_defined_procedure_symbol final : public procedure_symbol
+class user_defined_routine_symbol final : public routine_symbol
 {
 private:
 	ast::routine& m_procedure;
 	
 public:
-	explicit user_defined_procedure_symbol(ast::routine& procedure);
+	explicit user_defined_routine_symbol(ast::routine& procedure);
 	
 	[[nodiscard]] const ast::routine& procedure() const;
 
@@ -44,7 +44,7 @@ public:
 /**
  * Represents a built-in procedure. Derived classes actually implement the procedure logic.
  */
-class builtin_procedure_symbol abstract : public procedure_symbol
+class builtin_routine_symbol abstract : public routine_symbol
 {
 	private:
 		/**
@@ -57,7 +57,7 @@ class builtin_procedure_symbol abstract : public procedure_symbol
 	protected:
 		ast::procedure_param_list m_param_list;
 	
-		builtin_procedure_symbol(const symbol_identifier& identifier, ::symbol_table* runtime_symbol_table);
+		builtin_routine_symbol(const symbol_identifier& identifier, ::symbol_table* runtime_symbol_table);
 		ast::type_ptr get_builtin_type(ast::builtin_type type_spec) const;
 		void register_param(const symbol_identifier& identifier, ast::builtin_type builtin_type);
 		

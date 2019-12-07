@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "symbol.h"
 #include "symbol_table_builder.h"
-#include "procedure_symbol.h"
+#include "routine_symbol.h"
 #include "type_symbol.h"
 
 template<class T>
@@ -38,12 +38,12 @@ void symbol_table_builder::visit_leftover_procedures()
 		this->m_procedures_to_visit.pop();
 
 		// We found a (nested) procedure. New scope.
-		symbol_table_builder nested_scope_visitor(procedure_info.procedure_symbol->identifier(), this->m_symbol_table.get());
-		nested_scope_visitor.symbol_table()->declare(procedure_info.procedure_symbol, procedure_info.procedure_node.get_line_info());
+		symbol_table_builder nested_scope_visitor(procedure_info.routine_symbol->identifier(), this->m_symbol_table.get());
+		nested_scope_visitor.symbol_table()->declare(procedure_info.routine_symbol, procedure_info.procedure_node.get_line_info());
 
 		if (procedure_info.procedure_node.is_function())
 		{
-			nested_scope_visitor.symbol_table()->associated_routine(procedure_info.procedure_symbol);
+			nested_scope_visitor.symbol_table()->associated_routine(procedure_info.routine_symbol);
 		}
 
 		procedure_info.procedure_node.m_symbol_table = nested_scope_visitor.symbol_table();
@@ -56,7 +56,7 @@ void symbol_table_builder::delay_procedure_visit(const procedure_visit_context& 
 	this->m_procedures_to_visit.push(procedure_info);
 }
 
-void symbol_table_builder::initialize_builtin_procedure(builtin_procedure_symbol* builtin_procedure)
+void symbol_table_builder::initialize_builtin_procedure(builtin_routine_symbol* builtin_procedure)
 {
 	// Built-in procedures have their symbol table pre-constructed. The types can be resolve according to
 	// our current context but the variables need to be properly resolved from their symbol tables.
@@ -75,7 +75,7 @@ void symbol_table_builder::visit(ast::ast_node& node)
 void symbol_table_builder::visit(ast::assignment_target& variable)
 {
 	// Assignment can either be to procedure (return value) or variable
-	const auto procedure_target = std::dynamic_pointer_cast<procedure_symbol>(this->m_symbol_table->get(variable.identifier()));
+	const auto procedure_target = std::dynamic_pointer_cast<routine_symbol>(this->m_symbol_table->get(variable.identifier()));
 	if (procedure_target)
 	{
 		if (!procedure_target->is_function())
@@ -99,11 +99,11 @@ void symbol_table_builder::visit(ast::routine_call& procedure_call)
 {
 	// Verify that we can actually resolve this procedure
 	// The procedure that is being called must be declared in the same or any parent scope. 
-	procedure_call.m_procedure_symbol = verify_exists<procedure_symbol>(*this->m_symbol_table, procedure_call.procedure_identifier(), procedure_call.get_line_info());
+	procedure_call.m_routine_symbol = verify_exists<routine_symbol>(*this->m_symbol_table, procedure_call.procedure_identifier(), procedure_call.get_line_info());
 
 	// ... if this is a built-in procedure its types have not been assigned their symbols, so lets do that
 	{
-		const auto builtin_procedure = dynamic_cast<builtin_procedure_symbol*>(procedure_call.m_procedure_symbol.get());
+		const auto builtin_procedure = dynamic_cast<builtin_routine_symbol*>(procedure_call.m_routine_symbol.get());
 		if (builtin_procedure)
 		{
 			this->initialize_builtin_procedure(builtin_procedure);
@@ -171,7 +171,7 @@ void symbol_table_builder::visit(ast::routine& procedure)
 		return;
 	}
 
-	const auto symbol = make_symbol_ptr<user_defined_procedure_symbol>(procedure);
+	const auto symbol = make_symbol_ptr<user_defined_routine_symbol>(procedure);
 
 	// Procedure, delay actual nested symbol rendering so we don't need procedures to be declared in order
 	// ... already add the procedure to the current scope so it can be referenced

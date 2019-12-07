@@ -186,9 +186,6 @@
     <ClCompile Include="builtin_type_symbol.cpp">
       <Filter>Source Files\ast_visitor\symbols</Filter>
     </ClCompile>
-    <ClCompile Include="procedure_symbol.cpp">
-      <Filter>Source Files\ast_visitor\symbols</Filter>
-    </ClCompile>
     <ClCompile Include="builtin_procedures.cpp">
       <Filter>Source Files\ast_visitor\symbols</Filter>
     </ClCompile>
@@ -200,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="routine_call.cpp">
       <Filter>Source Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="routine_symbol.cpp">
+      <Filter>Source Files\ast_visitor\symbols</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -341,9 +341,6 @@
     <ClInclude Include="builtin_type_symbol.h">
       <Filter>Header Files\ast_visitor\symbols</Filter>
     </ClInclude>
-    <ClInclude Include="procedure_symbol.h">
-      <Filter>Header Files\ast_visitor\symbols</Filter>
-    </ClInclude>
     <ClInclude Include="type_symbol.h">
       <Filter>Header Files\ast_visitor\symbols</Filter>
     </ClInclude>
@@ -373,6 +370,9 @@
     </ClInclude>
     <ClInclude Include="routine_call.h">
       <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="routine_symbol.h">
+      <Filter>Header Files\ast_visitor\symbols</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

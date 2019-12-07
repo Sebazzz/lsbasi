@@ -2,8 +2,8 @@
 #include "pch.h"
 #include "symbol.h"
 
-class builtin_procedure_symbol;
-class procedure_symbol;
+class builtin_routine_symbol;
+class routine_symbol;
 class type_symbol;
 
 class symbol_table final
@@ -17,7 +17,7 @@ private:
 	 */
 	symbol_table* m_parent = nullptr;
 
-	symbol_type_ptr<procedure_symbol> m_associated_procedure;
+	symbol_type_ptr<routine_symbol> m_associated_procedure;
 
 	std::wstring m_scope_name;
 
@@ -84,12 +84,12 @@ public:
 	/**
 	 * Sets the current symbol table associated procedure it belongs to so the memory table can at a later stage use this information to pre-define variables.
 	 */
-	void associated_routine(const symbol_type_ptr<procedure_symbol>& routine);
+	void associated_routine(const symbol_type_ptr<routine_symbol>& routine);
 
 	/**
 	 * Gets, if available, the routine associated with this symbol
 	 */
-	[[nodiscard]] symbol_type_ptr<procedure_symbol> associated_routine() const;
+	[[nodiscard]] symbol_type_ptr<routine_symbol> associated_routine() const;
 };
 
 template <class T>

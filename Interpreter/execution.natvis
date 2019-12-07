@@ -47,7 +47,7 @@
     -->
     <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;builtin_type_symbol*&gt;(_Ptr) != nullptr" Optional="true">builtin {((builtin_type_symbol&amp;)*_Ptr).m_type} {id(),sub}</DisplayString>
     <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;variable_symbol*&gt;(_Ptr) != nullptr" Optional="true">var '{id(),sub}' {((variable_symbol&amp;)*_Ptr).m_var.m_type}</DisplayString>
-    <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;procedure_symbol*&gt;(_Ptr) != nullptr" Optional="true">proc '{id(),sub}' (args: {((procedure_symbol&amp;)*_Ptr).m_procedure.m_params})</DisplayString>
+    <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;routine_symbol*&gt;(_Ptr) != nullptr" Optional="true">proc '{id(),sub}' (args: {((routine_symbol&amp;)*_Ptr).m_procedure.m_params})</DisplayString>
     <DisplayString Condition="_Ptr != 0 &amp;&amp; dynamic_cast&lt;type_symbol*&gt;(_Ptr) != nullptr" Optional="true">type '{id(),sub}'</DisplayString>
     <DisplayString Condition="_Ptr != 0">(unknown) {(*_Ptr).m_type} {id(),sub}</DisplayString>
     <Expand>

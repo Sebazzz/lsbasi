@@ -2,7 +2,7 @@
 #include "assignment_target.h"
 #include "ast_node_visitor.h"
 #include "symbol.h"
-#include "procedure_symbol.h"
+#include "routine_symbol.h"
 
 using namespace ast;
 
@@ -62,7 +62,7 @@ symbol_ptr assignment_target::assignment_symbol() const
 
 	if (this->m_function_symbol)
 	{
-		return std::static_pointer_cast<symbol, procedure_symbol>(this->m_function_symbol);
+		return std::static_pointer_cast<symbol, routine_symbol>(this->m_function_symbol);
 	}
 
 	throw internal_interpret_except(L"Variable or function symbol was not made available in semantic analysis step");

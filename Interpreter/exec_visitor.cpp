@@ -3,7 +3,7 @@
 #include "exec_visitor.h"
 #include "builtin_type_symbol.h"
 #include "type_impl.h"
-#include "procedure_symbol.h"
+#include "routine_symbol.h"
 
 scope_context& exec_visitor::get_current_scope()
 {
@@ -101,8 +101,8 @@ void exec_visitor::visit(ast::routine_call& procedure_call)
 	};
 
 	// Find the referenced procedure
-	const auto procedure_symbol = procedure_call.procedure_symbol();
-	const auto& procedure_params = procedure_symbol->params();
+	const auto routine_symbol = procedure_call.routine_symbol();
+	const auto& procedure_params = routine_symbol->params();
 	const auto& procedure_args = procedure_call.args();
 
 	// Verify that even the correct number of arguments have been given. Let's do this while iterating the args and params.
@@ -110,7 +110,7 @@ void exec_visitor::visit(ast::routine_call& procedure_call)
 	
 	// We now have to process each of the parameters before the invocation. We get their value,
 	// then put their values in the memory table for the procedure. After this the invocation is fairly simple.
-	auto& proc_ctx = this->m_stack.new_scope(procedure_symbol->symbol_table());
+	auto& proc_ctx = this->m_stack.new_scope(routine_symbol->symbol_table());
 	
 	auto param_iterator = procedure_params.begin();
 	const auto params_end = procedure_params.end();
@@ -124,12 +124,12 @@ void exec_visitor::visit(ast::routine_call& procedure_call)
 		// or arguments for which no parameter has been declared.
 		if (param_iterator == procedure_params.end())
 		{
-			throw exec_error(L"In a call to " + procedure_symbol->to_string() + L" too many arguments have been provided", (*arg_iterator)->get_line_info());
+			throw exec_error(L"In a call to " + routine_symbol->to_string() + L" too many arguments have been provided", (*arg_iterator)->get_line_info());
 		}
 
 		if (arg_iterator == args_end)
 		{
-			throw exec_error(L"In a call to " + procedure_symbol->to_string() + L" no argument has been provided for this parameter: " + (*param_iterator)->identifier(), procedure_call.get_line_info());
+			throw exec_error(L"In a call to " + routine_symbol->to_string() + L" no argument has been provided for this parameter: " + (*param_iterator)->identifier(), procedure_call.get_line_info());
 		}
 
 		const ast::ast_ptr arg = *arg_iterator;
@@ -147,7 +147,7 @@ void exec_visitor::visit(ast::routine_call& procedure_call)
 		const auto& assign_type_impl = param_type->type_impl();
 		if (!assign_type_impl.supports_implicit_type_conversion_from(arg_value.type, token_type::assign))
 		{
-			throw runtime_type_error(L"Attempting to assign parameter " + param->identifier() + L" of " + procedure_symbol->to_string() + L" with invalid type: " + arg_value.type->to_string(), arg->get_line_info());
+			throw runtime_type_error(L"Attempting to assign parameter " + param->identifier() + L" of " + routine_symbol->to_string() + L" with invalid type: " + arg_value.type->to_string(), arg->get_line_info());
 		}
 
 		assign_type_impl.implicit_type_conversion(arg_value, type_operation_context);
@@ -162,8 +162,8 @@ void exec_visitor::visit(ast::routine_call& procedure_call)
 	// We have now bound all arguments in for the procedure. We can now execute the procedure
 
 	// ... Try to handle as a user defined procedure
-	const auto user_defined_procedure = std::dynamic_pointer_cast<user_defined_procedure_symbol>(procedure_symbol);
-	const auto builtin_procedure = std::dynamic_pointer_cast<builtin_procedure_symbol>(procedure_symbol);
+	const auto user_defined_procedure = std::dynamic_pointer_cast<user_defined_routine_symbol>(routine_symbol);
+	const auto builtin_procedure = std::dynamic_pointer_cast<builtin_routine_symbol>(routine_symbol);
 
 	if (user_defined_procedure)
 	{
@@ -176,16 +176,16 @@ void exec_visitor::visit(ast::routine_call& procedure_call)
 	}
 	else
 	{
-		throw internal_interpret_except(std::string("Unsupported procedure: ") + typeid(*procedure_symbol).name());
+		throw internal_interpret_except(std::string("Unsupported procedure: ") + typeid(*routine_symbol).name());
 	}
 
 	// Register return value if function
-	if (procedure_symbol->is_function())
+	if (routine_symbol->is_function())
 	{
-		const auto return_value = proc_ctx.memory->get(procedure_symbol);
+		const auto return_value = proc_ctx.memory->get(routine_symbol);
 
 		this->register_visit_result({
-			procedure_symbol->return_type(),
+			routine_symbol->return_type(),
 			return_value
 		});
 	} else

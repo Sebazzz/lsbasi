@@ -1,7 +1,7 @@
 #include "common_test.h"
 #include "../Interpreter/parser.h"
 #include "../Interpreter/symbol.h"
-#include "../Interpreter/procedure_symbol.h"
+#include "../Interpreter/routine_symbol.h"
 #include "../Interpreter/symbol_table_builder.h"
 
 struct parse_result
@@ -130,7 +130,7 @@ END.
 )");
 
 	REQUIRE( typeid(*result.symbol_table->get(L"_a")) == typeid(variable_symbol) );
-	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(user_defined_procedure_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(user_defined_routine_symbol) );
 }
 
 TEST_CASE( "Symbol lookup succeeds - procedures declared not in order", "[symbol_table_builder]" ) {
@@ -151,8 +151,8 @@ BEGIN
 END.        
 )");
 
-	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(user_defined_procedure_symbol) );
-	REQUIRE( typeid(*result.symbol_table->get(L"P2")) == typeid(user_defined_procedure_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(user_defined_routine_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"P2")) == typeid(user_defined_routine_symbol) );
 }
 
 TEST_CASE( "Symbol lookup succeeds - procedure with parameters", "[symbol_table_builder]" ) {
@@ -169,9 +169,9 @@ END.
 )");
 
 	REQUIRE( typeid(*result.symbol_table->get(L"_a")) == typeid(variable_symbol) );
-	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(user_defined_procedure_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(user_defined_routine_symbol) );
 
-    auto proc_symbol = result.symbol_table->get<user_defined_procedure_symbol>(L"P1");
+    auto proc_symbol = result.symbol_table->get<user_defined_routine_symbol>(L"P1");
 	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"a")) == typeid(variable_symbol) );
 }
 
@@ -190,9 +190,9 @@ END.
 )");
 
 	REQUIRE( typeid(*result.symbol_table->get(L"_a")) == typeid(variable_symbol) );
-	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(user_defined_procedure_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(user_defined_routine_symbol) );
 
-    auto proc_symbol = result.symbol_table->get<user_defined_procedure_symbol>(L"P1");
+    auto proc_symbol = result.symbol_table->get<user_defined_routine_symbol>(L"P1");
 	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"a")) == typeid(variable_symbol) );
 	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"b")) == typeid(variable_symbol) );
 	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"c")) == typeid(variable_symbol) );
@@ -226,10 +226,10 @@ END.  {Part12}
 )");
 
 	REQUIRE( typeid(*result.symbol_table->get(L"a")) == typeid(variable_symbol) );
-	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(user_defined_procedure_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(user_defined_routine_symbol) );
 
-    auto proc_symbol = result.symbol_table->get<user_defined_procedure_symbol>(L"P1");
-	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"P2")) == typeid(user_defined_procedure_symbol) );
+    auto proc_symbol = result.symbol_table->get<user_defined_routine_symbol>(L"P1");
+	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"P2")) == typeid(user_defined_routine_symbol) );
 	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"k")) == typeid(variable_symbol) );
 }
 
@@ -252,9 +252,9 @@ END.  {Part12}
 )");
 
 	REQUIRE( typeid(*result.symbol_table->get(L"a")) == typeid(variable_symbol) );
-	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(user_defined_procedure_symbol) );
+	REQUIRE( typeid(*result.symbol_table->get(L"P1")) == typeid(user_defined_routine_symbol) );
 
-    auto proc_symbol = result.symbol_table->get<user_defined_procedure_symbol>(L"P1");
+    auto proc_symbol = result.symbol_table->get<user_defined_routine_symbol>(L"P1");
 	REQUIRE( typeid(*proc_symbol->procedure().symbol_table().get(L"a")) == typeid(variable_symbol) );
 	REQUIRE( proc_symbol->procedure().symbol_table().get(L"b").get() == result.symbol_table->get(L"b").get());
 	REQUIRE( proc_symbol->procedure().symbol_table().get(L"a").get() != result.symbol_table->get(L"a").get());
@@ -314,7 +314,7 @@ END.
     REQUIRE_THROWS_MATCHES( 
 		do_parse_program(program), 
 		interpret_except, 
-		Catch::Message("Unable to resolve symbol of type 'class procedure_symbol': Attempt to reference symbol with name 'calculate' which does not exist in this scope: Simple"));
+		Catch::Message("Unable to resolve symbol of type 'class routine_symbol': Attempt to reference symbol with name 'calculate' which does not exist in this scope: Simple"));
 }
 
 TEST_CASE( "Symbol lookup fails - program undefined procedure args", "[symbol_table_builder]" ) {

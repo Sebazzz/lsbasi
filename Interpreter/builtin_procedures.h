@@ -2,7 +2,7 @@
 #include "builtin_type_traits.h"
 #include "memory_table.h"
 #include "scope_context.h"
-#include "procedure_symbol.h"
+#include "routine_symbol.h"
 #include "builtin_procedures.h"
 
 /**
@@ -18,7 +18,7 @@
  * }
  */
 template<ast::builtin_type... Ts>
-class builtin_procedure abstract : public builtin_procedure_symbol
+class builtin_procedure abstract : public builtin_routine_symbol
 {
 private:
 	/**
@@ -32,7 +32,7 @@ private:
 	}
 	
 protected:
-	builtin_procedure(const symbol_identifier& identifier, ::symbol_table* runtime_symbol_table): builtin_procedure_symbol(identifier, runtime_symbol_table)
+	builtin_procedure(const symbol_identifier& identifier, ::symbol_table* runtime_symbol_table): builtin_routine_symbol(identifier, runtime_symbol_table)
 	{
 		auto param_id = 0;
 		

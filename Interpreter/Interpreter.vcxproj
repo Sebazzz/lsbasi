@@ -253,7 +253,7 @@
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="routine.cpp" />
     <ClCompile Include="routine_call.cpp" />
-    <ClCompile Include="procedure_symbol.cpp" />
+    <ClCompile Include="routine_symbol.cpp" />
     <ClCompile Include="program.cpp" />
     <ClCompile Include="repl_visitor.cpp" />
     <ClCompile Include="rpn_visitor.cpp" />
@@ -308,7 +308,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="routine.h" />
     <ClInclude Include="routine_call.h" />
-    <ClInclude Include="procedure_symbol.h" />
+    <ClInclude Include="routine_symbol.h" />
     <ClInclude Include="program.h" />
     <ClInclude Include="repl_visitor.h" />
     <ClInclude Include="rpn_visitor.h" />

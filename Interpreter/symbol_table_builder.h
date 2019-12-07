@@ -3,7 +3,7 @@
 #include "ast_node_visitor.h"
 #include "symbol_table.h"
 
-class procedure_symbol;
+class routine_symbol;
 
 /**
  * This class visits the AST and assigns symbol tables to the appropriate AST nodes
@@ -17,7 +17,7 @@ private:
 	struct procedure_visit_context
 	{
 		ast::routine& procedure_node;
-		symbol_type_ptr<procedure_symbol> procedure_symbol;
+		symbol_type_ptr<routine_symbol> routine_symbol;
 	};
 	
 	std::stack<procedure_visit_context> m_procedures_to_visit;
@@ -42,7 +42,7 @@ private:
 	/**
 	 * Initializes the types in a built-in procedure
 	 */
-	void initialize_builtin_procedure(builtin_procedure_symbol* builtin_procedure);
+	void initialize_builtin_procedure(builtin_routine_symbol* builtin_procedure);
 
 public:
 	~symbol_table_builder() override = default;

@@ -9,7 +9,7 @@ namespace ast
 
 class type_symbol;
 class variable_symbol;
-class procedure_symbol;
+class routine_symbol;
 class symbol_table_builder;
 
 class ast::assignment_target : public ast_node
@@ -18,7 +18,7 @@ private:
 	var_identifier m_identifier;
 
 	symbol_type_ptr<variable_symbol> m_variable_symbol;
-	symbol_type_ptr<procedure_symbol> m_function_symbol;
+	symbol_type_ptr<routine_symbol> m_function_symbol;
 
 public:
 	assignment_target(var_identifier identifier, token token);

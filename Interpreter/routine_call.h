@@ -11,7 +11,7 @@ namespace ast
 	class routine_call;
 }
 
-class procedure_symbol;
+class routine_symbol;
 class symbol_table_builder;
 
 /**
@@ -22,7 +22,7 @@ private:
 	procedure_identifier m_procedure_identifier;
 	procedure_arg_list m_args;
 	
-	symbol_type_ptr<procedure_symbol> m_procedure_symbol;
+	symbol_type_ptr<routine_symbol> m_routine_symbol;
 
 public:
 	routine_call(procedure_identifier procedure_identifier, procedure_arg_list shared_ptrs, token token);
@@ -39,7 +39,7 @@ public:
 
 	[[nodiscard]] const procedure_identifier& procedure_identifier() const;
 	[[nodiscard]] const procedure_arg_list& args() const;
-	[[nodiscard]] symbol_type_ptr<procedure_symbol> procedure_symbol() const;
+	[[nodiscard]] symbol_type_ptr<routine_symbol> routine_symbol() const;
 	
 	void accept(ast_node_visitor& visitor) override;
 

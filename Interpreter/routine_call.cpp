@@ -52,12 +52,12 @@ void ast::routine_call::accept(ast_node_visitor& visitor)
 	visitor.visit(*this);
 }
 
-symbol_type_ptr<procedure_symbol> ast::routine_call::procedure_symbol() const
+symbol_type_ptr<routine_symbol> ast::routine_call::routine_symbol() const
 {
-	if (!this->m_procedure_symbol)
+	if (!this->m_routine_symbol)
 	{
 		throw internal_interpret_except(L"Procedure symbol was not made available in semantic analysis step");
 	}
 	
-	return this->m_procedure_symbol;
+	return this->m_routine_symbol;
 }

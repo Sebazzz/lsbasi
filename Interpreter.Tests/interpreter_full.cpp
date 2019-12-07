@@ -2,7 +2,7 @@
 #include "../Interpreter/interpreter.h"
 #include "../Interpreter/symbol.h"
 #include "../Interpreter/type.h"
-#include "../Interpreter/procedure_symbol.h"
+#include "../Interpreter/routine_symbol.h"
 #include "../Interpreter/var_decl.h"
 #include "../Interpreter/builtin_type_symbol.h"
 
@@ -390,7 +390,7 @@ END.
 
     REQUIRE( result.output  == std::wstring(L"") );
 
-    REQUIRE( (!!result.global_scope->symbols.get<procedure_symbol>(L"P1")) == true );
+    REQUIRE( (!!result.global_scope->symbols.get<routine_symbol>(L"P1")) == true );
 }
 
 TEST_CASE( "Interpretation succeeds - procedures with parameters called", "[interpreter_program]" ) {
@@ -409,7 +409,7 @@ END.
 
     REQUIRE( result.output  == std::wstring(L"") );
 
-    REQUIRE( (!!result.global_scope->symbols.get<procedure_symbol>(L"P1")) == true );
+    REQUIRE( (!!result.global_scope->symbols.get<routine_symbol>(L"P1")) == true );
     REQUIRE( verify_int_symbol(result, L"a_global") == 5 );
 }
 
@@ -429,7 +429,7 @@ END.
 
     REQUIRE( result.output  == std::wstring(L"") );
 
-    REQUIRE( (!!result.global_scope->symbols.get<procedure_symbol>(L"P1")) == true );
+    REQUIRE( (!!result.global_scope->symbols.get<routine_symbol>(L"P1")) == true );
     REQUIRE( verify_int_symbol(result, L"a_global") == 20 );
 }
 

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "memory_table.h"
-#include "procedure_symbol.h"
+#include "routine_symbol.h"
 #include "symbol_table.h"
 
 memory_table::memory_table(memory_table* parent) : m_parent(parent)
@@ -31,7 +31,7 @@ void memory_table::init_from_symbol_table(symbol_table& symbol_table)
 	const auto associated_routine = symbol_table.associated_routine();
 	if (associated_routine)
 	{
-		const auto symbol_ptr = std::static_pointer_cast<symbol, procedure_symbol>(associated_routine);
+		const auto symbol_ptr = std::static_pointer_cast<symbol, routine_symbol>(associated_routine);
 		this->m_variables.try_emplace(symbol_ptr, memory_contents { 0 });
 	}
 }
