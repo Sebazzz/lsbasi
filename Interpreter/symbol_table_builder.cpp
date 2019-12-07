@@ -40,6 +40,12 @@ void symbol_table_builder::visit_leftover_procedures()
 		// We found a (nested) procedure. New scope.
 		symbol_table_builder nested_scope_visitor(procedure_info.procedure_symbol->identifier(), this->m_symbol_table.get());
 		nested_scope_visitor.symbol_table()->declare(procedure_info.procedure_symbol, procedure_info.procedure_node.get_line_info());
+
+		if (procedure_info.procedure_node.is_function())
+		{
+			// TODO: declare variable for return value
+		}
+		
 		procedure_info.procedure_node.m_symbol_table = nested_scope_visitor.symbol_table();
 		procedure_info.procedure_node.accept(nested_scope_visitor);
 	}

@@ -14,10 +14,11 @@
 // block:           declarations compound
 //
 // declarations:    VAR (var_decl SEMI)+ |
-//                  PROCEDURE ID (procedure params)? SEMI block SEMI* |
+//                  PROCEDURE ID (routine params)? SEMI block SEMI* |
+//                  FUNCTION ID (routine params)? COLON type_spec SEMI block SEMI* |
 //                  empty
 //
-// procedure params: "(" var_decl (SEMI var_decl)+ ")"
+// routine params: "(" var_decl (SEMI var_decl)+ ")"
 //
 // var_decl:        ID (COMMA ID) COLON type_spec
 //
@@ -43,6 +44,7 @@
 //                  integer |
 //                  real |
 //                  group |
+//                  function_call |
 //                  var
 // 
 // group:           "(" expression ")"
@@ -64,6 +66,7 @@ private:
 	
 	ast_ptr handle_program(lexer_iterator& it) const;
 	std::shared_ptr<ast::procedure> handle_procedure(lexer_iterator& it) const;
+	std::shared_ptr<ast::procedure> handle_function(lexer_iterator& it) const;
 	void handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_declaration_list) const;
 	void handle_routine_decl_list(lexer_iterator& it, ast::routine_decl_list& procedure_declaration_list) const;
 

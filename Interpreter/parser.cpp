@@ -146,9 +146,17 @@ ast_ptr parser::handle_factor(lexer_iterator& it) const
 
 	if (it->type() == token_type::identifier)
 	{
-		const auto identifier = make_ast_ptr<var>(it->value(), it.current_token());
+		const auto identifier_token = it.current_token();
 		it.advance();
-		return identifier;
+
+		if (!it.is_at_end() && it->type() == token_type::group_start)
+		{
+			// This must be an function call
+			return this->handle_procedure_call(identifier_token.value(), it);
+		}
+
+		const auto var_node = make_ast_ptr<var>(identifier_token.value(), identifier_token);
+		return var_node;
 	}
 
 	if (it->type() == token_type::plus || it->type() == token_type::minus)
@@ -286,6 +294,52 @@ ast_node_ptr<procedure> parser::handle_procedure(lexer_iterator& it) const
 	return make_ast_ptr<procedure>(procedure_id, param_list, block, token);
 }
 
+std::shared_ptr<ast::procedure> parser::handle_function(lexer_iterator& it) const
+{
+	const auto token = it.expect(token_type::function);
+	it.advance();
+
+	// ID
+	const auto procedure_id = it.expect(token_type::identifier).value();
+	it.advance();
+
+	// Possible parameter list
+	it.ensure_token("Expect semicolon or procedure parameter list");
+
+	procedure_param_list param_list;
+	if (it->type() == token_type::group_start)
+	{
+		it.advance();
+
+		std::function<void(lexer_iterator&)> skip_logic = [](lexer_iterator& it)
+		{
+			// Skip semicolons, but formal parameters don't end with one so we cannot require it
+			if (it.current_token().type() == token_type::semicolon)
+			{
+				it.advance();
+			}
+		};
+		this->handle_var_decl_or_parameter_list(it, param_list, skip_logic);
+
+		it.skip_required(token_type::group_end);
+	}
+
+	// Type spec
+	it.skip_required(token_type::colon);
+
+	const auto type_token = it.expect(token_type::identifier);
+	const auto return_type = make_ast_ptr<type>(type_token.value(), type_token);
+	it.advance();
+	it.skip_required(token_type::semicolon);
+
+	// Expect block
+	auto block = this->handle_block(it);
+
+	it.skip_required(token_type::semicolon);
+
+	return make_ast_ptr<procedure>(procedure_id, param_list, return_type, block, token);
+}
+
 ast_node_ptr<block> parser::handle_block(lexer_iterator& it) const
 {
 	const auto token = it.current_token();
@@ -364,17 +418,24 @@ void parser::handle_var_decl_or_parameter_list(lexer_iterator& it, var_decl_list
 
 void parser::handle_routine_decl_list(lexer_iterator& it, routine_decl_list& procedure_declaration_list) const
 {
-	if (it->type() != token_type::procedure)
+	if (it->type() != token_type::procedure && it->type() != token_type::function)
 	{
-		// This is not a procedure declaration. Lets return control and hope the next parsing step knows what to do with it.
+		// This is not a procedure or function declaration. Lets return control and hope the next parsing step knows what to do with it.
 		return;
 	}
 
 	do
 	{
-		auto procedure = this->handle_procedure(it);
-		procedure_declaration_list.push_back(procedure);
-	} while (!it.is_at_end() && it->type() == token_type::procedure);
+		if (it->type() == token_type::procedure)
+		{
+			auto procedure = this->handle_procedure(it);
+			procedure_declaration_list.push_back(procedure);
+		} else if (it ->type() == token_type::function)
+		{
+			auto function = this->handle_function(it);
+			procedure_declaration_list.push_back(function);
+		}
+	} while (!it.is_at_end() && (it->type() == token_type::procedure || it->type() == token_type::function));
 }
 
 compound_ptr parser::handle_compound(lexer_iterator& it) const
@@ -442,7 +503,7 @@ ast_ptr parser::handle_statement(lexer_iterator& it) const
 ast_ptr parser::handle_assign_or_procedure_call(lexer_iterator& it) const
 {
 	// Take identifier
-	std::wstring identifier = it.expect(token_type::identifier).value();
+	const std::wstring identifier = it.expect(token_type::identifier).value();
 	it.advance();
 
 	// It could go two ways here: We have an assignment or we call a procedure.

@@ -9,9 +9,18 @@ ast::procedure::procedure(procedure_identifier id, procedure_param_list params, 
 {
 }
 
+ast::procedure::procedure(procedure_identifier id, procedure_param_list params, type_ptr return_type, block_ptr block, token token): ast_node(std::move(token)),
+                                                               m_identifier(std::move(id)),
+                                                               m_params(std::move(params)),
+                                                               m_return_type(std::move(return_type)),
+                                                               m_block(std::move(block))
+{
+}
+
 ast::procedure::procedure(procedure&& other) noexcept: ast_node(std::move(other)),
                                                  m_identifier(std::move(other.m_identifier)),
                                                  m_params(std::move(other.m_params)),
+                                                 m_return_type(std::move(other.m_return_type)),
                                                  m_block(std::move(other.m_block))
 {
 }
@@ -23,6 +32,7 @@ ast::procedure& ast::procedure::operator=(const procedure& other)
 	ast_node::operator =(other);
 	m_identifier = other.m_identifier;
 	m_params = other.m_params;
+	m_return_type = other.m_return_type;
 	m_block = other.m_block;
 	return *this;
 }
@@ -33,6 +43,7 @@ ast::procedure& ast::procedure::operator=(procedure&& other) noexcept
 		return *this;
 	m_identifier = std::move(other.m_identifier);
 	m_params = std::move(other.m_params);
+	m_return_type = std::move(other.m_return_type);
 	m_block = std::move(other.m_block);
 	ast_node::operator =(std::move(other));
 	return *this;
@@ -41,6 +52,16 @@ ast::procedure& ast::procedure::operator=(procedure&& other) noexcept
 const ast::procedure_identifier& ast::procedure::identifier() const
 {
 	return this->m_identifier;
+}
+
+const ast::type_ptr& ast::procedure::return_type() const
+{
+	return this->m_return_type;
+}
+
+bool ast::procedure::is_function() const
+{
+	return !!this->m_return_type;
 }
 
 const ast::block_ptr& ast::procedure::block() const

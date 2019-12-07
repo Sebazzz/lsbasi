@@ -89,6 +89,9 @@ const wchar_t* token::token_type_to_string(token_type type)
 	case token_type::procedure:
 		return L"procedure";
 
+	case token_type::function:
+		return L"function";
+
 	case token_type::begin:
 		return L"begin";
 		

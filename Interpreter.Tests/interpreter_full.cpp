@@ -356,6 +356,26 @@ END.
     REQUIRE( verify_int_symbol(result, L"_a") == 2 );
 }
 
+TEST_CASE( "Interpretation succeeds - functions", "[interpreter_program]" ) {
+    const auto result = do_interpret_program(R"(
+PROGRAM Semi;                           
+VAR _a: INTEGER;
+
+FUNCTION F1: INTEGER;
+BEGIN {F1}
+    F1 := 4 div 2
+END;
+
+BEGIN       
+   _a := F1();  
+END.        
+)");
+
+    REQUIRE( result.output  == std::wstring(L"") );
+
+    REQUIRE( verify_int_symbol(result, L"_a") == 2 );
+}
+
 TEST_CASE( "Interpretation succeeds - procedures with parameters", "[interpreter_program]" ) {
     const auto result = do_interpret_program(R"(
 PROGRAM Semi;                           

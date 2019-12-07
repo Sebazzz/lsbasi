@@ -176,6 +176,35 @@ PROCEDURE P1(a : INTEGER);
     REQUIRE( do_lex(lex) == std::wstring(L"token(semi) [5,6]") );
 }
 
+TEST_CASE( "Lexer tokenize test - function with params", "[lexer]" ) {
+    const auto input = make_lexer_input_stream(R"(
+FUNCTION F1(a : INTEGER): INTEGER;
+  BEGIN
+     F1 := a;
+  END;
+)");
+
+    lexer lex(*input);
+
+    REQUIRE( do_lex(lex) == std::wstring(L"token(function,FUNCTION) [2,1]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,F1) [2,10]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(group_start) [2,12]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,a) [2,13]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(colon) [2,15]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,INTEGER) [2,17]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(group_end) [2,24]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(colon) [2,25]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,INTEGER) [2,27]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(semi) [2,34]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(begin,BEGIN) [3,3]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,F1) [4,6]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(:=) [4,9]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,a) [4,12]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(semi) [4,13]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(end,END) [5,3]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(semi) [5,6]") );
+}
+
 TEST_CASE( "Lexer tokenize test - multiline with comment", "[lexer]" ) {
     const auto input = make_lexer_input_stream(R"(
 BEGIN
