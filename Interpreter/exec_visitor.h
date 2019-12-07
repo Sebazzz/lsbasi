@@ -28,7 +28,7 @@ public:
 	void visit(ast::assignment_target& assignment_target) override;
 	void visit(ast::block& block) override;
 	void visit(ast::program& program) override;
-	void visit(ast::procedure& procedure) override;
+	void visit(ast::routine& procedure) override;
 	void visit(ast::procedure_call& procedure_call) override;
 	
 	/**

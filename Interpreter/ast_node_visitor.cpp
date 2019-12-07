@@ -54,7 +54,7 @@ void ast_node_visitor::visit(ast::program& program)
 	program.block()->accept(*this);
 }
 
-void ast_node_visitor::visit(ast::procedure& procedure)
+void ast_node_visitor::visit(ast::routine& procedure)
 {
 	for (auto& param_decl : procedure.params())
 	{

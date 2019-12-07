@@ -132,9 +132,6 @@
     <ClCompile Include="scope_context.cpp">
       <Filter>Source Files\ast_visitor\execution</Filter>
     </ClCompile>
-    <ClCompile Include="procedure.cpp">
-      <Filter>Source Files\ast</Filter>
-    </ClCompile>
     <ClCompile Include="memory_table.cpp">
       <Filter>Source Files\ast_visitor\execution</Filter>
     </ClCompile>
@@ -199,6 +196,9 @@
       <Filter>Source Files\ast_visitor\symbols</Filter>
     </ClCompile>
     <ClCompile Include="assignment_target.cpp">
+      <Filter>Source Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="routine.cpp">
       <Filter>Source Files\ast</Filter>
     </ClCompile>
   </ItemGroup>
@@ -283,9 +283,6 @@
     </ClInclude>
     <ClInclude Include="scope_context.h">
       <Filter>Header Files\ast_visitor\execution</Filter>
-    </ClInclude>
-    <ClInclude Include="procedure.h">
-      <Filter>Header Files\ast</Filter>
     </ClInclude>
     <ClInclude Include="memory_table.h">
       <Filter>Header Files\ast_visitor\execution</Filter>
@@ -372,6 +369,9 @@
       <Filter>Header Files\ast_visitor\symbols</Filter>
     </ClInclude>
     <ClInclude Include="assignment_target.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="routine.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
   </ItemGroup>

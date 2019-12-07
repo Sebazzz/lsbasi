@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "procedure.h"
+#include "routine.h"
 #include "symbol_table.h"
 #include "procedure_symbol.h"
 #include "type_symbol.h"
@@ -8,7 +8,7 @@ procedure_symbol::procedure_symbol(const symbol_identifier& identifier): symbol(
 {
 }
 
-const ast::procedure& user_defined_procedure_symbol::procedure() const
+const ast::routine& user_defined_procedure_symbol::procedure() const
 {
 	return this->m_procedure;
 }
@@ -76,7 +76,7 @@ std::wstring procedure_symbol::to_string() const
 	return L"procedure " + this->identifier();
 }
 
-user_defined_procedure_symbol::user_defined_procedure_symbol(ast::procedure& procedure): procedure_symbol(procedure.identifier()), m_procedure(procedure)
+user_defined_procedure_symbol::user_defined_procedure_symbol(ast::routine& procedure): procedure_symbol(procedure.identifier()), m_procedure(procedure)
 {
 }
 

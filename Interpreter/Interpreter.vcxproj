@@ -251,7 +251,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="num.cpp" />
     <ClCompile Include="parser.cpp" />
-    <ClCompile Include="procedure.cpp" />
+    <ClCompile Include="routine.cpp" />
     <ClCompile Include="procedure_call.cpp" />
     <ClCompile Include="procedure_symbol.cpp" />
     <ClCompile Include="program.cpp" />
@@ -306,7 +306,7 @@
     <ClInclude Include="parser.h" />
     <ClInclude Include="parse_except.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="procedure.h" />
+    <ClInclude Include="routine.h" />
     <ClInclude Include="procedure_call.h" />
     <ClInclude Include="procedure_symbol.h" />
     <ClInclude Include="program.h" />

@@ -7,7 +7,7 @@
 #include "assignment_target.h"
 #include "assign.h"
 #include "program.h"
-#include "procedure.h"
+#include "routine.h"
 #include "var_decl.h"
 #include <functional>
 #include <utility>
@@ -254,7 +254,7 @@ ast_ptr parser::handle_program(lexer_iterator& it) const
 	return make_ast_ptr<program>(identifier, block, token);
 }
 
-ast_node_ptr<procedure> parser::handle_procedure(lexer_iterator& it) const
+ast_node_ptr<routine> parser::handle_procedure(lexer_iterator& it) const
 {
 	const auto token = it.expect(token_type::procedure);
 	it.advance();
@@ -291,10 +291,10 @@ ast_node_ptr<procedure> parser::handle_procedure(lexer_iterator& it) const
 
 	it.skip_required(token_type::semicolon);
 
-	return make_ast_ptr<procedure>(procedure_id, param_list, block, token);
+	return make_ast_ptr<routine>(procedure_id, param_list, block, token);
 }
 
-std::shared_ptr<ast::procedure> parser::handle_function(lexer_iterator& it) const
+std::shared_ptr<ast::routine> parser::handle_function(lexer_iterator& it) const
 {
 	const auto token = it.expect(token_type::function);
 	it.advance();
@@ -337,7 +337,7 @@ std::shared_ptr<ast::procedure> parser::handle_function(lexer_iterator& it) cons
 
 	it.skip_required(token_type::semicolon);
 
-	return make_ast_ptr<procedure>(procedure_id, param_list, return_type, block, token);
+	return make_ast_ptr<routine>(procedure_id, param_list, return_type, block, token);
 }
 
 ast_node_ptr<block> parser::handle_block(lexer_iterator& it) const

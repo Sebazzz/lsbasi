@@ -10,7 +10,7 @@ namespace ast
 	using procedure_param_list = std::vector<procedure_param_ptr>;
 
 	class block;
-	class procedure;
+	class routine;
 
 	using block_ptr = ast_node_ptr<block>;
 }
@@ -19,9 +19,9 @@ class symbol_table_builder;
 class symbol_table;
 
 /**
- * Represents a procedure or function (which as a return type)
+ * Represents a procedure or function (which has a return type)
  */
-class ast::procedure :
+class ast::routine :
 	public ast_node
 {
 private:
@@ -33,18 +33,18 @@ private:
 	std::shared_ptr<symbol_table> m_symbol_table;
 
 public:
-	procedure(procedure_identifier id, procedure_param_list params, block_ptr block, token token);
-	procedure(procedure_identifier id, procedure_param_list params, type_ptr return_type, block_ptr block, token token);
+	routine(procedure_identifier id, procedure_param_list params, block_ptr block, token token);
+	routine(procedure_identifier id, procedure_param_list params, type_ptr return_type, block_ptr block, token token);
 
-	procedure(const procedure& other) = default;
+	routine(const routine& other) = default;
 
-	procedure(procedure&& other) noexcept;
+	routine(routine&& other) noexcept;
 
-	procedure& operator=(const procedure& other);
+	routine& operator=(const routine& other);
 
-	procedure& operator=(procedure&& other) noexcept;
+	routine& operator=(routine&& other) noexcept;
 
-	~procedure() = default;
+	~routine() = default;
 
 	[[nodiscard]] const procedure_identifier& identifier() const;
 	[[nodiscard]] const type_ptr& return_type() const;

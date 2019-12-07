@@ -16,7 +16,7 @@ private:
 
 	struct procedure_visit_context
 	{
-		ast::procedure& procedure_node;
+		ast::routine& procedure_node;
 		symbol_type_ptr<procedure_symbol> procedure_symbol;
 	};
 	
@@ -57,7 +57,7 @@ public:
 	void visit(ast::var_decl& var_decl) override;
 	void visit(ast::block& block) override;
 	void visit(ast::program& program) override;
-	void visit(ast::procedure& procedure) override;
+	void visit(ast::routine& procedure) override;
 	void visit(ast::type& type_ref) override;
 	void visit(ast::procedure_call& procedure_call) override;
 	

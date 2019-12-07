@@ -11,7 +11,7 @@
 #include "program.h"
 #include "var_decl.h"
 #include "type.h"
-#include "procedure.h"
+#include "routine.h"
 #include "procedure_call.h"
 
 class ast_node_visitor
@@ -68,7 +68,7 @@ public:
 	/**
 	 * Visit a procedure statement - default implementation is visit of params and block
 	 */
-	virtual void visit(ast::procedure& procedure);
+	virtual void visit(ast::routine& procedure);
 
 	/**
 	 * Visit a procedure call - default implementation is no-op

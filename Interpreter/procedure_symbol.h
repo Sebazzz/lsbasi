@@ -1,6 +1,6 @@
 #pragma once
 #include "symbol.h"
-#include "procedure.h"
+#include "routine.h"
 #include "var_decl.h"
 
 struct scope_context;
@@ -28,12 +28,12 @@ public:
 class user_defined_procedure_symbol final : public procedure_symbol
 {
 private:
-	ast::procedure& m_procedure;
+	ast::routine& m_procedure;
 	
 public:
-	explicit user_defined_procedure_symbol(ast::procedure& procedure);
+	explicit user_defined_procedure_symbol(ast::routine& procedure);
 	
-	[[nodiscard]] const ast::procedure& procedure() const;
+	[[nodiscard]] const ast::routine& procedure() const;
 
 	[[nodiscard]] symbol_type_ptr<type_symbol> return_type() const override;
 	[[nodiscard]] bool is_function() const override;

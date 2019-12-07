@@ -40,10 +40,10 @@ namespace ast {
 	// Fwd declarations
 	class compound;
 	class var_decl;
-	class procedure;
+	class routine;
 
 	// Common pointer types
 	using compound_ptr = ast_node_ptr<compound>;
-	using routine_decl_ptr = ast_node_ptr<procedure>;
+	using routine_decl_ptr = ast_node_ptr<routine>;
 	using var_decl_ptr = ast_node_ptr<var_decl>;
 }

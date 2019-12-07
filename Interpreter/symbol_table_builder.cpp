@@ -155,7 +155,7 @@ void symbol_table_builder::visit(ast::program& program)
 	program.block()->accept(*this);
 }
 
-void symbol_table_builder::visit(ast::procedure& procedure)
+void symbol_table_builder::visit(ast::routine& procedure)
 {
 	if (!this->m_symbol_table)
 	{

@@ -1,15 +1,15 @@
 #include "pch.h"
-#include "procedure.h"
+#include "routine.h"
 #include "ast_node_visitor.h"
 
-ast::procedure::procedure(procedure_identifier id, procedure_param_list params, block_ptr block, token token): ast_node(std::move(token)),
+ast::routine::routine(procedure_identifier id, procedure_param_list params, block_ptr block, token token): ast_node(std::move(token)),
                                                                m_identifier(std::move(id)),
                                                                m_params(std::move(params)),
                                                                m_block(std::move(block))
 {
 }
 
-ast::procedure::procedure(procedure_identifier id, procedure_param_list params, type_ptr return_type, block_ptr block, token token): ast_node(std::move(token)),
+ast::routine::routine(procedure_identifier id, procedure_param_list params, type_ptr return_type, block_ptr block, token token): ast_node(std::move(token)),
                                                                m_identifier(std::move(id)),
                                                                m_params(std::move(params)),
                                                                m_return_type(std::move(return_type)),
@@ -17,7 +17,7 @@ ast::procedure::procedure(procedure_identifier id, procedure_param_list params, 
 {
 }
 
-ast::procedure::procedure(procedure&& other) noexcept: ast_node(std::move(other)),
+ast::routine::routine(routine&& other) noexcept: ast_node(std::move(other)),
                                                  m_identifier(std::move(other.m_identifier)),
                                                  m_params(std::move(other.m_params)),
                                                  m_return_type(std::move(other.m_return_type)),
@@ -25,7 +25,7 @@ ast::procedure::procedure(procedure&& other) noexcept: ast_node(std::move(other)
 {
 }
 
-ast::procedure& ast::procedure::operator=(const procedure& other)
+ast::routine& ast::routine::operator=(const routine& other)
 {
 	if (this == &other)
 		return *this;
@@ -37,7 +37,7 @@ ast::procedure& ast::procedure::operator=(const procedure& other)
 	return *this;
 }
 
-ast::procedure& ast::procedure::operator=(procedure&& other) noexcept
+ast::routine& ast::routine::operator=(routine&& other) noexcept
 {
 	if (this == &other)
 		return *this;
@@ -49,37 +49,37 @@ ast::procedure& ast::procedure::operator=(procedure&& other) noexcept
 	return *this;
 }
 
-const ast::procedure_identifier& ast::procedure::identifier() const
+const ast::procedure_identifier& ast::routine::identifier() const
 {
 	return this->m_identifier;
 }
 
-const ast::type_ptr& ast::procedure::return_type() const
+const ast::type_ptr& ast::routine::return_type() const
 {
 	return this->m_return_type;
 }
 
-bool ast::procedure::is_function() const
+bool ast::routine::is_function() const
 {
 	return !!this->m_return_type;
 }
 
-const ast::block_ptr& ast::procedure::block() const
+const ast::block_ptr& ast::routine::block() const
 {
 	return this->m_block;
 }
 
-const ast::procedure_param_list& ast::procedure::params() const
+const ast::procedure_param_list& ast::routine::params() const
 {
 	return this->m_params;
 }
 
-void ast::procedure::accept(ast_node_visitor& visitor)
+void ast::routine::accept(ast_node_visitor& visitor)
 {
 	visitor.visit(*this);
 }
 
-symbol_table& ast::procedure::symbol_table() const
+symbol_table& ast::routine::symbol_table() const
 {
 	if (!this->m_symbol_table)
 	{
