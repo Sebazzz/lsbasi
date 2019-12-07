@@ -146,7 +146,7 @@ ast_ptr parser::handle_factor(lexer_iterator& it) const
 
 	if (it->type() == token_type::identifier)
 	{
-		const auto identifier = make_ast_node_ptr<var>(it->value(), it.current_token());
+		const auto identifier = make_ast_ptr<var>(it->value(), it.current_token());
 		it.advance();
 		return identifier;
 	}
@@ -283,7 +283,7 @@ ast_node_ptr<procedure> parser::handle_procedure(lexer_iterator& it) const
 
 	it.skip_required(token_type::semicolon);
 
-	return make_ast_node_ptr<procedure>(procedure_id, param_list, block, token);
+	return make_ast_ptr<procedure>(procedure_id, param_list, block, token);
 }
 
 ast::ast_node_ptr<ast::block> parser::handle_block(lexer_iterator& it) const
@@ -298,7 +298,7 @@ ast::ast_node_ptr<ast::block> parser::handle_block(lexer_iterator& it) const
 
 	const auto compound = handle_compound(it);
 	
-	return make_ast_node_ptr<block>(variable_declaration_list, procedure_declaration_list, compound, token);
+	return make_ast_ptr<block>(variable_declaration_list, procedure_declaration_list, compound, token);
 }
 
 void parser::handle_var_decl_list(lexer_iterator& it, ast::var_decl_list& var_declaration_list) const
@@ -353,7 +353,7 @@ void parser::handle_var_decl_or_parameter_list(lexer_iterator& it, ast::var_decl
 		for (auto && identifier : identifiers)
 		{
 			var_declaration_list.push_back(
-				make_ast_node_ptr<var_decl>(identifier.first, make_ast_node_ptr<type>(v_type, type_token), identifier.second)
+				make_ast_ptr<var_decl>(identifier.first, make_ast_ptr<type>(v_type, type_token), identifier.second)
 			);
 		}
 
@@ -387,7 +387,7 @@ compound_ptr parser::handle_compound(lexer_iterator& it) const
 
 	it.skip_required(token_type::end);
 
-	return make_ast_node_ptr<compound>(statement_list, token);
+	return make_ast_ptr<compound>(statement_list, token);
 }
 
 void parser::handle_statement_list(lexer_iterator& it, statement_list& statement_list) const
@@ -490,7 +490,7 @@ ast_ptr parser::handle_procedure_call(const std::wstring& identifier, lexer_iter
 
 ast_ptr parser::handle_assign(const std::wstring& identifier, lexer_iterator& it) const
 {
-	const auto var_identifier = make_ast_node_ptr<var>(identifier, it.current_token());
+	const auto var_identifier = make_ast_ptr<var>(identifier, it.current_token());
 	
 	const auto token = it.expect(token_type::assign);
 	it.advance();

@@ -29,12 +29,12 @@ builtin_procedure_symbol::builtin_procedure_symbol(const symbol_identifier& iden
 ast::type_ptr builtin_procedure_symbol::get_builtin_type(ast::builtin_type type_spec) const
 {
 	const auto& identifier = this->m_runtime_symbol_table->get(type_spec)->identifier();
-	return ast::make_ast_node_ptr<ast::type>(identifier, token(token_type::identifier, identifier));
+	return ast::make_ast_ptr<ast::type>(identifier, token(token_type::identifier, identifier));
 }
 
 void builtin_procedure_symbol::register_param(const symbol_identifier& identifier, ast::builtin_type builtin_type)
 {
-	this->m_param_list.push_back(ast::make_ast_node_ptr<ast::var_decl>(identifier, this->get_builtin_type(builtin_type), token(token_type::identifier, identifier, line_info {-1,-1})));
+	this->m_param_list.push_back(ast::make_ast_ptr<ast::var_decl>(identifier, this->get_builtin_type(builtin_type), token(token_type::identifier, identifier, line_info {-1,-1})));
 }
 
 const ast::procedure_param_list& builtin_procedure_symbol::params() const
