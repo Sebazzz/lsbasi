@@ -18,7 +18,7 @@ public:
 
 	[[nodiscard]] virtual symbol_type_ptr<type_symbol> return_type() const = 0;
 	[[nodiscard]] virtual bool is_function() const = 0;
-	[[nodiscard]] virtual const ast::procedure_param_list& params() const = 0;
+	[[nodiscard]] virtual const ast::routine_param_list& params() const = 0;
 	[[nodiscard]] virtual symbol_table& symbol_table() const = 0;
 };
 
@@ -37,7 +37,7 @@ public:
 
 	[[nodiscard]] symbol_type_ptr<type_symbol> return_type() const override;
 	[[nodiscard]] bool is_function() const override;
-	[[nodiscard]] const ast::procedure_param_list& params() const override;
+	[[nodiscard]] const ast::routine_param_list& params() const override;
 	[[nodiscard]] ::symbol_table& symbol_table() const override;
 };
 
@@ -55,7 +55,7 @@ class builtin_routine_symbol abstract : public routine_symbol
 		::symbol_table* m_runtime_symbol_table;
 	
 	protected:
-		ast::procedure_param_list m_param_list;
+		ast::routine_param_list m_param_list;
 	
 		builtin_routine_symbol(const symbol_identifier& identifier, ::symbol_table* runtime_symbol_table);
 		ast::type_ptr get_builtin_type(ast::builtin_type type_spec) const;
@@ -63,7 +63,7 @@ class builtin_routine_symbol abstract : public routine_symbol
 		
 
 	public:
-		[[nodiscard]] const ast::procedure_param_list& params() const override;
+		[[nodiscard]] const ast::routine_param_list& params() const override;
 		[[nodiscard]] ::symbol_table& symbol_table() const override;
 		virtual void invoke(scope_context& procedure_scope) = 0;
 };

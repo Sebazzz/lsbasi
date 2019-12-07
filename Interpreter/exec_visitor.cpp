@@ -102,7 +102,7 @@ void exec_visitor::visit(ast::routine_call& procedure_call)
 
 	// Find the referenced procedure
 	const auto routine_symbol = procedure_call.routine_symbol();
-	const auto& procedure_params = routine_symbol->params();
+	const auto& routine_params = routine_symbol->params();
 	const auto& procedure_args = procedure_call.args();
 
 	// Verify that even the correct number of arguments have been given. Let's do this while iterating the args and params.
@@ -112,17 +112,17 @@ void exec_visitor::visit(ast::routine_call& procedure_call)
 	// then put their values in the memory table for the procedure. After this the invocation is fairly simple.
 	auto& proc_ctx = this->m_stack.new_scope(routine_symbol->symbol_table());
 	
-	auto param_iterator = procedure_params.begin();
-	const auto params_end = procedure_params.end();
+	auto param_iterator = routine_params.begin();
+	const auto params_end = routine_params.end();
 	auto arg_iterator = procedure_args.begin();
 	const auto args_end = procedure_args.end();
 
-	while (param_iterator != procedure_params.end() || arg_iterator != args_end)
+	while (param_iterator != routine_params.end() || arg_iterator != args_end)
 	{
 		// We only get in this loop if there are parameters or arguments left to iterate.
 		// This means that we can have parameters that have no corresponding argument,
 		// or arguments for which no parameter has been declared.
-		if (param_iterator == procedure_params.end())
+		if (param_iterator == routine_params.end())
 		{
 			throw exec_error(L"In a call to " + routine_symbol->to_string() + L" too many arguments have been provided", (*arg_iterator)->get_line_info());
 		}

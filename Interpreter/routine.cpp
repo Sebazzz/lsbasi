@@ -2,14 +2,14 @@
 #include "routine.h"
 #include "ast_node_visitor.h"
 
-ast::routine::routine(procedure_identifier id, procedure_param_list params, block_ptr block, token token): ast_node(std::move(token)),
+ast::routine::routine(procedure_identifier id, routine_param_list params, block_ptr block, token token): ast_node(std::move(token)),
                                                                m_identifier(std::move(id)),
                                                                m_params(std::move(params)),
                                                                m_block(std::move(block))
 {
 }
 
-ast::routine::routine(procedure_identifier id, procedure_param_list params, type_ptr return_type, block_ptr block, token token): ast_node(std::move(token)),
+ast::routine::routine(procedure_identifier id, routine_param_list params, type_ptr return_type, block_ptr block, token token): ast_node(std::move(token)),
                                                                m_identifier(std::move(id)),
                                                                m_params(std::move(params)),
                                                                m_return_type(std::move(return_type)),
@@ -69,7 +69,7 @@ const ast::block_ptr& ast::routine::block() const
 	return this->m_block;
 }
 
-const ast::procedure_param_list& ast::routine::params() const
+const ast::routine_param_list& ast::routine::params() const
 {
 	return this->m_params;
 }

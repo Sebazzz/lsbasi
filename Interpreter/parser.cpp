@@ -266,7 +266,7 @@ ast_node_ptr<routine> parser::handle_procedure(lexer_iterator& it) const
 	// Possible parameter list
 	it.ensure_token("Expect semicolon or procedure parameter list");
 
-	procedure_param_list param_list;
+	routine_param_list param_list;
 	if (it->type() == token_type::group_start)
 	{
 		it.advance();
@@ -306,7 +306,7 @@ std::shared_ptr<ast::routine> parser::handle_function(lexer_iterator& it) const
 	// Possible parameter list
 	it.ensure_token("Expect semicolon or procedure parameter list");
 
-	procedure_param_list param_list;
+	routine_param_list param_list;
 	if (it->type() == token_type::group_start)
 	{
 		it.advance();

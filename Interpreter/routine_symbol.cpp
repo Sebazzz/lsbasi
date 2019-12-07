@@ -23,7 +23,7 @@ bool user_defined_routine_symbol::is_function() const
 	return this->m_procedure.is_function();
 }
 
-const ast::procedure_param_list& user_defined_routine_symbol::params() const
+const ast::routine_param_list& user_defined_routine_symbol::params() const
 {
 	return this->m_procedure.params();
 }
@@ -48,7 +48,7 @@ void builtin_routine_symbol::register_param(const symbol_identifier& identifier,
 	this->m_param_list.push_back(ast::make_ast_ptr<ast::var_decl>(identifier, this->get_builtin_type(builtin_type), token(token_type::identifier, identifier, line_info {-1,-1})));
 }
 
-const ast::procedure_param_list& builtin_routine_symbol::params() const
+const ast::routine_param_list& builtin_routine_symbol::params() const
 {
 	return this->m_param_list;
 }
