@@ -69,7 +69,7 @@ void ast_node_visitor::visit(ast::routine& procedure)
 	procedure.block()->accept(*this);
 }
 
-void ast_node_visitor::visit(ast::procedure_call&)
+void ast_node_visitor::visit(ast::routine_call&)
 {
 	// For derived classes to implement
 }

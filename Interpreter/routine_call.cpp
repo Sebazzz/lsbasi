@@ -1,23 +1,23 @@
 #include "pch.h"
-#include "procedure_call.h"
+#include "routine_call.h"
 #include "ast_node_visitor.h"
 
-ast::procedure_call::procedure_call(ast::procedure_identifier procedure_identifier, procedure_arg_list shared_ptrs, token token): ast_node(std::move(token)),
+ast::routine_call::routine_call(ast::procedure_identifier procedure_identifier, procedure_arg_list shared_ptrs, token token): ast_node(std::move(token)),
 	m_procedure_identifier(std::move(procedure_identifier)),
 	m_args(std::move(shared_ptrs))
 {
 }
 
-ast::procedure_call::procedure_call(const procedure_call& other) = default;
+ast::routine_call::routine_call(const routine_call& other) = default;
 
-ast::procedure_call::procedure_call(procedure_call&& other) noexcept: ast_node(std::move(other)),
+ast::routine_call::routine_call(routine_call&& other) noexcept: ast_node(std::move(other)),
                                                                       m_procedure_identifier(
 	                                                                      std::move(other.m_procedure_identifier)),
                                                                       m_args(std::move(other.m_args))
 {
 }
 
-ast::procedure_call& ast::procedure_call::operator=(const procedure_call& other)
+ast::routine_call& ast::routine_call::operator=(const routine_call& other)
 {
 	if (this == &other)
 		return *this;
@@ -27,7 +27,7 @@ ast::procedure_call& ast::procedure_call::operator=(const procedure_call& other)
 	return *this;
 }
 
-ast::procedure_call& ast::procedure_call::operator=(procedure_call&& other) noexcept
+ast::routine_call& ast::routine_call::operator=(routine_call&& other) noexcept
 {
 	if (this == &other)
 		return *this;
@@ -37,22 +37,22 @@ ast::procedure_call& ast::procedure_call::operator=(procedure_call&& other) noex
 	return *this;
 }
 
-const ast::procedure_identifier& ast::procedure_call::procedure_identifier() const
+const ast::procedure_identifier& ast::routine_call::procedure_identifier() const
 {
 	return this->m_procedure_identifier;
 }
 
-const ast::procedure_arg_list& ast::procedure_call::args() const
+const ast::procedure_arg_list& ast::routine_call::args() const
 {
 	return this->m_args;
 }
 
-void ast::procedure_call::accept(ast_node_visitor& visitor)
+void ast::routine_call::accept(ast_node_visitor& visitor)
 {
 	visitor.visit(*this);
 }
 
-symbol_type_ptr<procedure_symbol> ast::procedure_call::procedure_symbol() const
+symbol_type_ptr<procedure_symbol> ast::routine_call::procedure_symbol() const
 {
 	if (!this->m_procedure_symbol)
 	{

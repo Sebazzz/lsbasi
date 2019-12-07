@@ -28,9 +28,9 @@
 //
 // statement_list:  statement |  statement SEMI statement
 //
-// statement:       compound | assign | procedure_call | empty
+// statement:       compound | assign | routine_call | empty
 //
-// procedure_call:  ID "(" (expression (COMMA expression)*)? ")"
+// routine_call:  ID "(" (expression (COMMA expression)*)? ")"
 //
 // assign:          ID ASSIGN expr
 //

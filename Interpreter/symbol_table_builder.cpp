@@ -95,7 +95,7 @@ void symbol_table_builder::visit(ast::type& type_ref)
 	type_ref.m_type_symbol = verify_exists<type_symbol>(*this->m_symbol_table, type_ref.identifier(), type_ref.get_line_info());
 }
 
-void symbol_table_builder::visit(ast::procedure_call& procedure_call)
+void symbol_table_builder::visit(ast::routine_call& procedure_call)
 {
 	// Verify that we can actually resolve this procedure
 	// The procedure that is being called must be declared in the same or any parent scope. 

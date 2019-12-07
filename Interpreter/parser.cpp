@@ -11,7 +11,7 @@
 #include "var_decl.h"
 #include <functional>
 #include <utility>
-#include "procedure_call.h"
+#include "routine_call.h"
 
 using namespace ast;
 
@@ -546,7 +546,7 @@ ast_ptr parser::handle_procedure_call(const std::wstring& identifier, lexer_iter
 	it.skip_required(token_type::group_end);
 	it.ensure_token("Found end of file while parsing procedure argument list");
 
-	return make_ast_ptr<procedure_call>(identifier, arg_list, token);
+	return make_ast_ptr<routine_call>(identifier, arg_list, token);
 }
 
 ast_ptr parser::handle_assign(const std::wstring& identifier, lexer_iterator& it) const

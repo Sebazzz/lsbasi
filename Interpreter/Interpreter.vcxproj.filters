@@ -141,9 +141,6 @@
     <ClCompile Include="builtin_type_impl.cpp">
       <Filter>Source Files\ast_visitor\execution</Filter>
     </ClCompile>
-    <ClCompile Include="procedure_call.cpp">
-      <Filter>Source Files\ast</Filter>
-    </ClCompile>
     <ClCompile Include="util.cpp">
       <Filter>Source Files\support</Filter>
     </ClCompile>
@@ -199,6 +196,9 @@
       <Filter>Source Files\ast</Filter>
     </ClCompile>
     <ClCompile Include="routine.cpp">
+      <Filter>Source Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="routine_call.cpp">
       <Filter>Source Files\ast</Filter>
     </ClCompile>
   </ItemGroup>
@@ -302,9 +302,6 @@
     <ClInclude Include="eval_value.h">
       <Filter>Header Files\ast_visitor\execution</Filter>
     </ClInclude>
-    <ClInclude Include="procedure_call.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
     <ClInclude Include="util.h">
       <Filter>Header Files\support</Filter>
     </ClInclude>
@@ -372,6 +369,9 @@
       <Filter>Header Files\ast</Filter>
     </ClInclude>
     <ClInclude Include="routine.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="routine_call.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
   </ItemGroup>

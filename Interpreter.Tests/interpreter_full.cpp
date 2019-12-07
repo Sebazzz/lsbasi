@@ -497,7 +497,7 @@ END.
     REQUIRE_THROWS_MATCHES( 
 		do_interpret_program(program), 
 		internal_interpret_except,  // TODO: improve this error message, perhaps we should be able to fix this in the semantic analysis step
-		Catch::Message("INTERNAL INTERPRETER ERROR: Previous node accept did not yield a value: class ast::procedure_call"));
+		Catch::Message("INTERNAL INTERPRETER ERROR: Previous node accept did not yield a value: class ast::routine_call"));
 }
 
 TEST_CASE( "Interpretation fails - procedure used as argument", "[interpreter_program]" ) {
@@ -524,7 +524,7 @@ END.
     REQUIRE_THROWS_MATCHES( 
 		do_interpret_program(program), 
 		internal_interpret_except,  // TODO: improve this error message, perhaps we should be able to fix this in the semantic analysis step
-		Catch::Message("INTERNAL INTERPRETER ERROR: Previous node accept did not yield a value: class ast::procedure_call"));
+		Catch::Message("INTERNAL INTERPRETER ERROR: Previous node accept did not yield a value: class ast::routine_call"));
 }
 
 TEST_CASE( "Interpretation fails - procedures with parameters called with not enough parameters", "[interpreter_program]" ) {

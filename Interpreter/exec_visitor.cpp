@@ -91,7 +91,7 @@ void exec_visitor::visit(ast::routine&)
 	// they are called with their own parameters.
 }
 
-void exec_visitor::visit(ast::procedure_call& procedure_call)
+void exec_visitor::visit(ast::routine_call& procedure_call)
 {
 	// General context for type operations
 	type_operation_context type_operation_context = {

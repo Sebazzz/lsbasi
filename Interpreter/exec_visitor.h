@@ -29,7 +29,7 @@ public:
 	void visit(ast::block& block) override;
 	void visit(ast::program& program) override;
 	void visit(ast::routine& procedure) override;
-	void visit(ast::procedure_call& procedure_call) override;
+	void visit(ast::routine_call& procedure_call) override;
 	
 	/**
 	 * Gets the global scope. This is primarily for unit testing purposes where we want to check if
