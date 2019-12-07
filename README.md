@@ -16,8 +16,14 @@ Implemented language features:
 	- Unary operators
 - Semantic analysis
 - Comments
-- Procedures with parameters
+- Procedures
+    - Parameter support
     - Built-in procedures
+        - `writeln`
+- Functions
+    - Parameter support
+    - Built-in functions
+        - `random`
 	
 Implemented interpreter features:
 
