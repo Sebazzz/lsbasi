@@ -14,6 +14,8 @@ struct interpret_result
     std::wstring output;
 };
 
+
+builtin_boolean verify_bool_symbol(const interpret_result& result, const symbol_identifier& identifier);
 builtin_integer verify_int_symbol(const interpret_result& result, const symbol_identifier& identifier);
 builtin_real verify_real_symbol(const interpret_result& result, const symbol_identifier& identifier);
 builtin_string verify_string_symbol(const interpret_result& result, const symbol_identifier& identifier);

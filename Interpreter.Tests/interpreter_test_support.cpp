@@ -7,6 +7,20 @@
 #include "../Interpreter/var_decl.h"
 #include "../Interpreter/builtin_type_symbol.h"
 
+builtin_boolean verify_bool_symbol(const interpret_result& result, const symbol_identifier& identifier)
+{
+    const auto var_symbol = result.global_scope->symbols.get<variable_symbol>(identifier);
+    const auto& contents = result.global_scope->memory->get(var_symbol);
+    const auto& builtin_type = result.global_scope->symbols.get<builtin_type_symbol>(var_symbol->variable().type()->identifier());
+
+    if (builtin_type->type() != ast::builtin_type::boolean)
+    {
+        throw std::logic_error("Symbol was not an integer");
+    }
+
+    return contents.boolean_val;
+}
+
 builtin_integer verify_int_symbol(const interpret_result& result, const symbol_identifier& identifier)
 {
     const auto var_symbol = result.global_scope->symbols.get<variable_symbol>(identifier);
