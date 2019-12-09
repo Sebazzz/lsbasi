@@ -9,58 +9,22 @@
 
 builtin_boolean verify_bool_symbol(const interpret_result& result, const symbol_identifier& identifier)
 {
-    const auto var_symbol = result.global_scope->symbols.get<variable_symbol>(identifier);
-    const auto& contents = result.global_scope->memory->get(var_symbol);
-    const auto& builtin_type = result.global_scope->symbols.get<builtin_type_symbol>(var_symbol->variable().type()->identifier());
-
-    if (builtin_type->type() != ast::builtin_type::boolean)
-    {
-        throw std::logic_error("Symbol was not an integer");
-    }
-
-    return contents.boolean_val;
+    return verify_symbol<ast::builtin_type::boolean>(result, identifier);
 }
 
 builtin_integer verify_int_symbol(const interpret_result& result, const symbol_identifier& identifier)
 {
-    const auto var_symbol = result.global_scope->symbols.get<variable_symbol>(identifier);
-    const auto& contents = result.global_scope->memory->get(var_symbol);
-    const auto& builtin_type = result.global_scope->symbols.get<builtin_type_symbol>(var_symbol->variable().type()->identifier());
-
-    if (builtin_type->type() != ast::builtin_type::integer)
-    {
-        throw std::logic_error("Symbol was not an integer");
-    }
-
-    return contents.int_val;
+    return verify_symbol<ast::builtin_type::integer>(result, identifier);
 }
 
 builtin_real verify_real_symbol(const interpret_result& result, const symbol_identifier& identifier)
 {
-    const auto var_symbol = result.global_scope->symbols.get<variable_symbol>(identifier);
-    const auto& contents = result.global_scope->memory->get(var_symbol);
-    const auto& builtin_type = result.global_scope->symbols.get<builtin_type_symbol>(var_symbol->variable().type()->identifier());
-
-    if (builtin_type->type() != ast::builtin_type::real)
-    {
-        throw std::logic_error("Symbol was not an real");
-    }
-
-    return contents.real_val;
+    return verify_symbol<ast::builtin_type::real>(result, identifier);
 }
 
 builtin_string verify_string_symbol(const interpret_result& result, const symbol_identifier& identifier)
 {
-    const auto var_symbol = result.global_scope->symbols.get<variable_symbol>(identifier);
-    const auto& contents = result.global_scope->memory->get(var_symbol);
-    const auto& builtin_type = result.global_scope->symbols.get<builtin_type_symbol>(var_symbol->variable().type()->identifier());
-
-    if (builtin_type->type() != ast::builtin_type::string)
-    {
-        throw std::logic_error("Symbol was not an string");
-    }
-
-    return *contents.string_ptr_val;
+    return *verify_symbol<ast::builtin_type::string>(result, identifier);
 }
 
 interpret_result do_interpret_program(const char* input)

@@ -1,5 +1,6 @@
 #pragma once
 #include "../Interpreter/interpreter.h"
+#include "../Interpreter/builtin_type_traits.h"
 #include "../Interpreter/symbol.h"
 #include "../Interpreter/type.h"
 #include "../Interpreter/routine_symbol.h"
@@ -14,6 +15,20 @@ struct interpret_result
     std::wstring output;
 };
 
+template<ast::builtin_type T>
+typename builtin_type_traits<T>::builtin_type verify_symbol(const interpret_result& result, const symbol_identifier& identifier)
+{
+    const auto var_symbol = result.global_scope->symbols.get<variable_symbol>(identifier);
+    const auto& builtin_type = result.global_scope->symbols.get<builtin_type_symbol>(var_symbol->variable().type()->identifier());
+
+    if (builtin_type->type() != T)
+    {
+        throw std::logic_error("ASSERT FAILED: Symbol was not an " + wstring_to_string(std::wstring(builtin_type_traits<T>::type_name)));
+    }
+
+    auto contents = result.global_scope->memory->get(var_symbol);
+    return builtin_type_traits<T>::get_from_expression(contents);
+}
 
 builtin_boolean verify_bool_symbol(const interpret_result& result, const symbol_identifier& identifier);
 builtin_integer verify_int_symbol(const interpret_result& result, const symbol_identifier& identifier);
