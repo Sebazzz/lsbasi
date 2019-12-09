@@ -14,6 +14,7 @@ namespace ast {
 	using procedure_identifier = std::wstring;
 
 	enum class builtin_type {
+		boolean,
 		integer,
 		real,
 		string
@@ -24,10 +25,12 @@ namespace ast {
 	 */
 	union expression_value
 	{
+		builtin_boolean boolean_val;
 		builtin_integer int_val;
 		builtin_real real_val;
 		builtin_string_ptr string_ptr_val;
 
+		expression_value(builtin_boolean value) : boolean_val(value){}
 		expression_value(builtin_integer value) : int_val(value){}
 		expression_value(builtin_real value) : real_val(value){}
 		expression_value(builtin_string_ptr value) : string_ptr_val(value){}

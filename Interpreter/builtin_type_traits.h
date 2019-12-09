@@ -53,6 +53,27 @@ struct builtin_type_traits<ast::builtin_type::string>
 	}
 };
 
+template<>
+struct builtin_type_traits<ast::builtin_type::boolean>
+{
+	using builtin_type = builtin_boolean;
+	static constexpr wchar_t type_name[] = L"BOOLEAN";
+
+	static symbol_identifier param_id(int param_id)
+	{
+		return L"bool_val" + std::to_wstring(param_id);
+	}
+
+	static builtin_type get_from_expression(ast::expression_value& expression_value)
+	{
+		return expression_value.boolean_val;
+	}
+
+	static ast::expression_value make_expression_value(const builtin_type arg)
+	{
+		return ast::expression_value(arg);
+	}
+};
 
 template<>
 struct builtin_type_traits<ast::builtin_type::integer>
