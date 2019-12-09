@@ -31,7 +31,7 @@
 // statement:       compound | assign | routine_call | if_statement | empty
 //
 // if_statement:    IF expression THEN statement (ELSE statement) |
-//                  IF expression THEN compound (ELSE compound)
+//                  IF expression THEN block (ELSE block)
 //
 // routine_call:  ID "(" (expression (COMMA expression)*)? ")"
 //
@@ -39,7 +39,9 @@
 //
 // empty:
 // 
-// expression:      term ((PLUS|MIN) term)*
+// expression:      compare_arg ((EQ) compare_arg)?
+//
+// compare_arg:     term ((PLUS|MIN) term)*
 // 
 // term:            factor ((MUL|DIV) factor)*
 // 
@@ -67,6 +69,7 @@ private:
 	ast_ptr handle_factor(lexer_iterator& it) const;
 	ast_ptr handle_group(lexer_iterator& it) const;
 	ast_ptr handle_term(lexer_iterator& it) const;
+	ast_ptr handle_compare_arg(lexer_iterator& it) const; // By lack of a better name
 	ast_ptr handle_expr(lexer_iterator& it) const;
 	
 	ast_ptr handle_program(lexer_iterator& it) const;
@@ -86,6 +89,7 @@ private:
 	ast::compound_ptr handle_compound(lexer_iterator& it) const;
 	void handle_statement_list(lexer_iterator& it, ast::statement_list& statement_list) const;
 	
+	ast_ptr handle_if_then_else(lexer_iterator& it) const;
 	ast_ptr handle_statement(lexer_iterator& it) const;
 
 	ast_ptr handle_assign_or_procedure_call(lexer_iterator& it) const;

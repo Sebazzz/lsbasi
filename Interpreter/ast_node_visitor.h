@@ -11,6 +11,7 @@
 #include "program.h"
 #include "var_decl.h"
 #include "type.h"
+#include "if_then_else.h"
 #include "routine.h"
 #include "routine_call.h"
 
@@ -89,6 +90,10 @@ public:
 	 * Visit a block - default implementation visits assignment_target declarations and compound
 	 */
 	virtual void visit(ast::block& block);
-	
+
+	/**
+	 * Visit an if/then/else statement - default implementation visits the test expression and true/false statement
+	 */
+	virtual void visit(ast::if_then_else& if_then_else);
 };
 

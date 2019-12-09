@@ -12,6 +12,7 @@
 #include <functional>
 #include <utility>
 #include "routine_call.h"
+#include "if_then_else.h"
 
 using namespace ast;
 
@@ -213,7 +214,7 @@ ast_ptr parser::handle_term(lexer_iterator& it) const
 	return result;
 }
 
-ast_ptr parser::handle_expr(lexer_iterator& it) const
+ast_ptr parser::handle_compare_arg(lexer_iterator& it) const
 {
 	ast_ptr result = handle_term(it);
 	const auto token = it.current_token();
@@ -227,6 +228,31 @@ ast_ptr parser::handle_expr(lexer_iterator& it) const
 			case token_type::minus:
 				it.advance();
 				result = make_ast_ptr<bin_op>(result, operatorType, handle_term(it), token);
+				break;
+
+			default:
+				// Note this may be an unexpected token
+				return result;
+		}
+	}
+
+	return result;
+}
+
+ast_ptr parser::handle_expr(lexer_iterator& it) const
+{
+	ast_ptr result = handle_compare_arg(it);
+
+	if (!it.is_at_end())
+	{
+		const auto token = it.current_token();
+		const auto operatorType = it->type();
+		
+		switch (operatorType)
+		{
+			case token_type::compare_equal:
+				it.advance();
+				result = make_ast_ptr<bin_op>(result, operatorType, handle_compare_arg(it), token);
 				break;
 
 			default:
@@ -483,10 +509,55 @@ void parser::handle_statement_list(lexer_iterator& it, statement_list& statement
 	
 }
 
+ast_ptr parser::handle_if_then_else(lexer_iterator& it) const
+{
+	token if_statement = it.expect(token_type::if_ctrl);
+	it.advance();
+
+	auto test_expression = this->handle_expr(it);
+
+	it.skip_required(token_type::then_ctrl);
+
+	if_block true_block, false_block;
+
+	if (it->type() == token_type::begin)
+	{
+		true_block.block_ptr = this->handle_block(it);
+	} else
+	{
+		true_block.ast_ptr = this->handle_statement(it);
+	}
+
+	it.ensure_token("Unexpected end of if/then statement");
+	if (it->type() != token_type::else_ctrl)
+	{
+		// If we haven't got an else statement, this is the end of the if
+		return make_ast_ptr<if_then_else>(test_expression, true_block, false_block, if_statement);
+	}
+	it.advance();
+
+	if (it->type() == token_type::begin)
+	{
+		false_block.block_ptr = this->handle_block(it);
+	} else
+	{
+		false_block.ast_ptr = this->handle_statement(it);
+	}
+
+	// This must be the end of the else statement
+	return make_ast_ptr<if_then_else>(test_expression, true_block, false_block, if_statement);
+}
+
 ast_ptr parser::handle_statement(lexer_iterator& it) const
 {
 	it.ensure_token("Found end while searching for statement");
 
+	if (it->type() == token_type::if_ctrl)
+	{
+		// If / then / else
+		return this->handle_if_then_else(it);
+	}
+	
 	if (it->type() == token_type::begin)
 	{
 		// Compound

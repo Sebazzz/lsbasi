@@ -78,6 +78,9 @@
     <ClCompile Include="builtin_type_boolean.cpp">
       <Filter>Source Files\interpreter</Filter>
     </ClCompile>
+    <ClCompile Include="if_then_else.cpp">
+      <Filter>Source Files\interpreter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="string_conv_util.h">

@@ -227,6 +227,7 @@
     <ClCompile Include="builtin_type_impl.cpp" />
     <ClCompile Include="builtin_type_symbol.cpp" />
     <ClCompile Include="exec_error.cpp" />
+    <ClCompile Include="if_then_else.cpp" />
     <ClCompile Include="internal_interpret_except.cpp" />
     <ClCompile Include="interpreter_context.cpp" />
     <ClCompile Include="parse_except.cpp" />
@@ -294,6 +295,7 @@
     <ClInclude Include="eval_visitor.h" />
     <ClInclude Include="exec_error.h" />
     <ClInclude Include="exec_visitor.h" />
+    <ClInclude Include="if_then_else.h" />
     <ClInclude Include="internal_interpret_except.h" />
     <ClInclude Include="interpreter.h" />
     <ClInclude Include="interpreter_context.h" />
