@@ -105,6 +105,6 @@ void ast_node_visitor::visit(ast::if_then_else& if_then_else)
 
 	if (if_then_else.true_block().ast_ptr) if_then_else.true_block().ast_ptr->accept(*this);
 	if (if_then_else.true_block().block_ptr) if_then_else.true_block().block_ptr->accept(*this);
-	if (if_then_else.false_block().block_ptr) if_then_else.false_block().block_ptr->accept(*this);
+	if (if_then_else.false_block().ast_ptr) if_then_else.false_block().ast_ptr->accept(*this);
 	if (if_then_else.false_block().block_ptr) if_then_else.false_block().block_ptr->accept(*this);
 }

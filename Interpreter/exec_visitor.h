@@ -30,6 +30,7 @@ public:
 	void visit(ast::program& program) override;
 	void visit(ast::routine& procedure) override;
 	void visit(ast::routine_call& procedure_call) override;
+	void visit(ast::if_then_else& if_then_else) override;
 	
 	/**
 	 * Gets the global scope. This is primarily for unit testing purposes where we want to check if

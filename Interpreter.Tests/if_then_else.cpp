@@ -51,7 +51,7 @@ END.
     REQUIRE( verify_int_symbol(result, L"a") == 2 );
 }
 
-TEST_CASE( "Interpretation succeeds - program with if/then (no match, multiline)", "[interpreter_program]" ) {
+TEST_CASE( "Interpretation succeeds - program with if/then (no match - multiline)", "[interpreter_program]" ) {
     const auto result = test_program_interpretation(R"(
 PROGRAM Simple;
 VAR a: INTEGER;
@@ -147,7 +147,7 @@ END.
     REQUIRE( verify_int_symbol(result, L"a") == -2 );
 }
 
-TEST_CASE( "Interpretation succeeds - program with if/then/else (no match, multiline)", "[interpreter_program]" ) {
+TEST_CASE( "Interpretation succeeds - program with if/then/else (no match - multiline)", "[interpreter_program]" ) {
     const auto result = test_program_interpretation(R"(
 PROGRAM Simple;
 VAR a: INTEGER; b: REAL;

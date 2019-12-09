@@ -73,7 +73,6 @@ void exec_visitor::visit(ast::assignment_target& assignment_target)
 
 void exec_visitor::visit(ast::block& block)
 {
-	// Blocks don't have their own scope. Procedures and programs do.
 	ast_node_visitor::visit(block);
 }
 
@@ -195,6 +194,41 @@ void exec_visitor::visit(ast::routine_call& procedure_call)
 
 	// Go back to previous context
 	this->m_stack.pop();
+}
+
+void exec_visitor::visit(ast::if_then_else& if_then_else)
+{
+	// For an if/then/else, we first need to test the expression and convert the result to a boolean.
+	// If true we take the true branch, else the false branch.
+
+	const auto ctx = this->get_current_scope();
+	const auto boolean_type = ctx.symbols.get(ast::builtin_type::boolean);
+	const auto& boolean_type_impl = boolean_type->type_impl();
+	
+	auto test_result = this->visit_with_result(*if_then_else.test_expression());
+	if (!boolean_type_impl.supports_implicit_type_conversion_from(test_result.type, token_type::assign))
+	{
+		throw runtime_type_error(L"Expression is not implicitly convertible to a boolean", if_then_else.get_line_info());
+	}
+
+	type_operation_context type_operation_context = {
+		this->get_interpreter_context(),
+		this->get_current_scope().symbols,
+		if_then_else.get_line_info()
+	};
+	boolean_type_impl.implicit_type_conversion(test_result, type_operation_context);
+
+	// Now determine the branch to take
+	const ast::if_block& branch_to_take = test_result.value.boolean_val == true ? if_then_else.true_block() : if_then_else.false_block();
+
+	// ... Handle either a block or single statement
+	if (branch_to_take.ast_ptr) this->visit_with_void_result(*branch_to_take.ast_ptr);
+
+	if (branch_to_take.block_ptr)
+	{
+		// TODO: check whether we need to create a new scope
+		this->visit_with_void_result(*branch_to_take.block_ptr);
+	}
 }
 
 std::shared_ptr<scope_context> exec_visitor::global_scope() const

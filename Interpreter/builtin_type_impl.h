@@ -16,6 +16,11 @@ protected:
 	 * Helper function to copy the symbol type pointer
 	 */
 	virtual void assign_self_type(eval_value& eval_value, type_operation_context& type_operation_context) const;
+
+	/**
+	 * Helper function to set that we handled a comparison and the result is a boolean
+	 */
+	virtual void handled_comparison(builtin_boolean value, eval_value& eval_value, type_operation_context& type_operation_context) const;
 	
 	/**
 	 * Gets if the current type supports conversion from the specific type

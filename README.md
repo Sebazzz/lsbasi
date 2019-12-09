@@ -13,8 +13,13 @@ Implemented language features:
     - Type conversion
 - Operators
     - Standard math operators
+    - Comparison operators (*Just eq for now*)
 	- String concatenation
 	- Unary operators
+- Control flow
+    - If / Else
+        - Single line
+        - Multi-line
 - Semantic analysis
 - Comments
 - Procedures

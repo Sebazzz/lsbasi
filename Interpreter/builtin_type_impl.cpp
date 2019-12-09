@@ -10,6 +10,13 @@ void builtin_type_impl::assign_self_type(eval_value& eval_value, type_operation_
 	eval_value.type = type_operation_context.symbol_table.get(this->m_symbol->type());
 }
 
+void builtin_type_impl::handled_comparison(builtin_boolean value, eval_value& eval_value, type_operation_context& type_operation_context) const
+{
+	// Assign boolean type
+	eval_value.value = value;
+	eval_value.type = type_operation_context.symbol_table.get(ast::builtin_type::boolean);
+}
+
 void builtin_type_impl::implicit_type_conversion(ast::expression_value&, builtin_type_symbol*, type_operation_context&) const
 {
 	throw internal_interpret_except("Type conversion is not implemented");
@@ -83,7 +90,7 @@ bool builtin_real_impl::supports_type_conversion_from(ast::builtin_type from_typ
 	return from_type == ast::builtin_type::integer;
 }
 
-void builtin_real_impl::execute_binary_operation(eval_value& result, const expression_value& from, const builtin_type_symbol& right_val, token_type op, type_operation_context&) const
+void builtin_real_impl::execute_binary_operation(eval_value& result, const expression_value& from, const builtin_type_symbol& right_val, token_type op, type_operation_context& type_operation_context) const
 {
 	// Implicit conversion to real
 	expression_value from_op = from;
@@ -115,6 +122,12 @@ void builtin_real_impl::execute_binary_operation(eval_value& result, const expre
 
 	case token_type::divide_real:
 		divide_interpret(result.value.real_val, from_op.real_val);
+		break;
+
+	// ----- Comparison operators
+	case token_type::compare_equal:
+		// If the user wants to they can use an epsilon to make the comparison more deterministic
+		this->handled_comparison(result.value.real_val == from_op.real_val, result, type_operation_context);
 		break;
 		
 	default:
@@ -163,7 +176,7 @@ bool builtin_integer_impl::supports_type_conversion_from(ast::builtin_type from_
 	return from_type == ast::builtin_type::integer;
 }
 
-void builtin_integer_impl::execute_binary_operation(eval_value& result, const expression_value& from, const builtin_type_symbol&, token_type op, type_operation_context&) const
+void builtin_integer_impl::execute_binary_operation(eval_value& result, const expression_value& from, const builtin_type_symbol&, token_type op, type_operation_context& type_operation_context) const
 {
 	switch (op) {
 	case token_type::plus:
@@ -184,6 +197,12 @@ void builtin_integer_impl::execute_binary_operation(eval_value& result, const ex
 
 	case token_type::divide_real:
 		throw exec_error("REAL division not supported for integers", {-1,-1});
+
+	// ----- Comparison operators
+	case token_type::compare_equal:
+		// If the user wants to they can use an epsilon to make the comparison more deterministic
+		this->handled_comparison(result.value.int_val == from.int_val, result, type_operation_context);
+		break;
 		
 	default:
 		throw exec_error("Invalid operator for bin_op: " + std::to_string(static_cast<int>(op)), {-1,-1});
@@ -201,6 +220,13 @@ bool builtin_string_impl::supports_type_conversion_from(ast::builtin_type from_t
 
 void builtin_string_impl::execute_binary_operation(eval_value& current, const expression_value& from, const builtin_type_symbol&, token_type op, type_operation_context& type_operation_context) const
 {
+	if (op == token_type::compare_equal)
+	{
+		// Since all the strings go into the into the string pool we can suffice with a simple pointer comparison
+		this->handled_comparison(current.value.string_ptr_val == from.string_ptr_val, current, type_operation_context);
+		return;
+	}
+	
 	if (op != token_type::plus)
 	{
 		throw exec_error("Invalid operator for string", {-1,-1});

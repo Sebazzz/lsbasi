@@ -23,6 +23,12 @@ protected:
 	eval_value visit_with_result(T& node);
 
 	/**
+	 * Helper function to visit the specified node which returns no value (or we don't care about the value)
+	 */
+	template <class T>
+	void visit_with_void_result(T& node);
+
+	/**
 	 * Helper method to register the result for further up the call stack
 	 */
 	void register_visit_result(const eval_value& result);
@@ -76,5 +82,12 @@ eval_value eval_visitor::visit_with_result(T& node)
 	const eval_value val = this->m_result.value();
 	this->m_result.reset();
 	return val;
+}
+
+template <class T>
+void eval_visitor::visit_with_void_result(T& node)
+{
+	node.accept(*this);
+	this->m_result.reset();
 }
 
