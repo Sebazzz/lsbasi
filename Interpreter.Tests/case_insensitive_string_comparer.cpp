@@ -21,15 +21,15 @@ TEST_CASE( "Case insensitive comparison", "[util - case-insensitive-compare]" ) 
     REQUIRE( test_compare(L"DIV", L"div") == false );
 }
 
-int add_element(std::map<std::wstring, int, case_insensitive_string_comparer>& map, int& val, const std::wstring& key)
+size_t add_element(std::map<std::wstring, size_t, case_insensitive_string_comparer>& map, size_t& val, const std::wstring& key)
 {
     map.try_emplace(key, ++val);
     return map.size();
 }
 
 TEST_CASE( "Case insensitive comparison - std::map", "[util - case-insensitive-compare]" ) {
-    std::map<std::wstring, int, case_insensitive_string_comparer> m;
-    int cnt = 0;
+    std::map<std::wstring, size_t, case_insensitive_string_comparer> m;
+    size_t cnt = 0;
 
     REQUIRE( add_element(m, cnt, L"BEGIN") == 1 );
     REQUIRE( add_element(m, cnt, L"END") == 2 );
