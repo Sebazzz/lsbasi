@@ -34,4 +34,4 @@ builtin_boolean verify_bool_symbol(const interpret_result& result, const symbol_
 builtin_integer verify_int_symbol(const interpret_result& result, const symbol_identifier& identifier);
 builtin_real verify_real_symbol(const interpret_result& result, const symbol_identifier& identifier);
 builtin_string verify_string_symbol(const interpret_result& result, const symbol_identifier& identifier);
-interpret_result do_interpret_program(const char* input);
+interpret_result test_program_interpretation(const char* input);

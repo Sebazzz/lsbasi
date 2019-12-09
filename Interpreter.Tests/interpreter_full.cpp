@@ -14,13 +14,13 @@ END.
 )";
 
     REQUIRE_THROWS_MATCHES(
-		do_interpret_program(program),
+		test_program_interpretation(program),
 		runtime_type_error, 
 		Catch::Message("Runtime type error: Attempting to assign variable variable a (which is of type built-in INTEGER) from expression with invalid type: built-in REAL"));
 }
 
 TEST_CASE( "Implicit assignment from integer to real allowed", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Simple;
 VAR a: INTEGER; b: REAL;
 BEGIN       
@@ -45,7 +45,7 @@ BEGIN
 END.        
 )";
 
-        REQUIRE_THROWS_MATCHES( do_interpret_program(program), 
+        REQUIRE_THROWS_MATCHES( test_program_interpretation(program), 
 			runtime_type_error, 
 			Catch::Message("Runtime type error: Attempting to assign variable variable b (which is of type built-in REAL) from expression with invalid type: built-in STRING"));
 
@@ -61,14 +61,14 @@ BEGIN
 END.        
 )";
 
-        REQUIRE_THROWS_MATCHES( do_interpret_program(program), 
+        REQUIRE_THROWS_MATCHES( test_program_interpretation(program), 
 			runtime_type_error, 
 			Catch::Message("Runtime type error: Attempting to assign variable variable b (which is of type built-in INTEGER) from expression with invalid type: built-in STRING"));
 
 }
 
 TEST_CASE( "Interpretation succeeds - program with string", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Simple;
 VAR a, b: STRING;
 BEGIN       
@@ -84,7 +84,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - call to builtin procedure", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Simple;
 BEGIN       
    writeln('hello world')
@@ -95,7 +95,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - call to builtin procedure with uninitialized variable", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Simple;
 VAR a: STRING;
 BEGIN       
@@ -107,7 +107,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - program with string concatenation", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Simple;
 VAR a, b, c: STRING;
 BEGIN       
@@ -125,7 +125,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - program with string concatenation and uninitialized variable", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Simple;
 VAR a, b, c: STRING;
 BEGIN       
@@ -141,7 +141,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - builtin function", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Simple;
 VAR a: REAL;
 BEGIN       
@@ -155,7 +155,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - program 1", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Simple;
 VAR a: INTEGER; b: REAL;
 BEGIN       
@@ -170,7 +170,7 @@ END.
 
 
 TEST_CASE( "Interpretation succeeds - program 2", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Semi;                           
 VAR a, b, c: REAL;
     x, number: INTEGER;
@@ -196,7 +196,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - program (case insensitive)", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Semi;                           
 VAR a, b, c: REAL;
     x, number: INTEGER;
@@ -222,7 +222,7 @@ ENd.
 }
 
 TEST_CASE( "Interpretation succeeds - program (vars with underscore) 1", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Semi;                           
 VAR _a: INTEGER;
 BEGIN       
@@ -236,7 +236,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - program (vars with underscore) 2", "[interpreter_program]" ) {
-     const auto result = do_interpret_program(R"(
+     const auto result = test_program_interpretation(R"(
 PROGRAM Semi;                           
 VAR _a_b: INTEGER;
 BEGIN       
@@ -250,7 +250,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - program (division using 'div' keyword)", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Semi;                           
 VAR _a: INTEGER;
 BEGIN       
@@ -264,7 +264,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - procedures", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Semi;                           
 VAR _a: INTEGER;
 
@@ -284,7 +284,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - functions", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Semi;                           
 VAR _a: INTEGER;
 
@@ -304,7 +304,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - procedures with parameters", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Semi;                           
 PROCEDURE P1(a : INTEGER);
 BEGIN {P1}
@@ -321,7 +321,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - procedures with parameters called", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Semi;                           
 VAR a_global: INTEGER;
 PROCEDURE P1(a : INTEGER);
@@ -341,7 +341,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - procedures with parameters called with expression", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Semi;                           
 VAR a_global: INTEGER;
 PROCEDURE P1(a : INTEGER);
@@ -361,7 +361,7 @@ END.
 }
 
 TEST_CASE( "Interpretation succeeds - procedure variable hides global variable and sets global variable", "[interpreter_program]" ) {
-    const auto result = do_interpret_program(R"(
+    const auto result = test_program_interpretation(R"(
 PROGRAM Part12;
 VAR
    a, c : REAL; b : INTEGER;
@@ -400,7 +400,7 @@ END.
 )";
 
     REQUIRE_THROWS_MATCHES( 
-		do_interpret_program(program), 
+		test_program_interpretation(program), 
 		interpret_except, 
 		Catch::Message("In a call to procedure P1 too many arguments have been provided"));
 }
@@ -422,7 +422,7 @@ END.
     // This error message is quite bad, but logical as it happens in the parsing phase.
     // The grammar currently does not support functions, so we don't allow it as part of an expression.
     REQUIRE_THROWS_MATCHES( 
-		do_interpret_program(program), 
+		test_program_interpretation(program), 
 		internal_interpret_except,  // TODO: improve this error message, perhaps we should be able to fix this in the semantic analysis step
 		Catch::Message("INTERNAL INTERPRETER ERROR: Previous node accept did not yield a value: class ast::routine_call"));
 }
@@ -449,7 +449,7 @@ END.
     // This error message is quite bad, but logical as it happens in the parsing phase.
     // The grammar currently does not support functions, so we don't allow it as part of an expression.
     REQUIRE_THROWS_MATCHES( 
-		do_interpret_program(program), 
+		test_program_interpretation(program), 
 		internal_interpret_except,  // TODO: improve this error message, perhaps we should be able to fix this in the semantic analysis step
 		Catch::Message("INTERNAL INTERPRETER ERROR: Previous node accept did not yield a value: class ast::routine_call"));
 }
@@ -469,7 +469,7 @@ END.
 )";
 
     REQUIRE_THROWS_MATCHES( 
-		do_interpret_program(program), 
+		test_program_interpretation(program), 
 		interpret_except, 
 		Catch::Message("In a call to procedure P1 no argument has been provided for this parameter: a"));
 }
