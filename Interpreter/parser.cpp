@@ -109,6 +109,14 @@ ast_ptr parser::handle_integer_or_literal(lexer_iterator& it) const
 				// I don't believe the string value is actually used somewhere else
 				return make_ast_ptr<num>(str_ptr, ::token(token.type(), L"POOLED", token.position()));
 			}
+
+		case token_type::boolean_const: {
+				const case_insensitive_string_comparer str_comp;
+				const builtin_boolean val = str_comp(L"true", num_str) == false && str_comp(num_str, L"true") == false;
+				it.advance();
+				
+				return make_ast_ptr<num>(val, token);
+			}
 			
 		default:
 			throw parse_except(L"Expected string literal, integer or real: " + it->to_string(), it->position());

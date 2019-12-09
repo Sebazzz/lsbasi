@@ -65,6 +65,23 @@ public:
 	builtin_real_impl& operator=(builtin_real_impl&& other) noexcept = delete;
 };
 
+class builtin_boolean_impl final : public builtin_type_impl
+{
+protected:
+	[[nodiscard]] bool supports_type_conversion_from(ast::builtin_type from_type, token_type op) const override;
+
+	void execute_binary_operation(eval_value& result, const ast::expression_value& from, const builtin_type_symbol& right_val, token_type op, type_operation_context& type_operation_context) const override;
+	
+public:
+	explicit builtin_boolean_impl(builtin_type_symbol* builtin_type_symbol);
+
+	virtual ~builtin_boolean_impl() = default;
+	builtin_boolean_impl(const builtin_boolean_impl& other) = delete;
+	builtin_boolean_impl(builtin_boolean_impl&& other) noexcept = delete;
+	builtin_boolean_impl& operator=(const builtin_boolean_impl& other) = delete;
+	builtin_boolean_impl& operator=(builtin_boolean_impl&& other) noexcept = delete;
+};
+
 class builtin_integer_impl final : public builtin_type_impl
 {
 protected:

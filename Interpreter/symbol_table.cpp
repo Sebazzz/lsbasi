@@ -8,6 +8,7 @@
 symbol_table::symbol_table(): m_scope_name(L"RUNTIME")
 {
 	// Build up our default, builtin, symbols
+	this->register_builtin_type(ast::builtin_type::boolean);
 	this->register_builtin_type(ast::builtin_type::integer);
 	this->register_builtin_type(ast::builtin_type::real);
 	this->register_builtin_type(ast::builtin_type::string);

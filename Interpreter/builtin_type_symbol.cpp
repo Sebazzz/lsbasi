@@ -8,6 +8,9 @@ builtin_type_symbol::builtin_type_symbol(ast::builtin_type type):
 {
 	switch (type)
 	{
+	case ast::builtin_type::boolean:
+		this->m_type_impl = std::make_unique<builtin_boolean_impl>(this);
+		break;
 	case ast::builtin_type::integer:
 		this->m_type_impl = std::make_unique<builtin_integer_impl>(this);
 		break;
@@ -31,6 +34,8 @@ symbol_identifier builtin_type_symbol::var_type_to_string(ast::builtin_type type
 {
 	switch (type)
 	{
+	case ast::builtin_type::boolean:
+		return builtin_type_traits<ast::builtin_type::boolean>::type_name;
 	case ast::builtin_type::integer:
 		return builtin_type_traits<ast::builtin_type::integer>::type_name;
 	case ast::builtin_type::real:
@@ -55,22 +60,28 @@ const ::type_impl& builtin_type_symbol::type_impl()
 
 symbol_type_ptr<type_symbol> builtin_type_symbol::get_for_builtin_type(ast::builtin_type type_spec)
 {
+	if (type_spec == ast::builtin_type::boolean)
+	{
+		static auto boolean_type = make_symbol_ptr<builtin_type_symbol>(ast::builtin_type::boolean);
+		return boolean_type;
+	}
+	
 	if (type_spec == ast::builtin_type::integer)
 	{
-		static symbol_ptr integer_type = make_symbol_ptr<builtin_type_symbol>(ast::builtin_type::integer);
-		return std::static_pointer_cast<type_symbol, symbol>(integer_type);
+		static auto integer_type = make_symbol_ptr<builtin_type_symbol>(ast::builtin_type::integer);
+		return integer_type;
 	}
 
 	if (type_spec == ast::builtin_type::real)
 	{
-		static symbol_ptr real_type = make_symbol_ptr<builtin_type_symbol>(ast::builtin_type::real);
-		return std::static_pointer_cast<type_symbol, symbol>(real_type);
+		static auto real_type = make_symbol_ptr<builtin_type_symbol>(ast::builtin_type::real);
+		return real_type;
 	}
 
 	if (type_spec == ast::builtin_type::string)
 	{
-		static symbol_ptr string_type = make_symbol_ptr<builtin_type_symbol>(ast::builtin_type::string);
-		return std::static_pointer_cast<type_symbol, symbol>(string_type);
+		static auto string_type = make_symbol_ptr<builtin_type_symbol>(ast::builtin_type::string);
+		return string_type;
 	}
 
 	throw std::logic_error("Unsupported built-in type as argument");

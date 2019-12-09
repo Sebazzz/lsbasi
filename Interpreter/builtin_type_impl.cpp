@@ -138,6 +138,26 @@ builtin_real_impl::builtin_real_impl(builtin_type_symbol* builtin_type_symbol):b
 	
 }
 
+bool builtin_boolean_impl::supports_type_conversion_from(ast::builtin_type from_type, token_type) const
+{
+	return from_type == ast::builtin_type::boolean;
+}
+
+void builtin_boolean_impl::execute_binary_operation(eval_value& result, const expression_value& expr, const builtin_type_symbol&, token_type op, type_operation_context&) const
+{
+	if (op == token_type::assign)
+	{
+		result.value.boolean_val = expr.boolean_val;
+		return;
+	}
+	
+	throw exec_error("Binary operators are not supported for booleans", {-1,-1});
+}
+
+builtin_boolean_impl::builtin_boolean_impl(builtin_type_symbol* builtin_type_symbol):builtin_type_impl(builtin_type_symbol)
+{
+}
+
 bool builtin_integer_impl::supports_type_conversion_from(ast::builtin_type from_type, token_type) const
 {
 	return from_type == ast::builtin_type::integer;

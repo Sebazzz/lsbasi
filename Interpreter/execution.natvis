@@ -8,8 +8,10 @@
     <!-- Special support for built-in types. Note I compare by enum integer value, apparently 
          comparing by the fully qualified name of the enum does not work -->
     <Intrinsic Name="builtin_type" Expression="((builtin_type_symbol&amp;)*type)" />
-    <DisplayString Optional="true" Condition="(builtin_type()).m_type == 0">{{ value = {value.int_val}  (builtin_int)} }</DisplayString>
-    <DisplayString Optional="true" Condition="(builtin_type()).m_type == 1">{{ value = {value.real_val}  (builtin_real)} }</DisplayString>
+    <DisplayString Optional="true" Condition="(builtin_type()).m_type == 0">{{ value = {value.boolean_val}  (boolean_val)} }</DisplayString>
+    <DisplayString Optional="true" Condition="(builtin_type()).m_type == 1">{{ value = {value.int_val}  (builtin_int)} }</DisplayString>
+    <DisplayString Optional="true" Condition="(builtin_type()).m_type == 2">{{ value = {value.real_val}  (builtin_real)} }</DisplayString>
+    <DisplayString Optional="true" Condition="(builtin_type()).m_type == 3">{{ value = {value.string_ptr_val}  (string_ptr_val)} }</DisplayString>
 
     <!-- Fallback for builtin type -->
     <DisplayString Optional="true">{{ value = {value} - builtin-type = {(builtin_type()).m_type} }</DisplayString>

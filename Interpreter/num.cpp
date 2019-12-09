@@ -5,6 +5,10 @@
 
 using namespace ast;
 
+num::num(bool value, token token): ast_node(std::move(token)), m_value(value), m_type(builtin_type::boolean)
+{
+}
+
 num::num(const int value, token token): ast_node(std::move(token)), m_value(value), m_type(builtin_type::integer)
 {
 }

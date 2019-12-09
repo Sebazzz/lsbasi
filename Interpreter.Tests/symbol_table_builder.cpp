@@ -16,6 +16,20 @@ END.
     REQUIRE( typeid(*result.symbol_table->get(L"b")) == typeid(variable_symbol) );
 }
 
+TEST_CASE( "Symbol lookup succeeds - program with boolean", "[symbol_table_builder]" ) {
+    const auto result = test_symbol_table_builder(R"(
+PROGRAM Simple;
+VAR a: BOOLEAN;
+BEGIN       
+   a := true;  
+END.        
+)");
+
+    REQUIRE( typeid(*result.symbol_table->get(L"a")) == typeid(variable_symbol) );
+
+    auto var_symbol = result.symbol_table->get<variable_symbol>(L"a");
+    REQUIRE( var_symbol->variable().type()->type_symbol()->to_string() == std::wstring(L"built-in BOOLEAN") );
+}
 
 TEST_CASE( "Symbol lookup succeeds - program 2", "[symbol_table_builder]" ) {
     const auto result = test_symbol_table_builder(R"(

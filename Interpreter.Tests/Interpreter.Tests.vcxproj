@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="builtin_functions.cpp" />
     <ClCompile Include="builtin_procedures.cpp" />
+    <ClCompile Include="builtin_type_boolean.cpp" />
     <ClCompile Include="builtin_type_string.cpp" />
     <ClCompile Include="case_insensitive_string_comparer.cpp" />
     <ClCompile Include="functions.cpp" />
