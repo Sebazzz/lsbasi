@@ -59,3 +59,13 @@ interpret_result test_program_interpretation(const char* input)
         interpret_output
     };
 }
+
+std::wstring test_repl_interpretation(const std::wstring& input)
+{
+    std::wstringstream input_stream;
+	input_stream.str(input);
+
+    interpreter sut(input_stream, true);
+
+    return sut.interpret();
+}

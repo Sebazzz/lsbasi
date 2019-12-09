@@ -35,3 +35,4 @@ builtin_integer verify_int_symbol(const interpret_result& result, const symbol_i
 builtin_real verify_real_symbol(const interpret_result& result, const symbol_identifier& identifier);
 builtin_string verify_string_symbol(const interpret_result& result, const symbol_identifier& identifier);
 interpret_result test_program_interpretation(const char* input);
+std::wstring test_repl_interpretation(const std::wstring& input);
