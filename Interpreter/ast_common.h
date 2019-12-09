@@ -35,7 +35,7 @@ namespace ast {
 
 	// Note about data type size of expression_value:
 	// a double is 64-bit so it is at max 64-bits. 
-	static_assert(sizeof(expression_value) == (sizeof(void*) * 2), "Expect data size to be at most two pointers (8 bytes)");
+	static_assert(sizeof(expression_value) <= (sizeof(void*) * 2), "Expect data size to be at most two pointers (8 bytes)");
 
 	// Fwd declarations
 	class compound;
