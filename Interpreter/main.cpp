@@ -74,9 +74,10 @@ void repl_mode()
 			if (e.has_line_info())
 			{
 				const int col = e.line_info().column;
-				
+
+				// Note on AMD64, appears to raise CS26451: https://developercommunity.visualstudio.com/content/problem/625861/-should-not-raise-c26451.html
 				std::wcout << std::endl << "\t" << input << std::endl;
-				std::wcout << "\t" << std::wstring(col - 1, L'-') << console_color::bright_red << L'^' << console_color::reset << std::endl;
+				std::wcout << "\t" << std::wstring((col - 1), L'-') << console_color::bright_red << L'^' << console_color::reset << std::endl;
 			}
 		}
 		
@@ -125,6 +126,7 @@ int interpret_file(const std::wstring& file_path)
 
 			if (!buf.empty())
 			{
+				// Note on AMD64, appears to raise CS26451: https://developercommunity.visualstudio.com/content/problem/625861/-should-not-raise-c26451.html
 				std::wcout << std::endl << "\t" << buf << std::endl;
 				std::wcout << "\t" << std::wstring(line_info.column - 1, L'-') << console_color::bright_red << L'^' << console_color::reset << std::endl;
 			}
