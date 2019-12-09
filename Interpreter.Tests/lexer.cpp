@@ -176,6 +176,30 @@ PROCEDURE P1(a : INTEGER);
     REQUIRE( do_lex(lex) == std::wstring(L"token(semi) [5,6]") );
 }
 
+TEST_CASE( "Lexer tokenize test - boolean", "[lexer]" ) {
+    const auto input = make_lexer_input_stream(R"(
+VAR a : BOOLEAN;
+BEGIN
+ a := true;
+END;
+)");
+
+    lexer lex(*input);
+
+    REQUIRE( do_lex(lex) == std::wstring(L"token(var_decl,VAR) [2,1]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,a) [2,5]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(colon) [2,7]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,BOOLEAN) [2,9]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(semi) [2,16]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(begin,BEGIN) [3,1]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,a) [4,2]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(:=) [4,4]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(bool,true) [4,7]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(semi) [4,11]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(end,END) [5,1]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(semi) [5,4]") );
+}
+
 TEST_CASE( "Lexer tokenize test - function with params", "[lexer]" ) {
     const auto input = make_lexer_input_stream(R"(
 FUNCTION F1(a : INTEGER): INTEGER;

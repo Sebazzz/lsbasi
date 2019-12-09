@@ -83,6 +83,9 @@ const wchar_t* token::token_type_to_string(token_type type)
 	case token_type::group_end:
 		return L"group_end";
 
+	case token_type::boolean_const:
+		return L"bool";
+
 	case token_type::program:
 		return L"prog";
 

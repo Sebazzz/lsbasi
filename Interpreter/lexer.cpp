@@ -174,6 +174,8 @@ token lexer::read_identifier_or_keyword()
 		{ L"FUNCTION", token(token_type::function, L"FUNCTION" )},
 		{ L"INTEGER", token(token_type::identifier, L"INTEGER" )},
 		{ L"REAL", token(token_type::identifier, L"REAL" )},
+		{ L"TRUE", token(token_type::boolean_const, L"true" )},
+		{ L"FALSE", token(token_type::boolean_const, L"false" )},
 		{ L"VAR", token(token_type::var_decl, L"VAR" )},
 		{ L"BEGIN", token(token_type::begin, L"BEGIN" )},
 		{ L"DIV", token(token_type::divide_integer, L"DIV" )},

@@ -3,6 +3,7 @@
 enum class token_type
 {
 	// data values
+	boolean_const,
 	integer_const,
 	real_const,
 	string_const,
