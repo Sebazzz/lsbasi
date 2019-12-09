@@ -28,7 +28,10 @@
 //
 // statement_list:  statement |  statement SEMI statement
 //
-// statement:       compound | assign | routine_call | empty
+// statement:       compound | assign | routine_call | if_statement | empty
+//
+// if_statement:    IF expression THEN statement (ELSE statement) |
+//                  IF expression THEN compound (ELSE compound)
 //
 // routine_call:  ID "(" (expression (COMMA expression)*)? ")"
 //
