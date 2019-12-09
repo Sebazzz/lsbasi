@@ -44,6 +44,8 @@
 //                  integer |
 //                  real |
 //                  group |
+//                  TRUE |
+//                  FALSE |
 //                  function_call |
 //                  var
 // 
