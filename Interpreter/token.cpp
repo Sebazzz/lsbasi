@@ -64,6 +64,9 @@ const wchar_t* token::token_type_to_string(token_type type)
 
 	case token_type::divide_real:
 		return L"rdiv";
+
+	case token_type::compare_equal:
+		return L"eq";
 		
 	case token_type::eof:
 		return L"end of file";
@@ -76,6 +79,15 @@ const wchar_t* token::token_type_to_string(token_type type)
 
 	case token_type::string_const:
 		return L"str";
+
+	case token_type::if_ctrl:
+		return L"if";
+
+	case token_type::then_ctrl:
+		return L"then";
+
+	case token_type::else_ctrl:
+		return L"else";
 
 	case token_type::group_start:
 		return L"group_start";

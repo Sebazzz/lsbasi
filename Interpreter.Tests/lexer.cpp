@@ -72,6 +72,32 @@ TEST_CASE( "Lexer tokenize test - single line - division real", "[lexer]" ) {
     REQUIRE( do_lex(lex) == std::wstring(L"token(.) [1,22]") );
 }
 
+TEST_CASE( "Lexer tokenize test - if/then/else", "[lexer]" ) {
+    const auto input = make_lexer_input_stream(R"(
+IF a = true THEN
+    b := 3
+ELSE
+    b := -1;
+)");
+
+    lexer lex(*input);
+
+    REQUIRE( do_lex(lex) == std::wstring(L"token(if,IF) [2,1]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,a) [2,4]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(eq) [2,6]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(bool,true) [2,8]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(then,THEN) [2,13]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,b) [3,5]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(:=) [3,7]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(int,3) [3,10]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(else,ELSE) [4,1]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(idf,b) [5,5]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(:=) [5,7]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(min) [5,10]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(int,1) [5,11]") );
+    REQUIRE( do_lex(lex) == std::wstring(L"token(semi) [5,12]") );
+}
+
 TEST_CASE( "Lexer tokenize test - multiline", "[lexer]" ) {
     const auto input = make_lexer_input_stream(R"(
 BEGIN

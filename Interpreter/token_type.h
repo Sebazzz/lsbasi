@@ -12,12 +12,15 @@ enum class token_type
 	type,
 	var_decl,
 
-	// operators
-	plus,
-	minus,
+	// operators (ref: https://wiki.freepascal.org/Operator)
 	multiply,
 	divide_integer,
 	divide_real,
+	
+	plus,
+	minus,
+
+	compare_equal,
 
 	// constructs
 	group_start,
@@ -27,14 +30,20 @@ enum class token_type
 	program,
 	procedure,
 	function,
+	
 	begin,
 	end,
-	dot,
+
+	if_ctrl,
+	then_ctrl,
+	else_ctrl,
+	
 	assign,
 	comma,
 	colon,
 	semicolon,
 	identifier,
+	dot,
 	
 	eof
 };

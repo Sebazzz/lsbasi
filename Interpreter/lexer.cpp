@@ -150,6 +150,10 @@ token lexer::read_operator()
 		this->advance();
 		return token(token_type::group_end, stream_pos);
 
+	case '=':
+		this->advance();
+		return token(token_type::compare_equal, stream_pos);
+
 	default:
 		throw parse_except("Unknown token in string: " + std::to_string(static_cast<char>(this->m_current_char)), stream_pos);
 	}
@@ -177,6 +181,9 @@ token lexer::read_identifier_or_keyword()
 		{ L"TRUE", token(token_type::boolean_const, L"true" )},
 		{ L"FALSE", token(token_type::boolean_const, L"false" )},
 		{ L"VAR", token(token_type::var_decl, L"VAR" )},
+		{ L"IF", token(token_type::if_ctrl, L"IF" )},
+		{ L"ELSE", token(token_type::else_ctrl, L"ELSE" )},
+		{ L"THEN", token(token_type::then_ctrl, L"THEN" )},
 		{ L"BEGIN", token(token_type::begin, L"BEGIN" )},
 		{ L"DIV", token(token_type::divide_integer, L"DIV" )},
 		{ L"END", token(token_type::end, L"END" )}
