@@ -14,3 +14,4 @@ END.
 
     REQUIRE( verify_real_symbol(result, L"a") != 0 /*Default value and very unlikely to be the outcome of random*/ );
 }
+
