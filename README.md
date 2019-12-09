@@ -5,8 +5,9 @@ This is my attempt at following the [Let's Build A Simple Interpreter](https://r
 Implemented language features:
 
 - Built-in types
-    - REAL
+	- BOOLEAN
 	- INTEGER
+    - REAL
 	- STRING (*TODO: Currently leaks memory because the string pool is not cleaned up when strings are no longer used*)
 - Variable assignment
     - Type conversion
