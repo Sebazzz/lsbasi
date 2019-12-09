@@ -157,15 +157,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="builtin_functions.cpp" />
+    <ClCompile Include="builtin_procedures.cpp" />
+    <ClCompile Include="builtin_type_string.cpp" />
     <ClCompile Include="case_insensitive_string_comparer.cpp" />
+    <ClCompile Include="functions.cpp" />
     <ClCompile Include="interpreter_test_support.cpp" />
     <ClCompile Include="interpreter_full.cpp" />
     <ClCompile Include="interpreter_repl.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="lisp_notation_visitor.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="procedures.cpp" />
     <ClCompile Include="rpn_visitor.cpp" />
+    <ClCompile Include="runtime_type_conversion.cpp" />
     <ClCompile Include="symbol_table_builder.cpp" />
+    <ClCompile Include="variable_recognition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common_test.h" />

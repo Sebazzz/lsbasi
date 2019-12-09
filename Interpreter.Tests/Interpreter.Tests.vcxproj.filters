@@ -54,6 +54,27 @@
     <ClCompile Include="interpreter_full.cpp">
       <Filter>Source Files\interpreter</Filter>
     </ClCompile>
+    <ClCompile Include="runtime_type_conversion.cpp">
+      <Filter>Source Files\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="builtin_type_string.cpp">
+      <Filter>Source Files\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="builtin_procedures.cpp">
+      <Filter>Source Files\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="builtin_functions.cpp">
+      <Filter>Source Files\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="variable_recognition.cpp">
+      <Filter>Source Files\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="procedures.cpp">
+      <Filter>Source Files\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="functions.cpp">
+      <Filter>Source Files\interpreter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="string_conv_util.h">

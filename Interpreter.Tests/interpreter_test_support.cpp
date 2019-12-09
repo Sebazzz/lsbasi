@@ -6,6 +6,7 @@
 #include "../Interpreter/routine_symbol.h"
 #include "../Interpreter/var_decl.h"
 #include "../Interpreter/builtin_type_symbol.h"
+#include "../Interpreter/symbol_table_builder.h"
 
 builtin_boolean verify_bool_symbol(const interpret_result& result, const symbol_identifier& identifier)
 {
@@ -68,4 +69,23 @@ std::wstring test_repl_interpretation(const std::wstring& input)
     interpreter sut(input_stream, true);
 
     return sut.interpret();
+}
+
+parse_result test_symbol_table_builder(const char* input)
+{
+    std::wstringstream input_stream;
+	input_stream.str(raw_to_wstring(input));
+
+	const interpreter_context_ptr context = std::make_shared<interpreter_context>();
+    parser sut(input_stream, context);
+
+    const auto result = sut.parse();
+
+    symbol_table_builder symbol_visitor;
+    symbol_visitor.visit(*result);
+
+    return {
+        symbol_visitor.symbol_table(),
+        result
+    };
 }

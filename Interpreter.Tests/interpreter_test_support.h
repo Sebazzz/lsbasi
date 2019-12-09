@@ -15,6 +15,12 @@ struct interpret_result
     std::wstring output;
 };
 
+struct parse_result
+{
+    std::shared_ptr<symbol_table> symbol_table;
+    ast::ast_ptr ast;
+};
+
 template<ast::builtin_type T>
 typename builtin_type_traits<T>::builtin_type verify_symbol(const interpret_result& result, const symbol_identifier& identifier)
 {
@@ -36,3 +42,4 @@ builtin_real verify_real_symbol(const interpret_result& result, const symbol_ide
 builtin_string verify_string_symbol(const interpret_result& result, const symbol_identifier& identifier);
 interpret_result test_program_interpretation(const char* input);
 std::wstring test_repl_interpretation(const std::wstring& input);
+parse_result test_symbol_table_builder(const char* input);

@@ -2,36 +2,9 @@
 #include "../Interpreter/parser.h"
 #include "../Interpreter/symbol.h"
 #include "../Interpreter/routine_symbol.h"
-#include "../Interpreter/symbol_table_builder.h"
-
-struct parse_result
-{
-    std::shared_ptr<symbol_table> symbol_table;
-    ast::ast_ptr ast;
-};
-
-parse_result do_parse_program(const char* input)
-{
-    std::wstringstream input_stream;
-	input_stream.str(raw_to_wstring(input));
-
-	const interpreter_context_ptr context = std::make_shared<interpreter_context>();
-    parser sut(input_stream, context);
-
-    const auto result = sut.parse();
-
-    symbol_table_builder symbol_visitor;
-    symbol_visitor.visit(*result);
-
-    return {
-        symbol_visitor.symbol_table(),
-        result
-    };
-}
-
 
 TEST_CASE( "Symbol lookup succeeds - program 1", "[symbol_table_builder]" ) {
-    const auto result = do_parse_program(R"(
+    const auto result = test_symbol_table_builder(R"(
 PROGRAM Simple;
 VAR a: INTEGER; b: REAL;
 BEGIN       
@@ -45,7 +18,7 @@ END.
 
 
 TEST_CASE( "Symbol lookup succeeds - program 2", "[symbol_table_builder]" ) {
-    const auto result = do_parse_program(R"(
+    const auto result = test_symbol_table_builder(R"(
 PROGRAM Semi;                           
 VAR a, b, c: REAL;
     x, number: INTEGER;
@@ -68,7 +41,7 @@ END.
 }
 
 TEST_CASE( "Symbol lookup succeeds - program (case insensitive)", "[symbol_table_builder]" ) {
-    const auto result = do_parse_program(R"(
+    const auto result = test_symbol_table_builder(R"(
 PROGRAM Semi;                           
 VAR a, b, c: REAL;
     x, number: INTEGER;
@@ -91,7 +64,7 @@ ENd.
 }
 
 TEST_CASE( "Symbol lookup succeeds - program (vars with underscore) 1", "[symbol_table_builder]" ) {
-    const auto result = do_parse_program(R"(
+    const auto result = test_symbol_table_builder(R"(
 PROGRAM Semi;                           
 VAR _a: INTEGER;
 BEGIN       
@@ -103,7 +76,7 @@ END.
 }
 
 TEST_CASE( "Symbol lookup succeeds - program (vars with underscore) 2", "[symbol_table_builder]" ) {
-     const auto result = do_parse_program(R"(
+     const auto result = test_symbol_table_builder(R"(
 PROGRAM Semi;                           
 VAR _a_b: INTEGER;
 BEGIN       
@@ -115,7 +88,7 @@ END.
 }
 
 TEST_CASE( "Symbol lookup succeeds - procedures", "[symbol_table_builder]" ) {
-    const auto result = do_parse_program(R"(
+    const auto result = test_symbol_table_builder(R"(
 PROGRAM Semi;                           
 VAR _a: INTEGER;
 
@@ -134,7 +107,7 @@ END.
 }
 
 TEST_CASE( "Symbol lookup succeeds - procedures declared not in order", "[symbol_table_builder]" ) {
-    const auto result = do_parse_program(R"(
+    const auto result = test_symbol_table_builder(R"(
 PROGRAM Semi;                           
 
 PROCEDURE P1;
@@ -156,7 +129,7 @@ END.
 }
 
 TEST_CASE( "Symbol lookup succeeds - procedure with parameters", "[symbol_table_builder]" ) {
-    const auto result = do_parse_program(R"(
+    const auto result = test_symbol_table_builder(R"(
 PROGRAM Semi;
 VAR _a: INTEGER;
 PROCEDURE P1(a : INTEGER);
@@ -177,7 +150,7 @@ END.
 
 
 TEST_CASE( "Symbol lookup succeeds - procedure with multiple parameters", "[symbol_table_builder]" ) {
-    const auto result = do_parse_program(R"(
+    const auto result = test_symbol_table_builder(R"(
 PROGRAM Semi;
 VAR _a: INTEGER;
 PROCEDURE P1(a, b : INTEGER; c: REAL);
@@ -199,7 +172,7 @@ END.
 }
 
 TEST_CASE( "Symbol lookup succeeds - nested procedures", "[symbol_table_builder]" ) {
-    const auto result = do_parse_program(R"(
+    const auto result = test_symbol_table_builder(R"(
 PROGRAM Part12;
 VAR
    a : INTEGER;
@@ -234,7 +207,7 @@ END.  {Part12}
 }
 
 TEST_CASE( "Symbol lookup succeeds - nested procedure variable hides global variable", "[symbol_table_builder]" ) {
-    const auto result = do_parse_program(R"(
+    const auto result = test_symbol_table_builder(R"(
 PROGRAM Part12;
 VAR
    a : REAL; b : INTEGER;
@@ -270,7 +243,7 @@ BEGIN
 END.        
 )";
 
-    REQUIRE_THROWS_MATCHES( do_parse_program(program), interpret_except, Catch::Message("Attempt to declare duplicate symbol 'variable b' which already exists in this scope: Simple"));
+    REQUIRE_THROWS_MATCHES( test_symbol_table_builder(program), interpret_except, Catch::Message("Attempt to declare duplicate symbol 'variable b' which already exists in this scope: Simple"));
 }
     
 TEST_CASE( "Symbol lookup fails - program 1", "[symbol_table_builder]" ) {
@@ -283,7 +256,7 @@ END.
 )";
 
     REQUIRE_THROWS_MATCHES( 
-		do_parse_program(program), 
+		test_symbol_table_builder(program), 
 		interpret_except, 
 		Catch::Message("Attempt to reference symbol with name 'a' which does not exist in this scope: Simple"));
 }
@@ -298,7 +271,7 @@ END.
 )";
 
     REQUIRE_THROWS_MATCHES( 
-		do_parse_program(program), 
+		test_symbol_table_builder(program), 
 		interpret_except, 
 		Catch::Message("Unable to resolve symbol of type 'class type_symbol': Attempt to reference symbol with name 'NOTEXISTS' which does not exist in this scope: Simple"));
 }
@@ -312,7 +285,7 @@ END.
 )";
 
     REQUIRE_THROWS_MATCHES( 
-		do_parse_program(program), 
+		test_symbol_table_builder(program), 
 		interpret_except, 
 		Catch::Message("Unable to resolve symbol of type 'class routine_symbol': Attempt to reference symbol with name 'calculate' which does not exist in this scope: Simple"));
 }
@@ -330,7 +303,7 @@ END.
 )";
 
     REQUIRE_THROWS_MATCHES( 
-		do_parse_program(program), 
+		test_symbol_table_builder(program), 
 		interpret_except, 
 		Catch::Message("In call to procedure 'calculate' unexpected error found: Attempt to reference symbol with name 'x' which does not exist in this scope: Simple"));
 }
