@@ -99,6 +99,8 @@
     <CustomBuildBeforeTargets>PreLinkEvent</CustomBuildBeforeTargets>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
+    <OutDir>$(SolutionDir)$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -119,7 +121,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <CustomBuildStep>
-      <Command>"$(VC_ExecutablePath_x86_x86)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
+      <Command>"$(VC_ExecutablePath_x86)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
       <Inputs>*.cpp;%(Inputs)</Inputs>
       <Outputs>$(OutDir)\*.lib</Outputs>
       <Message>Creating static library for unit tests</Message>
@@ -179,10 +181,10 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <CustomBuildStep>
-      <Command>"$(VC_ExecutablePath_x86)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
       <Inputs>*.cpp;%(Inputs)</Inputs>
       <Outputs>$(OutDir)\*.lib</Outputs>
       <Message>Creating static library for unit tests</Message>
+      <Command>"$(VC_ExecutablePath_x86)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -214,10 +216,10 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <CustomBuildStep>
-      <Command>"$(VC_ExecutablePath_x86)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
       <Inputs>*.cpp;%(Inputs)</Inputs>
       <Outputs>$(OutDir)\*.lib</Outputs>
       <Message>Creating static library for unit tests</Message>
+      <Command>"$(VC_ExecutablePath_x64_x64)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
