@@ -1,0 +1,2 @@
+#define SPILIB_API __declspec(dllexport)
+#define SPILIB_API __declspec(dllimport)

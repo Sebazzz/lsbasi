@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spilib", "..\spilib\spilib.vcxproj", "{EADDDF72-C7DB-4EC3-BEDB-D254F2FE408B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -39,6 +41,14 @@ Global
 		{C68F364F-CBDE-48D3-81D0-B462F8B7F779}.Release|x64.Build.0 = Release|x64
 		{C68F364F-CBDE-48D3-81D0-B462F8B7F779}.Release|x86.ActiveCfg = Release|Win32
 		{C68F364F-CBDE-48D3-81D0-B462F8B7F779}.Release|x86.Build.0 = Release|Win32
+		{EADDDF72-C7DB-4EC3-BEDB-D254F2FE408B}.Debug|x64.ActiveCfg = Debug|x64
+		{EADDDF72-C7DB-4EC3-BEDB-D254F2FE408B}.Debug|x64.Build.0 = Debug|x64
+		{EADDDF72-C7DB-4EC3-BEDB-D254F2FE408B}.Debug|x86.ActiveCfg = Debug|Win32
+		{EADDDF72-C7DB-4EC3-BEDB-D254F2FE408B}.Debug|x86.Build.0 = Debug|Win32
+		{EADDDF72-C7DB-4EC3-BEDB-D254F2FE408B}.Release|x64.ActiveCfg = Release|x64
+		{EADDDF72-C7DB-4EC3-BEDB-D254F2FE408B}.Release|x64.Build.0 = Release|x64
+		{EADDDF72-C7DB-4EC3-BEDB-D254F2FE408B}.Release|x86.ActiveCfg = Release|Win32
+		{EADDDF72-C7DB-4EC3-BEDB-D254F2FE408B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
