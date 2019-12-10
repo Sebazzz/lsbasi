@@ -13,6 +13,33 @@
     </Expand>
   </Type>
 
+  <!-- Pointer to ast::num -->
+  <Type Name="std::shared_ptr&lt;ast::num&gt;">
+    <DisplayString Condition="_Rep == 0">invalid!</DisplayString>
+    <DisplayString Condition="_Ptr == 0">nullptr (!invalid)</DisplayString>
+    <DisplayString Condition="_Ptr != 0">{(*_Ptr).m_type} {(*_Ptr).m_value}</DisplayString>
+    <DisplayString Optional="true" Condition="((*_Ptr)).m_type == 0">{{ value = {(*_Ptr).m_value.boolean_val}  (boolean_val)} }</DisplayString>
+    <DisplayString Optional="true" Condition="((*_Ptr)).m_type == 1">{{ value = {(*_Ptr).m_value.int_val}  (builtin_int)} }</DisplayString>
+    <DisplayString Optional="true" Condition="((*_Ptr)).m_type == 2">{{ value = {(*_Ptr).m_value.real_val}  (builtin_real)} }</DisplayString>
+    <DisplayString Optional="true" Condition="((*_Ptr)).m_type == 3">{{ value = {(*_Ptr).m_value.string_ptr_val}  (string_ptr_val)} }</DisplayString>
+    <Expand>
+      <Item Name="[type]" ExcludeView="simple" Optional="true">(*_Ptr).m_type</Item>
+      <Item Name="[value]" ExcludeView="simple" Optional="true">(*_Ptr).m_value</Item>
+    </Expand>
+  </Type>
+
+  <!-- Pointer to ast::if_then_else -->
+  <Type Name="std::shared_ptr&lt;ast::if_then_else&gt;">
+    <DisplayString Condition="_Rep == 0">invalid!</DisplayString>
+    <DisplayString Condition="_Ptr == 0">nullptr (!invalid)</DisplayString>
+    <DisplayString Condition="_Ptr != 0">{(*_Ptr).m_test_expression}</DisplayString>
+    <Expand>
+      <Item Name="[test_expression]" ExcludeView="simple" Optional="true">(*_Ptr).m_test_expression</Item>
+      <Item Name="[true_block]" ExcludeView="simple" Optional="true">(*_Ptr).m_true_block</Item>
+      <Item Name="[false_block]" ExcludeView="simple" Optional="true">(*_Ptr).m_false_block</Item>
+    </Expand>
+  </Type>
+
   <!-- Pointer to ast::var_decl -->
   <Type Name="std::shared_ptr&lt;ast::var_decl&gt;">
     <DisplayString Condition="_Rep == 0">invalid!</DisplayString>
@@ -25,7 +52,7 @@
   </Type>
 
   <!-- Pointer to ast::procedure -->
-  <Type Name="std::shared_ptr&lt;ast::procedure&gt;">
+  <Type Name="std::shared_ptr&lt;ast::routine&gt;">
     <DisplayString Condition="_Rep == 0">invalid!</DisplayString>
     <DisplayString Condition="_Ptr == 0">nullptr (!invalid)</DisplayString>
     <DisplayString Condition="_Ptr != 0">{(*_Ptr).m_identifier,sub} ({(*_Ptr).m_params} params)</DisplayString>
@@ -36,7 +63,7 @@
   </Type>
 
   <!-- Pointer to ast::procedure_call -->
-  <Type Name="std::shared_ptr&lt;ast::procedure_call&gt;">
+  <Type Name="std::shared_ptr&lt;ast::routine_call&gt;">
     <DisplayString Condition="_Rep == 0">invalid!</DisplayString>
     <DisplayString Condition="_Ptr == 0">nullptr (!invalid)</DisplayString>
     <DisplayString Condition="_Ptr != 0">Call to {(*_Ptr).m_procedure_identifier,sub} ({(*_Ptr).m_args} args)</DisplayString>

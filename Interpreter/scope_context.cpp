@@ -62,13 +62,16 @@ scope_context& scope_manager::push(symbol_table& symbol_table)
 	return this->m_scope.top();
 }
 
-scope_context& scope_manager::new_scope(symbol_table& symbol_table)
+scope_context& scope_manager::apply_prepared_scope(scope_context& new_scope)
 {
-	this->m_scope.push(
-		scope_context(symbol_table, 
-		memory_table::create_from_parent_scope(this->m_global_scope->memory.get())));
-	
+	this->m_scope.push(std::move(new_scope));
+
 	return this->m_scope.top();
+}
+
+scope_context scope_manager::prepare_new_scope(symbol_table& symbol_table) const
+{
+	return scope_context(symbol_table, memory_table::create_from_parent_scope(this->m_global_scope->memory.get()));
 }
 
 void scope_manager::pop()

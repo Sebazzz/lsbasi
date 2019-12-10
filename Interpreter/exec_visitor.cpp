@@ -109,7 +109,7 @@ void exec_visitor::visit(ast::routine_call& procedure_call)
 	
 	// We now have to process each of the parameters before the invocation. We get their value,
 	// then put their values in the memory table for the procedure. After this the invocation is fairly simple.
-	auto& proc_ctx = this->m_stack.new_scope(routine_symbol->symbol_table());
+	auto proc_ctx = this->m_stack.prepare_new_scope(routine_symbol->symbol_table());
 	
 	auto param_iterator = routine_params.begin();
 	const auto params_end = routine_params.end();
@@ -160,6 +160,9 @@ void exec_visitor::visit(ast::routine_call& procedure_call)
 	
 	// We have now bound all arguments in for the procedure. We can now execute the procedure
 
+	// ... Enter call frame
+	auto& current_stack = this->m_stack.apply_prepared_scope(proc_ctx);
+	
 	// ... Try to handle as a user defined procedure
 	const auto user_defined_procedure = std::dynamic_pointer_cast<user_defined_routine_symbol>(routine_symbol);
 	const auto builtin_procedure = std::dynamic_pointer_cast<builtin_routine_symbol>(routine_symbol);
@@ -171,7 +174,7 @@ void exec_visitor::visit(ast::routine_call& procedure_call)
 	} else if (builtin_procedure)
 	{
 		// Built-in procedures just need the scope to extract the variables they need
-		builtin_procedure->invoke(proc_ctx);
+		builtin_procedure->invoke(current_stack);
 	}
 	else
 	{
@@ -181,7 +184,7 @@ void exec_visitor::visit(ast::routine_call& procedure_call)
 	// Register return value if function
 	if (routine_symbol->is_function())
 	{
-		const auto return_value = proc_ctx.memory->get(routine_symbol);
+		const auto return_value = current_stack.memory->get(routine_symbol);
 
 		this->register_visit_result({
 			routine_symbol->return_type(),

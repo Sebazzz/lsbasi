@@ -2,7 +2,7 @@
 #include "../Interpreter/interpreter.h"
 #include "../Interpreter/routine_symbol.h"
 
-TEST_CASE( "Interpretation succeeds - functions", "[interpreter_program]" ) {
+TEST_CASE( "Interpretation succeeds - functions", "[functions]" ) {
     const auto result = test_program_interpretation(R"(
 PROGRAM Semi;                           
 VAR _a: INTEGER;
@@ -23,7 +23,7 @@ END.
 }
 
 
-TEST_CASE( "Interpretation succeeds - functions result as argument", "[interpreter_program]" ) {
+TEST_CASE( "Interpretation succeeds - functions result as argument", "[functions]" ) {
     const auto result = test_program_interpretation(R"(
 PROGRAM Semi;                           
 VAR _a: INTEGER;
@@ -50,7 +50,7 @@ END.
 
 
 
-TEST_CASE( "Interpretation succeeds - functions has too many args", "[interpreter_program]" ) {
+TEST_CASE( "Interpretation succeeds - functions has too many args", "[functions]" ) {
     const auto program = R"(
 PROGRAM Semi;                           
 VAR _a: INTEGER;
@@ -69,4 +69,28 @@ END.
 		test_program_interpretation(program), 
 		interpret_except,
 		Catch::Message("In a call to function F2 too many arguments have been provided"));
+}
+
+
+TEST_CASE( "Interpretation succeeds - recursion", "[functions]" ) {
+    const auto result = test_program_interpretation(R"(
+PROGRAM Recursion;
+VAR result: INTEGER;
+
+FUNCTION Recursive(n: INTEGER): INTEGER;
+BEGIN
+	IF n = 0 THEN
+		Recursive := 10
+	ELSE
+		Recursive := Recursive(n-1)
+END;
+
+BEGIN
+   result := Recursive(1)
+END.        
+)");
+
+    REQUIRE( result.output == std::wstring(L"") );
+
+    REQUIRE( verify_int_symbol(result, L"result") == 10 );
 }

@@ -47,11 +47,12 @@ public:
 	 * Enters a new scope with the current scope as parent
 	 */
 	scope_context& push(symbol_table& symbol_table);
+	scope_context& apply_prepared_scope(scope_context& new_scope);
 
 	/**
 	 * Enters a new scope (procedure)
 	 */
-	scope_context& new_scope(symbol_table& symbol_table);
+	scope_context prepare_new_scope(symbol_table& symbol_table) const;
 
 	/**
 	 * Reverts to the previous scope.
