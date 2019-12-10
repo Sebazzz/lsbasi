@@ -1,6 +1,6 @@
 #include "common_test.h"
-#include "../Interpreter/interpreter.h"
-#include "../Interpreter/routine_symbol.h"
+
+#include "routine_symbol.h"
 
 TEST_CASE( "Interpretation succeeds - program 1", "[interpreter_program]" ) {
     const auto result = test_program_interpretation(R"(

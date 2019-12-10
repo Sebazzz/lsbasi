@@ -1,6 +1,6 @@
 #include "common_test.h"
-#include "../Interpreter/lexer.h"
-#include "../Interpreter/parse_except.h"
+#include "lexer.h"
+#include "parse_except.h"
 
 std::unique_ptr<std::wstringstream> make_lexer_input_stream(const char* input)
 {

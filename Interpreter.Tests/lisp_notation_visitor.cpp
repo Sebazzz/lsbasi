@@ -1,6 +1,6 @@
 #include "common_test.h"
-#include "../Interpreter/parser.h"
-#include "../Interpreter/lisp_notation_visitor.h"
+#include "parser.h"
+#include "lisp_notation_visitor.h"
 
 std::wstring do_lsp(const std::wstring& input)
 {

@@ -126,6 +126,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+	 <CustomBuildStep>
+      <Inputs>*.cpp;%(Inputs)</Inputs>
+      <Outputs>$(OutDir)\*.lib</Outputs>
+      <Message>Creating static library for unit tests</Message>
+      <Command>"$(VC_ExecutablePath_x86)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -147,6 +153,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+	 <CustomBuildStep>
+      <Inputs>*.cpp;%(Inputs)</Inputs>
+      <Outputs>$(OutDir)\*.lib</Outputs>
+      <Message>Creating static library for unit tests</Message>
+      <Command>"$(VC_ExecutablePath_x64_x64)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -176,6 +188,12 @@
       <ShowProgress>LinkVerbose</ShowProgress>
       <EnableUAC>false</EnableUAC>
     </Link>
+	<CustomBuildStep>
+      <Inputs>*.cpp;%(Inputs)</Inputs>
+      <Outputs>$(OutDir)\*.lib</Outputs>
+      <Message>Creating static library for unit tests</Message>
+      <Command>"$(VC_ExecutablePath_x86)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -205,6 +223,12 @@
       <ShowProgress>LinkVerbose</ShowProgress>
       <EnableUAC>false</EnableUAC>
     </Link>
+	 <CustomBuildStep>
+      <Inputs>*.cpp;%(Inputs)</Inputs>
+      <Outputs>$(OutDir)\*.lib</Outputs>
+      <Message>Creating static library for unit tests</Message>
+      <Command>"$(VC_ExecutablePath_x64_x64)\lib.exe" /out:"$(OutDir)$(ProjectName).lib" "$(IntermediateOutputPath)*.obj"</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

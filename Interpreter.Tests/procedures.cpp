@@ -1,6 +1,6 @@
 #include "common_test.h"
-#include "../Interpreter/interpreter.h"
-#include "../Interpreter/routine_symbol.h"
+
+#include "routine_symbol.h"
 
 
 TEST_CASE( "Interpretation succeeds - procedures", "[interpreter_program]" ) {

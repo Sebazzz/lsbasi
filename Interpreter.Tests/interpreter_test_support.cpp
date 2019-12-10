@@ -1,12 +1,12 @@
 #include "common_test.h"
 #include "interpreter_test_support.h"
-#include "../Interpreter/interpreter.h"
-#include "../Interpreter/symbol.h"
-#include "../Interpreter/type.h"
-#include "../Interpreter/routine_symbol.h"
-#include "../Interpreter/var_decl.h"
-#include "../Interpreter/builtin_type_symbol.h"
-#include "../Interpreter/symbol_table_builder.h"
+
+#include "symbol.h"
+#include "type.h"
+#include "routine_symbol.h"
+#include "var_decl.h"
+#include "builtin_type_symbol.h"
+#include "symbol_table_builder.h"
 
 builtin_boolean verify_bool_symbol(const interpret_result& result, const symbol_identifier& identifier)
 {

@@ -1,5 +1,5 @@
 #include "common_test.h"
-#include "../Interpreter/util.h"
+#include "util.h"
 #include <map>
 
 bool test_compare(const std::wstring& left, const std::wstring& right)

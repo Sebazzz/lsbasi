@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Interpreter", "Interpreter.vcxproj", "{A64FBEDA-A530-4C1D-AF08-44BB063B08F5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Interpreter", "Interpreter\Interpreter.vcxproj", "{A64FBEDA-A530-4C1D-AF08-44BB063B08F5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Interpreter.Tests", "..\Interpreter.Tests\Interpreter.Tests.vcxproj", "{C68F364F-CBDE-48D3-81D0-B462F8B7F779}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Interpreter.Tests", "Interpreter.Tests\Interpreter.Tests.vcxproj", "{C68F364F-CBDE-48D3-81D0-B462F8B7F779}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E6470971-1697-4943-A710-EF0891EAE4CA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spilib", "spilib\spilib.vcxproj", "{EADDDF72-C7DB-4EC3-BEDB-D254F2FE408B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7A72AA27-27D3-43CF-A9F2-2ABDE4D7AD2F}"
 	ProjectSection(SolutionItems) = preProject
-		ast.natvis = ast.natvis
-		execution.natvis = execution.natvis
-		lexer.natvis = lexer.natvis
-		..\README.md = ..\README.md
+		spilib\ast.natvis = spilib\ast.natvis
+		spilib\execution.natvis = spilib\execution.natvis
+		spilib\lexer.natvis = spilib\lexer.natvis
+		README.md = README.md
 	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spilib", "..\spilib\spilib.vcxproj", "{EADDDF72-C7DB-4EC3-BEDB-D254F2FE408B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

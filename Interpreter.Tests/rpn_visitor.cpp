@@ -1,6 +1,6 @@
 #include "common_test.h"
-#include "../Interpreter/parser.h"
-#include "../Interpreter/rpn_visitor.h"
+#include "parser.h"
+#include "rpn_visitor.h"
 
 std::wstring do_rpn(const std::wstring& input)
 {

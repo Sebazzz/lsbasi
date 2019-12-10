@@ -1,5 +1,5 @@
 #include "common_test.h"
-#include "../Interpreter/interpreter.h"
+
 
 TEST_CASE( "Interpretation succeeds - program (case insensitive)", "[interpreter_program]" ) {
     const auto result = test_program_interpretation(R"(

@@ -1,7 +1,7 @@
 #include "common_test.h"
-#include "../Interpreter/parser.h"
-#include "../Interpreter/symbol.h"
-#include "../Interpreter/routine_symbol.h"
+#include "parser.h"
+#include "symbol.h"
+#include "routine_symbol.h"
 
 TEST_CASE( "Symbol lookup succeeds - program 1", "[symbol_table_builder]" ) {
     const auto result = test_symbol_table_builder(R"(

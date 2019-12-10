@@ -89,14 +89,14 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="string_conv_util.h">
-      <Filter>Source Files\support</Filter>
-    </ClInclude>
     <ClInclude Include="common_test.h">
-      <Filter>Source Files\support</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="interpreter_test_support.h">
-      <Filter>Source Files\support</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="string_conv_util.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

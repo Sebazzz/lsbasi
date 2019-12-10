@@ -1,5 +1,5 @@
 #include "common_test.h"
-#include "../Interpreter/interpreter.h"
+
 
 TEST_CASE( "Conditionals: a = 2; a == 2", "[conditionals]" ) {
     const auto result = test_program_interpretation(R"(

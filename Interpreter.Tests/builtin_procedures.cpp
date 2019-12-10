@@ -1,5 +1,5 @@
 #include "common_test.h"
-#include "../Interpreter/interpreter.h"
+
 
 TEST_CASE( "Interpretation succeeds - call to builtin procedure", "[interpreter_program]" ) {
     const auto result = test_program_interpretation(R"(
