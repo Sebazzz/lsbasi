@@ -11,6 +11,8 @@ private:
 	struct memory_contents
 	{
 		expression_value value;
+
+		memory_contents() = default;
 	};
 	
 	std::map<symbol_ptr, memory_contents> m_variables;

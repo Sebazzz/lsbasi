@@ -21,7 +21,7 @@ void memory_table::init_from_symbol_table(symbol_table& symbol_table)
 
 		if (var_symbol != nullptr)
 		{
-			this->m_variables.try_emplace(symbol_ptr, memory_contents { 0 });
+			this->m_variables.try_emplace(symbol_ptr, memory_contents());
 		}
 		
 		iterator.next();
@@ -32,7 +32,7 @@ void memory_table::init_from_symbol_table(symbol_table& symbol_table)
 	if (associated_routine)
 	{
 		const auto symbol_ptr = std::static_pointer_cast<symbol, routine_symbol>(associated_routine);
-		this->m_variables.try_emplace(symbol_ptr, memory_contents { 0 });
+		this->m_variables.try_emplace(symbol_ptr, memory_contents());
 	}
 }
 

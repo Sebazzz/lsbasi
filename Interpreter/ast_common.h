@@ -25,7 +25,7 @@ namespace ast {
 	 */
 	union expression_value
 	{
-		builtin_boolean boolean_val;
+		builtin_boolean boolean_val{};
 		builtin_integer int_val;
 		builtin_real real_val;
 		builtin_string_ptr string_ptr_val;
@@ -34,6 +34,15 @@ namespace ast {
 		expression_value(builtin_integer value) : int_val(value){}
 		expression_value(builtin_real value) : real_val(value){}
 		expression_value(builtin_string_ptr value) : string_ptr_val(value){}
+
+		/**
+		 * Zero-initialize the union. This is especially important on x64 where the string pointer is
+		 * is 8 bytes long and simply a "expression_value { 0 }"  does not suffice.
+		 */
+		expression_value()
+		{
+			std::memset(this, 0, sizeof(expression_value));
+		}
 	};
 
 	// Note about data type size of expression_value:
