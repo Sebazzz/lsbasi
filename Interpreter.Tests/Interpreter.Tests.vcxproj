@@ -162,6 +162,7 @@
     <ClCompile Include="builtin_type_boolean.cpp" />
     <ClCompile Include="builtin_type_string.cpp" />
     <ClCompile Include="case_insensitive_string_comparer.cpp" />
+    <ClCompile Include="conditionals.cpp" />
     <ClCompile Include="functions.cpp" />
     <ClCompile Include="if_then_else.cpp" />
     <ClCompile Include="interpreter_test_support.cpp" />

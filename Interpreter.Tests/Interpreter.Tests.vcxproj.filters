@@ -81,6 +81,9 @@
     <ClCompile Include="if_then_else.cpp">
       <Filter>Source Files\interpreter</Filter>
     </ClCompile>
+    <ClCompile Include="conditionals.cpp">
+      <Filter>Source Files\interpreter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="string_conv_util.h">
