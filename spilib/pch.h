@@ -1,13 +1,34 @@
-// pch.h: This is a precompiled header file.
-// Files listed below are compiled only once, improving build performance for future builds.
-// This also affects IntelliSense performance, including code completion and many code browsing features.
-// However, files listed here are ALL re-compiled if any one of them is updated between builds.
-// Do not add files here that you will be updating frequently as this negates the performance advantage.
+#pragma once
 
-#ifndef PCH_H
-#define PCH_H
+// Interpreter PCH file for common includes and reduced compilation time
 
-// add headers that you want to pre-compile here
-#include "framework.h"
+#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+#define NOMINMAX						// Prevent STL conflicts
 
-#endif //PCH_H
+// Windows Header Files
+#include <windows.h>
+
+// STL
+#include <algorithm>
+#include <exception>
+#include <map>
+#include <memory>
+#include <stack>
+#include <stdexcept>
+#include <string>
+#include <utility>
+#include <vector>
+
+// Private
+#include "ast_common.h"
+#include "ast_node.h"
+#include "builtin_type_defs.h"
+#include "interpret_except.h"
+#include "parse_except.h"
+#include "semantic_except.h"
+#include "exec_error.h"
+#include "runtime_type_error.h"
+#include "internal_interpret_except.h"
+#include "token.h"
+#include "line_info.h"
+#include "util.h"
