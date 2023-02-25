@@ -15,7 +15,7 @@ struct builtin_type_traits
 
 	static symbol_identifier param_id(int)
 	{
-		static_assert(false, L"Invalid template - this relies on specialization");
+		//static_assert(false, "Invalid template - this relies on specialization");
 		return L"?";
 	}
 
@@ -26,7 +26,7 @@ struct builtin_type_traits
 
 	static ast::expression_value make_expression_value(const builtin_type)
 	{
-		static_assert(false, L"Invalid template - this relies on specialization");
+		//static_assert(false, "Invalid template - this relies on specialization");
 		return {0};
 	}
 };

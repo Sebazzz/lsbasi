@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -126,7 +126,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
-	 <CustomBuildStep>
+    <CustomBuildStep>
       <Inputs>*.cpp;%(Inputs)</Inputs>
       <Outputs>$(OutDir)\*.lib</Outputs>
       <Message>Creating static library for unit tests</Message>
@@ -135,7 +135,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -153,7 +153,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
-	 <CustomBuildStep>
+    <CustomBuildStep>
       <Inputs>*.cpp;%(Inputs)</Inputs>
       <Outputs>$(OutDir)\*.lib</Outputs>
       <Message>Creating static library for unit tests</Message>
@@ -188,7 +188,7 @@
       <ShowProgress>LinkVerbose</ShowProgress>
       <EnableUAC>false</EnableUAC>
     </Link>
-	<CustomBuildStep>
+    <CustomBuildStep>
       <Inputs>*.cpp;%(Inputs)</Inputs>
       <Outputs>$(OutDir)\*.lib</Outputs>
       <Message>Creating static library for unit tests</Message>
@@ -197,7 +197,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -223,7 +223,7 @@
       <ShowProgress>LinkVerbose</ShowProgress>
       <EnableUAC>false</EnableUAC>
     </Link>
-	 <CustomBuildStep>
+    <CustomBuildStep>
       <Inputs>*.cpp;%(Inputs)</Inputs>
       <Outputs>$(OutDir)\*.lib</Outputs>
       <Message>Creating static library for unit tests</Message>
